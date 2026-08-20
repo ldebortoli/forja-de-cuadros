@@ -61,7 +61,7 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 
 ### Generar el clip desde la propia aplicación
 
-El botón `KAGGLE I2V` de la sección **Fuente** abre un asistente integrado. Prepara la CLI oficial en un entorno aislado, conecta la cuenta mediante OAuth en el navegador, sube la imagen como dataset privado temporal, ejecuta LTX-Video 2B en una GPU T4, espera el resultado y recupera el MP4. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
+El botón `KAGGLE I2V` de la sección **Fuente** abre un asistente integrado. Antes de OAuth muestra una guía de alta, correo y verificación de cuenta, exige confirmar que esos pasos terminaron y avisa si se intenta conectar antes de tiempo. Después prepara la CLI oficial en un entorno aislado, conecta la cuenta mediante OAuth en el navegador, sube la imagen como dataset privado temporal, ejecuta LTX-Video 2B en una GPU T4, espera el resultado y recupera el MP4. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
 
 La cuenta debe tener correo y teléfono verificados para acceder a GPU. La disponibilidad es compartida, puede haber cola y la cuota semanal varía. Consultá el [instructivo completo de Kaggle](docs/kaggle.md).
 
@@ -92,7 +92,7 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 80,61 % de líneas, 48,98 % de ramas y 73,72 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 80,61 % de líneas, 48,76 % de ramas y 73,72 % de métodos.
 
 ## Privacidad y alcance
 

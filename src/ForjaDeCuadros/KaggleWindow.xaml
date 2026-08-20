@@ -65,7 +65,16 @@
                     <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                         <StackPanel>
                             <TextBlock Text="01  CUENTA Y GPU" Style="{StaticResource Step}"/>
-                            <TextBlock Text="Crea una cuenta gratuita, confirma el correo y verifica el telefono. La verificacion es necesaria para que Kaggle habilite aceleradores GPU." TextWrapping="Wrap" Margin="0,7,0,12"/>
+                            <Border x:Name="AccountGuideBorder" Background="#F3E6CC" BorderBrush="#D2B98A" BorderThickness="1" CornerRadius="9" Padding="13" Margin="0,8,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="ANTES DE CONECTAR" Foreground="#742A25" FontSize="11" FontWeight="Bold"/>
+                                    <TextBlock Text="Necesitás una cuenta de Kaggle ya creada y verificada. Si todavía no la tenés, por favor creala siguiendo esta guía:" TextWrapping="Wrap" Margin="0,5,0,7"/>
+                                    <TextBlock Text="1 · Abrí CREAR CUENTA y registrate con Google o correo.&#x0a;2 · Elegí tu usuario y confirmá el correo que te envía Kaggle.&#x0a;3 · Abrí VERIFICAR CUENTA y completá la verificación telefónica para habilitar GPU.&#x0a;4 · Volvé a Forja, marcá la confirmación de abajo y recién entonces conectá OAuth." TextWrapping="Wrap" Foreground="#554B3D" LineHeight="20"/>
+                                    <CheckBox x:Name="AccountReadyCheck" Margin="0,9,0,0">
+                                        <TextBlock Text="Ya creé mi cuenta, confirmé el correo y completé la verificación requerida." TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                    </CheckBox>
+                                </StackPanel>
+                            </Border>
                             <WrapPanel>
                                 <Button Content="CREAR CUENTA" Style="{StaticResource PrimaryButton}" Click="OpenSignup_Click"/>
                                 <Button Content="VERIFICAR CUENTA" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="OpenAccountSettings_Click"/>
@@ -78,7 +87,7 @@
                     <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                         <StackPanel>
                             <TextBlock Text="02  CONEXION SEGURA" Style="{StaticResource Step}"/>
-                            <TextBlock Text="Forja instala la CLI oficial en una carpeta aislada. CONECTAR abre OAuth en tu navegador: la aplicacion nunca pide ni guarda tu contraseña." TextWrapping="Wrap" Margin="0,7,0,12"/>
+                            <TextBlock Text="Forja instala la CLI oficial en una carpeta aislada. CONECTAR abre OAuth en tu navegador: la aplicación nunca pide ni guarda tu contraseña. Si no confirmaste el paso 01, Forja te avisará antes de abrir OAuth." TextWrapping="Wrap" Margin="0,7,0,12"/>
                             <WrapPanel>
                                 <Button x:Name="PrepareButton" Content="PREPARAR KAGGLE" Style="{StaticResource SecondaryButton}" Click="Prepare_Click"/>
                                 <Button x:Name="ConnectButton" Content="CONECTAR CUENTA" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="Connect_Click"/>

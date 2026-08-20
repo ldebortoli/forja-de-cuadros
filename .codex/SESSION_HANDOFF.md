@@ -6,7 +6,7 @@ Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada 
 
 ## Tarea actual
 
-Esperar a que el usuario cree/verifique su cuenta para ejecutar el primer trabajo Kaggle GPU real. Linux y releases ejecutables quedan expresamente diferidos por el usuario.
+Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y ejecute el primer trabajo Kaggle GPU real. Linux y releases ejecutables continúan diferidos.
 
 ## Estado actual
 
@@ -15,9 +15,10 @@ Esperar a que el usuario cree/verifique su cuenta para ejecutar el primer trabaj
 - Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.0 aislada, job privado T4, espera, descarga y limpieza.
+- El paso 01 ahora contiene una guía numerada y confirmación explícita; un intento de conectar antes de completarla muestra un aviso y no abre OAuth.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
 - Tests locales y CI pública: 17/17; run `32394942328` verde.
-- Cobertura: líneas 80,61 %, ramas 48,98 %, métodos 73,72 %; umbrales 78/48/72.
+- Cobertura: líneas 80,61 %, ramas 48,76 %, métodos 73,72 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
 - Capturas 1280×680 y Kaggle 900×640 confirman barra superior, cierre y scroll accesibles.
@@ -27,8 +28,8 @@ Esperar a que el usuario cree/verifique su cuenta para ejecutar el primer trabaj
 
 ## Próximos pasos
 
-1. Usuario: crear cuenta en `https://www.kaggle.com/account/login?phase=startRegisterTab`, verificar correo y teléfono.
-2. En Forja: `KAGGLE I2V` → `CONECTAR CUENTA` → `VERIFICAR` → generar con una imagen de prueba.
+1. En Forja: `KAGGLE I2V` y seguir la guía visible del paso 01 para crear/verificar la cuenta.
+2. Marcar la confirmación → `CONECTAR CUENTA` → `VERIFICAR` → generar con una imagen de prueba.
 3. Si el MP4 se aprueba, preparar después Linux y releases cuando el usuario lo pida.
 
 ## Riesgos

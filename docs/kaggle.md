@@ -16,13 +16,14 @@ No hace falta crear manualmente un notebook ni descargar `kaggle.json`. Forja us
 
 1. Abrí `Forja de Cuadros` desde el acceso instalado.
 2. En **01 Fuente**, pulsá `KAGGLE I2V`.
-3. Pulsá `PREPARAR KAGGLE`. La primera vez crea `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli` e instala allí la CLI oficial; requiere Python 3.11 o superior.
-4. Pulsá `CONECTAR CUENTA`. Se abre Kaggle en el navegador. Iniciá sesión, autorizá el acceso y volvé a Forja.
-5. Pulsá `VERIFICAR`. Esto confirma que la CLI puede consultar tu cuenta.
-6. Escribí tu usuario de Kaggle, elegí una imagen PNG/JPG/WebP y ajustá el prompt, formato, duración, FPS y semilla.
-7. Dejá activada la limpieza remota salvo que necesites conservar el trabajo para depurarlo.
-8. Pulsá `SINCRONIZAR Y GENERAR`. Forja esperará aunque Kaggle ponga el trabajo en cola.
-9. Cuando aparezca `MP4 LISTO`, pulsá `USAR ESTE VIDEO`; la ventana principal lo carga automáticamente.
+3. Seguí la guía visible del paso **01 Cuenta y GPU**. Cuando hayas creado la cuenta, confirmado el correo y completado la verificación requerida, marcá la casilla de confirmación. Si intentás conectar antes, Forja muestra un aviso y no abre OAuth.
+4. Pulsá `PREPARAR KAGGLE`. La primera vez crea `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli` e instala allí la CLI oficial; requiere Python 3.11 o superior.
+5. Pulsá `CONECTAR CUENTA`. Se abre Kaggle en el navegador. Iniciá sesión, autorizá el acceso y volvé a Forja.
+6. Pulsá `VERIFICAR`. Esto confirma que la CLI puede consultar tu cuenta.
+7. Escribí tu usuario de Kaggle, elegí una imagen PNG/JPG/WebP y ajustá el prompt, formato, duración, FPS y semilla.
+8. Dejá activada la limpieza remota salvo que necesites conservar el trabajo para depurarlo.
+9. Pulsá `SINCRONIZAR Y GENERAR`. Forja esperará aunque Kaggle ponga el trabajo en cola.
+10. Cuando aparezca `MP4 LISTO`, pulsá `USAR ESTE VIDEO`; la ventana principal lo carga automáticamente.
 
 ## Qué sucede en Kaggle
 

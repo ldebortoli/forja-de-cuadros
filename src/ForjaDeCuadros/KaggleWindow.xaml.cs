@@ -95,6 +95,18 @@ namespace ForjaDeCuadros
 
         private async void Connect_Click(object sender, RoutedEventArgs e)
         {
+            if (AccountReadyCheck.IsChecked != true)
+            {
+                AccountGuideBorder.BringIntoView();
+                MessageBox.Show(
+                    this,
+                    "Antes de conectar necesitás una cuenta de Kaggle creada y verificada.\n\nSeguí la guía del paso 01, confirmá el correo y completá la verificación requerida. Después marcá la casilla y volvé a pulsar CONECTAR CUENTA.",
+                    "Primero creá tu cuenta de Kaggle",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
             await RunOperationAsync(async token =>
             {
                 await _kaggle.AuthenticateAsync(CreateProgress(), token);

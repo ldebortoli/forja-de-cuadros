@@ -18,3 +18,4 @@ No hay tareas en curso.
 - [2026-08-20] Publicar la entrega inicial en `https://github.com/ldebortoli/forja-de-cuadros` con rama primaria `main`, CI verde y controles de seguridad activos.
 - [2026-08-20] Actualizar GitHub Actions a las versiones oficiales compatibles con Node 24.
 - [2026-08-20] Integrar Kaggle I2V: onboarding y OAuth, CLI oficial aislada, dataset/kernel privados T4 con LTX-Video fijado, espera, descarga, limpieza, UI compacta, 17 tests y documentación pública.
+- [2026-08-20] Reforzar el alta Kaggle dentro del asistente con guía numerada, enlaces de cuenta/verificación, confirmación explícita y bloqueo con aviso antes de OAuth; captura instalada 900×640, identidad y 17 tests correctos.

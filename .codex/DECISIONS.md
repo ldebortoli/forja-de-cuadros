@@ -64,3 +64,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: no crear todavía ejecutables Linux ni releases descargables; hacerlo cuando el flujo Kaggle tenga una prueba real aprobada.
 - Motivo: el usuario pidió probar primero la aplicación actual y posponer la distribución multiplataforma.
+
+## D-010 - OAuth exige confirmar primero el alta de Kaggle
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: mostrar dentro del paso 01 una guía numerada para crear la cuenta, confirmar correo y completar la verificación requerida; antes de abrir OAuth, exigir una confirmación explícita y mostrar un aviso si falta.
+- Motivo: una conexión técnica no debe comenzar sin que la persona entienda que necesita una cuenta Kaggle creada y habilitada para GPU.
