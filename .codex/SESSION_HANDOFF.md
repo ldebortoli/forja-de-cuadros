@@ -17,7 +17,7 @@ Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y eje
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.0 aislada, job privado T4, espera, descarga y limpieza.
 - El paso 01 ahora contiene una guía numerada y confirmación explícita; un intento de conectar antes de completarla muestra un aviso y no abre OAuth.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
-- Tests locales y CI pública: 17/17; run `32394942328` verde.
+- Tests locales y CI pública: 17/17; el cambio de guía pasó el run `32396222758`.
 - Cobertura: líneas 80,61 %, ramas 48,76 %, métodos 73,72 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
