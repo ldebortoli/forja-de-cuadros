@@ -4,7 +4,7 @@ No hay tareas pendientes registradas.
 
 # IN PROGRESS
 
-- [P1] Publicar la entrega inicial en el repositorio público `ldebortoli/forja-de-cuadros`; falta auditoría final, commit, push y verificación remota.
+No hay tareas en curso.
 
 # DONE
 
@@ -14,3 +14,5 @@ No hay tareas pendientes registradas.
 - [2026-08-20] Agregar tests xUnit, cobertura con umbrales y workflows de CI eficientes.
 - [2026-08-20] Corregir la deriva de suelo causada por el remuestreo bilineal.
 - [2026-08-20] Validar build limpio, 7/7 tests, cobertura, autoprueba FFmpeg e instalación/identidad/cierre desde el acceso real.
+- [2026-08-20] Publicar la entrega inicial en `https://github.com/ldebortoli/forja-de-cuadros` con rama primaria `main`, CI verde y controles de seguridad activos.
+- [2026-08-20] Actualizar GitHub Actions a las versiones oficiales compatibles con Node 24.

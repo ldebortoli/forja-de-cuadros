@@ -36,3 +36,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: exigir 72 % de líneas, 48 % de ramas y 68 % de métodos para el núcleo cubierto.
 - Motivo: la base verificada mide 76,27 %, 50,57 % y 70,47 % respectivamente; los umbrales previenen regresiones con margen pequeño.
+
+## D-006 - Acciones oficiales compatibles con Node 24
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: usar `checkout@v7`, `setup-dotnet@v6`, `cache@v6` y `upload-artifact@v7`.
+- Motivo: son las versiones oficiales actuales y eliminan la advertencia de deprecación de Node 20 emitida por los runners de GitHub.

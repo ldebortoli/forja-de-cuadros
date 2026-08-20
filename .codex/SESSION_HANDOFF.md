@@ -2,30 +2,30 @@
 
 ## Objetivo general
 
-Publicar y mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada del proyecto de juego.
+Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada del proyecto de juego.
 
 ## Tarea actual
 
-Publicación inicial del repositorio público.
+No hay una tarea activa registrada.
 
 ## Estado actual
 
-- Rama local: `codex/initial-public-release`.
-- Remoto público creado y configurado: `https://github.com/ldebortoli/forja-de-cuadros`.
-- .NET 8.0.424 instalado y proyecto migrado.
-- Build Release: 0 advertencias, 0 errores.
-- Tests: 7/7.
+- Repositorio público: `https://github.com/ldebortoli/forja-de-cuadros`.
+- Rama primaria: `main`.
+- Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
+- .NET 8.0.424; build Release con 0 advertencias y 0 errores.
+- Tests locales y remotos: 7/7.
 - Cobertura: líneas 76,27 %, ramas 50,57 %, métodos 70,47 %; umbrales 72/48/68.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
-- Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, ventana única y cierre normal verificados.
+- Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
 - Captura 1280×680 confirma barra superior y cierre visibles.
+- Gitleaks: cero hallazgos en archivos e historial.
+- Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.
+- CI usa versiones oficiales de GitHub Actions compatibles con Node 24.
 
-## Próximos pasos exactos
+## Próximos pasos
 
-1. Ejecutar auditoría de privacidad y secretos sobre archivos versionables.
-2. Crear commit inicial con rutas explícitas.
-3. Empujar a `main` y verificar CI/seguridad del repositorio público.
-4. Marcar esta entrega como DONE y registrar el commit remoto.
+No hay pasos obligatorios. La autoprueba FFmpeg puede ejecutarse manualmente desde Actions cuando cambie la pipeline multimedia.
 
 ## Riesgos
 

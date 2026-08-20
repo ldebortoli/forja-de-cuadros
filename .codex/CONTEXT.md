@@ -10,6 +10,7 @@ Aplicación WPF gratuita para Windows que transforma videos cortos en paquetes d
 - Remoto público: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria: `main`.
 - Licencia: MIT.
+- GitHub Secret Scanning, Push Protection, alertas de vulnerabilidad y actualizaciones automáticas de seguridad están activos.
 - No versionar binarios, videos, exportaciones, logs, secretos ni rutas personales.
 
 ## Stack y estructura
@@ -19,7 +20,7 @@ Aplicación WPF gratuita para Windows que transforma videos cortos en paquetes d
 - `tests/ForjaDeCuadros.Tests/`: tests xUnit del núcleo de procesamiento.
 - `assets/branding/forja-de-cuadros/`: icono común de app, ventana y acceso directo.
 - `docs/`: workflow y capturas.
-- `.github/workflows/ci.yml`: build, tests y cobertura en push/PR.
+- `.github/workflows/ci.yml`: build, tests y cobertura en push/PR con acciones basadas en Node 24.
 - `.github/workflows/integration.yml`: autoprueba FFmpeg manual.
 
 ## Comandos verificados
