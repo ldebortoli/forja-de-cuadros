@@ -16,7 +16,7 @@ Esperar a que el usuario cree/verifique su cuenta para ejecutar el primer trabaj
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.0 aislada, job privado T4, espera, descarga y limpieza.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
-- Tests locales: 17/17.
+- Tests locales y CI pública: 17/17; run `32394942328` verde.
 - Cobertura: líneas 80,61 %, ramas 48,98 %, métodos 73,72 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
