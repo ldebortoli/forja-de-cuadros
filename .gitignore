@@ -1,0 +1,41 @@
+# Build and IDE output
+**/bin/
+**/obj/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Test and coverage output
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Runtime and generated media
+exports/
+sessions/
+logs/
+*.log
+*.pid
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pfx
+*.snk
+secrets.json
+
+# Packaged artifacts
+artifacts/
+releases/
+*.exe
+*.msi
+*.zip
+*.pck
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+.DS_Store

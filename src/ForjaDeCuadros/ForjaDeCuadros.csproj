@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <AssemblyName>ForjaDeCuadros</AssemblyName>
+    <RootNamespace>ForjaDeCuadros</RootNamespace>
+    <ApplicationIcon>..\..\assets\branding\forja-de-cuadros\forja-de-cuadros-icon.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Authors>ldebortoli</Authors>
+    <Product>Forja de Cuadros</Product>
+    <Description>Convierte videos cortos en animaciones raster registradas de 16 cuadros.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/ldebortoli/forja-de-cuadros</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="..\..\assets\branding\forja-de-cuadros\forja-de-cuadros-icon.png">
+      <Link>Assets\forja-de-cuadros-icon.png</Link>
+    </Resource>
+    <Resource Include="..\..\assets\branding\forja-de-cuadros\forja-de-cuadros-icon.ico">
+      <Link>Assets\forja-de-cuadros-icon.ico</Link>
+    </Resource>
+  </ItemGroup>
+</Project>

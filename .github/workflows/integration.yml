@@ -1,0 +1,37 @@
+name: FFmpeg integration
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Install FFmpeg
+        run: choco install ffmpeg -y --no-progress
+      - name: Build
+        run: dotnet build src\ForjaDeCuadros\ForjaDeCuadros.csproj -c Release
+      - name: Run full pipeline self-test
+        shell: powershell
+        run: |
+          $report = Join-Path $PWD 'artifacts\self-test.json'
+          $process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net8.0-windows\ForjaDeCuadros.exe' -ArgumentList @('--self-test', $report) -WindowStyle Hidden -Wait -PassThru
+          exit $process.ExitCode
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: forja-self-test-report
+          path: artifacts/self-test.json
+          retention-days: 3

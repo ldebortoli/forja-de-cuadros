@@ -1,0 +1,309 @@
+<Window x:Class="ForjaDeCuadros.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Forja de Cuadros" Width="1540" Height="920" MinWidth="1060" MinHeight="560"
+        WindowStartupLocation="CenterScreen" Background="#E9DFC9" WindowStyle="None" ResizeMode="CanResize"
+        Icon="pack://application:,,,/Assets/forja-de-cuadros-icon.ico">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="7" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <DrawingBrush x:Key="CheckerBrush" TileMode="Tile" Viewport="0,0,24,24" ViewportUnits="Absolute" Viewbox="0,0,24,24" ViewboxUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#F7F1E5" Geometry="M0,0 H24 V24 H0 Z"/>
+                    <GeometryDrawing Brush="#D9CFBD" Geometry="M0,0 H12 V12 H0 Z M12,12 H24 V24 H12 Z"/>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#F8F0DF"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="BorderBrush" Value="#CDBFA4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+        <Style x:Key="SectionLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#7B6E5A"/>
+            <Setter Property="Margin" Value="0,0,0,7"/>
+        </Style>
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#665C4C"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value><ControlTemplate TargetType="Button"><ContentPresenter/></ControlTemplate></Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="WindowButton" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#EEE5D4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#373330"/></Trigger>
+                <Trigger Property="IsPressed" Value="True"><Setter Property="Background" Value="#514A44"/></Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CloseWindowButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
+            <Setter Property="Background" Value="#742A25"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#C73B2F"/><Setter Property="Foreground" Value="White"/></Trigger>
+                <Trigger Property="IsPressed" Value="True"><Setter Property="Background" Value="#952A22"/></Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions><RowDefinition Height="40"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#11100F" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="13,0,0,0" VerticalAlignment="Center">
+                    <Image Source="pack://application:,,,/Assets/forja-de-cuadros-icon.png" Width="23" Height="23"/>
+                    <TextBlock Text="FORJA DE CUADROS" Foreground="#F5ECDB" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="9,0,0,0"/>
+                    <TextBlock Text="  ·  video a sprites" Foreground="#8DB9B2" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Content="—" Style="{StaticResource WindowButton}" ToolTip="Minimizar" Click="MinimizeWindow_Click"/>
+                    <Button x:Name="MaximizeWindowButton" Content="□" Style="{StaticResource WindowButton}" ToolTip="Maximizar" Click="MaximizeWindow_Click"/>
+                    <Button Content="×" Style="{StaticResource CloseWindowButton}" ToolTip="Cerrar" Click="CloseWindow_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid x:Name="WorkspaceGrid" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="390"/>
+            </Grid.ColumnDefinitions>
+
+        <!-- Taller / controles -->
+        <Border Grid.Column="0" Background="#181716">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24,24,24,30">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,26">
+                        <Border Width="62" Height="62" CornerRadius="13" Background="#0D0D0C" BorderBrush="#51473B" BorderThickness="1">
+                            <Image Source="pack://application:,,,/Assets/forja-de-cuadros-icon.png" Margin="3"/>
+                        </Border>
+                        <StackPanel Margin="14,7,0,0">
+                            <TextBlock Text="FORJA DE CUADROS" Foreground="White" FontWeight="Bold" FontSize="18"/>
+                            <TextBlock Text="Taller local · 100 % gratis" Foreground="#9DC8C1" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <TextBlock Text="01  FUENTE" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="Video corto" Foreground="#BEB29F" FontSize="12" Margin="0,0,0,5"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBox x:Name="VideoPathText" IsReadOnly="True" Text="Elegí un MP4, MOV, WebM o GIF" Foreground="#575044"/>
+                                <Button Grid.Column="1" Content="ABRIR" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="BrowseVideo_Click" Padding="12,8"/>
+                            </Grid>
+                            <TextBlock x:Name="VideoInfoText" Text="Todavía no hay video cargado." Foreground="#8E8372" FontSize="11" Margin="0,8,0,10" TextWrapping="Wrap"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,6,0"><TextBlock Text="Inicio (s)" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="StartText" Text="0"/></StackPanel>
+                                <StackPanel Grid.Column="1" Margin="3,0"><TextBlock Text="Final (s)" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="EndText" Text="2"/></StackPanel>
+                                <StackPanel Grid.Column="2" Margin="6,0,0,0"><TextBlock Text="Cada N" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="EveryNText" Text="2"/></StackPanel>
+                            </Grid>
+                            <Button x:Name="ExtractButton" Content="EXTRAER CANDIDATOS" Style="{StaticResource PrimaryButton}" Margin="0,12,0,0" Click="Extract_Click" IsEnabled="False"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="02  FONDO / CHROMA" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
+                        <StackPanel>
+                            <CheckBox x:Name="ChromaEnabledCheck" IsChecked="True" Margin="0,0,0,10"><TextBlock Text="Quitar fondo por color" Foreground="#F2E9D5"/></CheckBox>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <StackPanel><TextBlock Text="Color clave" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="ChromaHexText" Text="#00FF00"/></StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="7,0,0,0">
+                                    <Button Content="VERDE" Tag="#00FF00" Style="{StaticResource SecondaryButton}" Padding="8,7" Click="ChromaPreset_Click"/>
+                                    <Button Content="AZUL" Tag="#0066FF" Style="{StaticResource SecondaryButton}" Padding="8,7" Margin="5,0,0,0" Click="ChromaPreset_Click"/>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="También podés hacer clic sobre el fondo en la vista original para tomar el color." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,7,0,10"/>
+                            <TextBlock Text="Tolerancia" Foreground="#9D927F" FontSize="11"/>
+                            <Slider x:Name="ToleranceSlider" Minimum="0" Maximum="100" Value="30" TickFrequency="5"/>
+                            <TextBlock Text="Suavidad de borde" Foreground="#9D927F" FontSize="11" Margin="0,6,0,0"/>
+                            <Slider x:Name="SoftnessSlider" Minimum="1" Maximum="40" Value="12" TickFrequency="2"/>
+                            <Grid Margin="0,7,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,4,0"><TextBlock Text="Derrame %" Foreground="#9D927F" FontSize="10"/><TextBox x:Name="SpillText" Text="65"/></StackPanel>
+                                <StackPanel Grid.Column="1" Margin="3,0"><TextBlock Text="Halo px" Foreground="#9D927F" FontSize="10"/><TextBox x:Name="HaloText" Text="1"/></StackPanel>
+                                <StackPanel Grid.Column="2" Margin="4,0,0,0"><TextBlock Text="Islas ≤ px" Foreground="#9D927F" FontSize="10"/><TextBox x:Name="IslandText" Text="24"/></StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="03  REGISTRO" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="Modo" Foreground="#9D927F" FontSize="11"/>
+                            <ComboBox x:Name="RegistrationCombo" SelectedIndex="0" Margin="0,3,0,9">
+                                <ComboBoxItem Content="Suelo + raíz fijos (loops)"/>
+                                <ComboBoxItem Content="Suelo fijo, conservar avance"/>
+                                <ComboBoxItem Content="Cámara fija (saltos/dash)"/>
+                            </ComboBox>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                                <StackPanel Margin="0,0,5,7"><TextBlock Text="Canvas ancho" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="CanvasWidthText" Text="256"/></StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,7"><TextBlock Text="Canvas alto" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="CanvasHeightText" Text="256"/></StackPanel>
+                                <StackPanel Grid.Row="1" Margin="0,0,5,0"><TextBlock Text="Raíz X" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="RootXText" Text="128"/></StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"><TextBlock Text="Suelo Y" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="GroundYText" Text="234"/></StackPanel>
+                            </Grid>
+                            <StackPanel Margin="0,7,0,0"><TextBlock Text="Margen mínimo" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="PaddingText" Text="10"/></StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="04  EXPORTACIÓN" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Border Background="#252321" CornerRadius="10" Padding="13">
+                        <StackPanel>
+                            <TextBlock Text="Nombre de animación" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="AnimationNameText" Text="nueva_animacion"/>
+                            <TextBlock Text="Carpeta de salida" Foreground="#9D927F" FontSize="11" Margin="0,7,0,0"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBox x:Name="ExportFolderText" IsReadOnly="True"/>
+                                <Button Grid.Column="1" Content="…" Style="{StaticResource SecondaryButton}" Padding="10,7" Margin="6,0,0,0" Click="BrowseExport_Click"/>
+                            </Grid>
+                            <Grid Margin="0,7,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,5,0"><TextBlock Text="Atlas" Foreground="#9D927F" FontSize="11"/><ComboBox x:Name="AtlasLayoutCombo" SelectedIndex="0"><ComboBoxItem Content="4 × 4"/><ComboBoxItem Content="16 horizontal"/></ComboBox></StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0"><TextBlock Text="FPS" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="ExportFpsText" Text="12"/></StackPanel>
+                            </Grid>
+                            <TextBlock Text="Ruta del atlas dentro de Godot" Foreground="#9D927F" FontSize="11" Margin="0,7,0,0"/>
+                            <TextBox x:Name="GodotPathText" Text="res://assets/sprites/generated/nueva_animacion_atlas.png"/>
+                            <Button x:Name="ExportButton" Content="EXPORTAR PAQUETE" Style="{StaticResource PrimaryButton}" Margin="0,12,0,0" Click="Export_Click" IsEnabled="False"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Mesa de selección -->
+        <Grid Grid.Column="1" Margin="22,20,18,20">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="190"/></Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Mesa de selección" FontSize="26" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="CandidateSummaryText" Text="Cargá un video para extraer candidatos." Foreground="#706653" Margin="0,4,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="AUTO 16" Style="{StaticResource SecondaryButton}" Click="AutoSelect_Click"/>
+                    <Button Content="LIMPIAR" Style="{StaticResource SecondaryButton}" Margin="7,0,0,0" Click="ClearSelection_Click"/>
+                    <Button x:Name="ProcessButton" Content="PROCESAR 16" Style="{StaticResource PrimaryButton}" Margin="7,0,0,0" Click="Process_Click" IsEnabled="False"/>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,17,0,15" Padding="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Candidates}">
+                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource GhostButton}" Tag="{Binding}" Click="Candidate_Click" Margin="5">
+                                    <Border Width="145" CornerRadius="9" Padding="7" BorderThickness="2" Background="#FFF9EA">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderBrush" Value="#CDBFA4"/>
+                                                <Style.Triggers><DataTrigger Binding="{Binding IsSelected}" Value="True"><Setter Property="BorderBrush" Value="#C73B2F"/><Setter Property="Background" Value="#FFF1E8"/></DataTrigger></Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <StackPanel>
+                                            <Border Height="116" Background="{StaticResource CheckerBrush}" CornerRadius="5"><Image Source="{Binding Thumbnail}" Stretch="Uniform"/></Border>
+                                            <Grid Margin="0,7,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Caption}" FontSize="11" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Column="1" IsChecked="{Binding IsSelected, Mode=TwoWay}" Click="SelectionCheck_Click"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+            <Border Grid.Row="2" Style="{StaticResource Card}" Padding="12">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <Grid><TextBlock Text="Los 16 cuadros finales" FontSize="16" FontWeight="SemiBold"/><TextBlock x:Name="ProcessedSummaryText" Text="Procesá la selección para ver el resultado." HorizontalAlignment="Right" Foreground="#706653"/></Grid>
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0,10,0,0">
+                        <ItemsControl ItemsSource="{Binding ProcessedFrames}">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate><Button Style="{StaticResource GhostButton}" Tag="{Binding}" Click="ProcessedFrame_Click" Margin="0,0,8,0"><StackPanel><Border Width="112" Height="112" Background="{StaticResource CheckerBrush}" BorderBrush="#BEB29B" BorderThickness="1" CornerRadius="6"><Image Source="{Binding Preview}" Stretch="Uniform"/></Border><TextBlock Text="{Binding Caption}" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11"/></StackPanel></Button></DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Vista y auditoría -->
+        <Border Grid.Column="2" Background="#DCCFB7" BorderBrush="#C1B395" BorderThickness="1,0,0,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="20">
+                    <TextBlock Text="Vista de control" FontSize="24" FontWeight="Bold"/>
+                    <TextBlock Text="Original para tomar color" Style="{StaticResource SectionLabel}" Margin="0,15,0,7"/>
+                    <Border Height="220" Background="#111" CornerRadius="10" BorderBrush="#776D5D" BorderThickness="1">
+                        <Image x:Name="CandidatePreview" Stretch="Uniform" MouseLeftButtonDown="CandidatePreview_MouseLeftButtonDown"/>
+                    </Border>
+                    <TextBlock x:Name="SampleHintText" Text="Elegí un candidato; después hacé clic sobre su fondo." Foreground="#746A58" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,0"/>
+
+                    <Grid Margin="0,20,0,8"><TextBlock Text="Loop procesado" FontSize="17" FontWeight="SemiBold"/><TextBlock x:Name="PreviewFrameText" Text="—" HorizontalAlignment="Right" Foreground="#706653"/></Grid>
+                    <Border x:Name="PreviewSurface" Height="330" Background="{StaticResource CheckerBrush}" CornerRadius="12" BorderBrush="#A89B83" BorderThickness="1">
+                        <Image x:Name="ProcessedPreview" Stretch="Uniform"/>
+                    </Border>
+                    <Grid Margin="0,10,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <Button x:Name="PlayButton" Content="▶ REPRODUCIR" Style="{StaticResource PrimaryButton}" Padding="13,8" Click="Play_Click" IsEnabled="False"/>
+                        <Slider x:Name="PreviewFpsSlider" Grid.Column="1" Minimum="1" Maximum="24" Value="12" TickFrequency="1" Margin="12,0" ValueChanged="PreviewFpsSlider_ValueChanged"/>
+                        <TextBlock Grid.Column="2" x:Name="PreviewFpsText" Text="12 FPS" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ComboBox x:Name="PreviewBackgroundCombo" SelectedIndex="0" SelectionChanged="PreviewBackgroundCombo_SelectionChanged" Margin="0,9,0,0">
+                        <ComboBoxItem Content="Fondo cuadriculado"/><ComboBoxItem Content="Papel marfil"/><ComboBoxItem Content="Oscuro"/><ComboBoxItem Content="Verde chroma"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Auditoría automática" FontSize="17" FontWeight="SemiBold" Margin="0,22,0,8"/>
+                    <Border Style="{StaticResource Card}" Padding="12">
+                        <ItemsControl ItemsSource="{Binding AuditFindings}">
+                            <ItemsControl.ItemTemplate><DataTemplate><Grid Margin="0,4"><Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="{Binding Symbol}" Foreground="{Binding Color}" FontWeight="Bold" FontSize="17"/><TextBlock Grid.Column="1" Text="{Binding Message}" TextWrapping="Wrap" FontSize="12"/></Grid></DataTemplate></ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                    <Border Background="#2A2825" CornerRadius="10" Padding="12" Margin="0,12,0,0">
+                        <TextBlock Text="La auditoría detecta duplicados, bordes, suelo, escala y costura del loop. La anatomía y el equipo rígido todavía necesitan tus ojos." Foreground="#D4C8B3" TextWrapping="Wrap" FontSize="11"/>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        </Grid>
+
+        <!-- Estado ocupado -->
+        <Border x:Name="BusyOverlay" Grid.Row="1" Background="#B2181716" Visibility="Collapsed" Panel.ZIndex="20">
+            <Border Width="420" Padding="28" CornerRadius="18" Background="#181716" BorderBrush="#C73B2F" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <ProgressBar Height="6" IsIndeterminate="True" Foreground="#C73B2F" Background="#383431"/>
+                    <TextBlock x:Name="BusyText" Text="Trabajando…" Foreground="White" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                    <TextBlock Text="Podés cerrar la app: el proceso de FFmpeg se cancelará completo." Foreground="#BDB19D" TextWrapping="Wrap" TextAlignment="Center" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</Window>
