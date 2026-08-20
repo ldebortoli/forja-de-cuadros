@@ -239,6 +239,15 @@ namespace ForjaDeCuadros
             finally { SetBusy(false); }
         }
 
+        private async void Kaggle_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new KaggleWindow { Owner = this };
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.GeneratedVideoPath))
+            {
+                await LoadVideoAsync(dialog.GeneratedVideoPath);
+            }
+        }
+
         private async void Extract_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedVideo == null || _videoInfo == null) return;

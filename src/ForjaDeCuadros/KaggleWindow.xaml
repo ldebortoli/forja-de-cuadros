@@ -1,0 +1,147 @@
+<Window x:Class="ForjaDeCuadros.KaggleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Kaggle I2V · Forja de Cuadros" Width="930" Height="760" MinWidth="720" MinHeight="540"
+        WindowStartupLocation="CenterOwner" Background="#E9DFC9" WindowStyle="None" ResizeMode="CanResize"
+        Icon="pack://application:,,,/Assets/forja-de-cuadros-icon.ico">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="7" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style x:Key="WindowButton" TargetType="Button">
+            <Setter Property="Width" Value="46"/><Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="#EEE5D4"/>
+            <Setter Property="BorderThickness" Value="0"/><Setter Property="FontSize" Value="17"/><Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}"><TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Setter.Value></Setter>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#373330"/></Trigger></Style.Triggers>
+        </Style>
+        <Style x:Key="CloseWindowButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
+            <Setter Property="Background" Value="#742A25"/><Setter Property="Foreground" Value="White"/>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#C73B2F"/></Trigger></Style.Triggers>
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#FFF9EA"/><Setter Property="BorderBrush" Value="#CDBFA4"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="12"/><Setter Property="Padding" Value="18"/>
+        </Style>
+        <Style x:Key="Step" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#C73B2F"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#665C4C"/><Setter Property="FontSize" Value="11"/><Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="40"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#11100F" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="13,0,0,0" VerticalAlignment="Center">
+                    <Image Source="pack://application:,,,/Assets/forja-de-cuadros-icon.png" Width="23" Height="23"/>
+                    <TextBlock Text="KAGGLE I2V" Foreground="#F5ECDB" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="9,0,0,0"/>
+                    <TextBlock Text="  ·  imagen a video privado" Foreground="#8DB9B2" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Content="—" Style="{StaticResource WindowButton}" ToolTip="Minimizar" Click="Minimize_Click"/>
+                    <Button Content="×" Style="{StaticResource CloseWindowButton}" ToolTip="Cerrar" Click="Close_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="26,22,26,28">
+                    <Grid Margin="0,0,0,18">
+                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="De una imagen a un clip corto" FontSize="27" FontWeight="Bold"/>
+                            <TextBlock Text="Forja prepara un trabajo privado, Kaggle presta la GPU y el MP4 vuelve a tu PC." Foreground="#665C4C" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Border Grid.Column="1" Background="#D8E7E3" CornerRadius="18" Padding="13,7" VerticalAlignment="Top">
+                            <TextBlock x:Name="ConnectionStatusText" Text="SIN CONFIGURAR" Foreground="#1E615A" FontWeight="Bold" FontSize="11"/>
+                        </Border>
+                    </Grid>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="01  CUENTA Y GPU" Style="{StaticResource Step}"/>
+                            <TextBlock Text="Crea una cuenta gratuita, confirma el correo y verifica el telefono. La verificacion es necesaria para que Kaggle habilite aceleradores GPU." TextWrapping="Wrap" Margin="0,7,0,12"/>
+                            <WrapPanel>
+                                <Button Content="CREAR CUENTA" Style="{StaticResource PrimaryButton}" Click="OpenSignup_Click"/>
+                                <Button Content="VERIFICAR CUENTA" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="OpenAccountSettings_Click"/>
+                                <Button Content="VER CUOTA GPU" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="OpenNotebooks_Click"/>
+                            </WrapPanel>
+                            <TextBlock Text="Es gratis, pero la GPU es compartida: puede haber cola y la cuota semanal varia con la demanda." Foreground="#7B6E5A" FontSize="11" Margin="0,10,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="02  CONEXION SEGURA" Style="{StaticResource Step}"/>
+                            <TextBlock Text="Forja instala la CLI oficial en una carpeta aislada. CONECTAR abre OAuth en tu navegador: la aplicacion nunca pide ni guarda tu contraseña." TextWrapping="Wrap" Margin="0,7,0,12"/>
+                            <WrapPanel>
+                                <Button x:Name="PrepareButton" Content="PREPARAR KAGGLE" Style="{StaticResource SecondaryButton}" Click="Prepare_Click"/>
+                                <Button x:Name="ConnectButton" Content="CONECTAR CUENTA" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="Connect_Click"/>
+                                <Button x:Name="VerifyButton" Content="VERIFICAR" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="Verify_Click"/>
+                                <Button Content="AJUSTES API" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="OpenApiSettings_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="03  GENERACION" Style="{StaticResource Step}"/>
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="18"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Usuario de Kaggle" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="UsernameText" ToolTip="El nombre que aparece en la URL de tu perfil"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Imagen inicial" Style="{StaticResource Label}"/>
+                                    <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <TextBox x:Name="ImagePathText" IsReadOnly="True"/>
+                                        <Button Grid.Column="1" Content="ELEGIR" Style="{StaticResource SecondaryButton}" Padding="12,8" Margin="7,0,0,0" Click="BrowseImage_Click"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="Prompt de movimiento (conviene escribirlo en ingles)" Style="{StaticResource Label}" Margin="0,11,0,4"/>
+                            <TextBox x:Name="PromptText" Height="92" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"
+                                     Text="Full-body 2D inked game character performs one clean animation cycle. Fixed camera, no zoom, stable identity and clothing, rigid equipment, feet remain visible, uniform bright green background, no shadow, smooth readable motion, final pose matches the first pose."/>
+                            <Grid Margin="0,11,0,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,5,0"><TextBlock Text="Formato" Style="{StaticResource Label}"/><ComboBox x:Name="ResolutionCombo" SelectedIndex="0"><ComboBoxItem Content="512 × 512" Tag="512x512"/><ComboBoxItem Content="768 × 512" Tag="768x512"/><ComboBoxItem Content="512 × 768" Tag="512x768"/></ComboBox></StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0"><TextBlock Text="Duracion" Style="{StaticResource Label}"/><ComboBox x:Name="FramesCombo" SelectedIndex="1"><ComboBoxItem Content="2,4 s · 73 cuadros" Tag="73"/><ComboBoxItem Content="3,2 s · 97 cuadros" Tag="97"/><ComboBoxItem Content="4,0 s · 121 cuadros" Tag="121"/></ComboBox></StackPanel>
+                                <StackPanel Grid.Column="2" Margin="5,0"><TextBlock Text="FPS" Style="{StaticResource Label}"/><TextBox x:Name="FpsText" Text="30"/></StackPanel>
+                                <StackPanel Grid.Column="3" Margin="5,0,0,0"><TextBlock Text="Semilla" Style="{StaticResource Label}"/><TextBox x:Name="SeedText" Text="171198"/></StackPanel>
+                            </Grid>
+                            <TextBlock Text="Carpeta local para el MP4" Style="{StaticResource Label}" Margin="0,11,0,4"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBox x:Name="OutputFolderText" IsReadOnly="True"/>
+                                <Button Grid.Column="1" Content="…" Style="{StaticResource SecondaryButton}" Padding="12,8" Margin="7,0,0,0" Click="BrowseOutput_Click"/>
+                            </Grid>
+                            <CheckBox x:Name="DeleteRemoteCheck" IsChecked="True" Margin="0,11,0,0"><TextBlock Text="Borrar de Kaggle el dataset y script privados despues de descargar el MP4" TextWrapping="Wrap"/></CheckBox>
+                            <TextBlock Text="Modelo: LTX-Video 2B 0.9.8 distilled · GPU solicitada: NVIDIA T4 · notebook e input: privados" Foreground="#287F76" FontSize="11" FontWeight="SemiBold" Margin="0,9,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="ESTADO DEL TRABAJO" Style="{StaticResource Step}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Content="ABRIR TRABAJO" Style="{StaticResource SecondaryButton}" Padding="11,7" Click="OpenJob_Click" IsEnabled="False" x:Name="OpenJobButton"/>
+                            </Grid>
+                            <TextBox x:Name="ProgressText" Height="130" Margin="0,9,0,0" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" Text="Forja esta lista. Completa los pasos 1 y 2 antes de generar."/>
+                            <WrapPanel HorizontalAlignment="Right" Margin="0,12,0,0">
+                                <Button x:Name="CancelButton" Content="CANCELAR ESPERA" Style="{StaticResource SecondaryButton}" Click="Cancel_Click" IsEnabled="False"/>
+                                <Button x:Name="GenerateButton" Content="SINCRONIZAR Y GENERAR" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="Generate_Click"/>
+                                <Button x:Name="UseVideoButton" Content="USAR ESTE VIDEO" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="UseVideo_Click" IsEnabled="False"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

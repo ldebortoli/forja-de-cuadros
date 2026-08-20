@@ -4,8 +4,10 @@
 
 La herramienta separa dos responsabilidades:
 
-- **Generacion I2V externa:** produce un MP4 corto desde una imagen aprobada. Puede ser Kaggle/LTX, Grok u otra fuente.
+- **Generacion I2V intercambiable:** produce un MP4 corto desde una imagen aprobada. El asistente integrado usa Kaggle/LTX; también se puede importar manualmente un clip de Grok u otra fuente.
 - **Postprocesado local reproducible:** extrae, selecciona, limpia, registra, audita y exporta los 16 cuadros sin enviar el video a ningun servicio.
+
+El botón `KAGGLE I2V` automatiza el primer tramo con OAuth oficial, dataset/kernel privados, GPU T4, espera y descarga del MP4. El postprocesado posterior no usa la nube. Ver `docs/kaggle.md`.
 
 ## Contrato recomendado para el video fuente
 

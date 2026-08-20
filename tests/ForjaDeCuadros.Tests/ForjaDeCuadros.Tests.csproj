@@ -8,10 +8,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <CoverletOutput>$(MSBuildProjectDirectory)\..\..\coverage\forja</CoverletOutput>
     <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
-    <Threshold>72,48,68</Threshold>
+    <Threshold>78,48,72</Threshold>
     <ThresholdType>line,branch,method</ThresholdType>
     <ThresholdStat>total</ThresholdStat>
-    <ExcludeByFile>**/App.xaml.cs,**/MainWindow.xaml.cs,**/SplashWindow.xaml.cs,**/WindowsIdentity.cs,**/ImageLoading.cs,**/FfmpegService.cs,**/SelfTestRunner.cs,**/ExportService.cs</ExcludeByFile>
+    <ExcludeByFile>**/App.xaml.cs,**/MainWindow.xaml.cs,**/KaggleWindow.xaml.cs,**/SplashWindow.xaml.cs,**/WindowsIdentity.cs,**/ImageLoading.cs,**/FfmpegService.cs,**/KaggleCliService.cs,**/SelfTestRunner.cs,**/ExportService.cs</ExcludeByFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

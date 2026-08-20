@@ -6,7 +6,7 @@ Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada 
 
 ## Tarea actual
 
-No hay una tarea activa registrada.
+Esperar a que el usuario cree/verifique su cuenta para ejecutar el primer trabajo Kaggle GPU real. Linux y releases ejecutables quedan expresamente diferidos por el usuario.
 
 ## Estado actual
 
@@ -14,20 +14,26 @@ No hay una tarea activa registrada.
 - Rama primaria: `main`.
 - Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
-- Tests locales y remotos: 7/7.
-- Cobertura: líneas 76,27 %, ramas 50,57 %, métodos 70,47 %; umbrales 72/48/68.
+- Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.0 aislada, job privado T4, espera, descarga y limpieza.
+- CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
+- Tests locales: 17/17.
+- Cobertura: líneas 80,61 %, ramas 48,98 %, métodos 73,72 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
-- Captura 1280×680 confirma barra superior y cierre visibles.
+- Capturas 1280×680 y Kaggle 900×640 confirman barra superior, cierre y scroll accesibles.
 - Gitleaks: cero hallazgos en archivos e historial.
 - Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.
 - CI usa versiones oficiales de GitHub Actions compatibles con Node 24.
 
 ## Próximos pasos
 
-No hay pasos obligatorios. La autoprueba FFmpeg puede ejecutarse manualmente desde Actions cuando cambie la pipeline multimedia.
+1. Usuario: crear cuenta en `https://www.kaggle.com/account/login?phase=startRegisterTab`, verificar correo y teléfono.
+2. En Forja: `KAGGLE I2V` → `CONECTAR CUENTA` → `VERIFICAR` → generar con una imagen de prueba.
+3. Si el MP4 se aprueba, preparar después Linux y releases cuando el usuario lo pida.
 
 ## Riesgos
 
 - No publicar `bin/`, `obj/`, `coverage/`, videos, reportes temporales ni datos del usuario.
 - La autoprueba FFmpeg de CI es manual para evitar consumo recurrente de cuota.
+- El primer job Kaggle puede esperar cola y descargar dependencias/pesos; no afirmar validación GPU real hasta que se ejecute con la cuenta del usuario.
+- Computer Use contra Explorer falló en agosto de 2026 con `Interfaz no compatible (0x80004002)` y geometría no disponible. Fallback validado: captura interna de la app, AppUserModelID y propiedades del acceso. No reintentar antes de septiembre salvo cambio de versión/configuración.

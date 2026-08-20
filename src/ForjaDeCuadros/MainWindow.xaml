@@ -125,6 +125,10 @@
                                 <Button Grid.Column="1" Content="ABRIR" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="BrowseVideo_Click" Padding="12,8"/>
                             </Grid>
                             <TextBlock x:Name="VideoInfoText" Text="Todavía no hay video cargado." Foreground="#8E8372" FontSize="11" Margin="0,8,0,10" TextWrapping="Wrap"/>
+                            <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="¿Solo tenés una imagen?" Foreground="#9DC8C1" FontSize="11" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Content="KAGGLE I2V" Style="{StaticResource SecondaryButton}" Padding="11,7" Click="Kaggle_Click"/>
+                            </Grid>
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,6,0"><TextBlock Text="Inicio (s)" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="StartText" Text="0"/></StackPanel>
                                 <StackPanel Grid.Column="1" Margin="3,0"><TextBlock Text="Final (s)" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="EndText" Text="2"/></StackPanel>

@@ -17,6 +17,7 @@ La herramienta recibe MP4, MOV, WebM o GIF, extrae fotogramas con FFmpeg y permi
 - Detecta cuadros vacíos, duplicados, recortes, deriva de altura/suelo/raíz y una mala costura del loop.
 - Exporta PNG individuales, atlas 4×4 u horizontal, GIF, revisión HTML, metadata JSON y `SpriteFrames.tres`.
 - Conserva cada exportación en una carpeta nueva: no pisa animaciones previas.
+- Incluye un asistente Kaggle I2V para convertir una imagen en MP4 mediante un trabajo privado con GPU T4 y cargar el resultado directamente en la mesa de selección.
 
 ## Requisitos
 
@@ -58,6 +59,12 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 6. Procesá y revisá el GIF, los bordes, las huellas únicas y la costura `16 → 01`.
 7. Exportá el paquete e integrá el atlas aprobado a la ruta declarada para Godot.
 
+### Generar el clip desde la propia aplicación
+
+El botón `KAGGLE I2V` de la sección **Fuente** abre un asistente integrado. Prepara la CLI oficial en un entorno aislado, conecta la cuenta mediante OAuth en el navegador, sube la imagen como dataset privado temporal, ejecuta LTX-Video 2B en una GPU T4, espera el resultado y recupera el MP4. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
+
+La cuenta debe tener correo y teléfono verificados para acceder a GPU. La disponibilidad es compartida, puede haber cola y la cuota semanal varía. Consultá el [instructivo completo de Kaggle](docs/kaggle.md).
+
 La auditoría automática encuentra problemas mecánicos, pero no reemplaza la revisión de anatomía, dirección de pies, ropa, pelo o equipo rígido.
 
 ## Desarrollo, tests y cobertura
@@ -68,7 +75,7 @@ Suite rápida y determinista:
 dotnet test ForjaDeCuadros.sln -c Release --no-restore
 ```
 
-Cobertura con umbrales de regresión para el núcleo de procesamiento (líneas 72 %, ramas 48 % y métodos 68 %):
+Cobertura con umbrales de regresión para el núcleo de procesamiento (líneas 78 %, ramas 48 % y métodos 72 %):
 
 ```powershell
 dotnet test tests\ForjaDeCuadros.Tests\ForjaDeCuadros.Tests.csproj -c Release --no-restore /p:CollectCoverage=true
@@ -85,12 +92,14 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local de la versión inicial es 76,27 % de líneas, 50,57 % de ramas y 70,47 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 80,61 % de líneas, 48,98 % de ramas y 73,72 % de métodos.
 
 ## Privacidad y alcance
 
-- El procesamiento ocurre enteramente en tu PC.
-- No hay cuentas, telemetría, API keys ni servicios en la nube.
+- La selección tradicional de cuadros y la exportación ocurren enteramente en tu PC.
+- El flujo local no requiere cuentas, telemetría, API keys ni servicios en la nube.
+- El procesamiento tradicional sigue siendo enteramente local. `KAGGLE I2V` es opcional y sí envía la imagen y el prompt a Kaggle cuando el usuario pulsa `SINCRONIZAR Y GENERAR`.
+- Los trabajos Kaggle creados por Forja son privados. La limpieza remota posterior a la descarga está activada por defecto.
 - Los logs de fallos, si existen, quedan en `%LOCALAPPDATA%\ForjaDeCuadros\Logs`.
 - Los binarios, videos, exportaciones, logs y contenido del usuario están excluidos del repositorio.
 

@@ -43,3 +43,24 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: usar `checkout@v7`, `setup-dotnet@v6`, `cache@v6` y `upload-artifact@v7`.
 - Motivo: son las versiones oficiales actuales y eliminan la advertencia de deprecación de Node 20 emitida por los runners de GitHub.
+
+## D-007 - Kaggle I2V opcional, privado y reproducible
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: integrar Kaggle mediante CLI oficial 2.2.0 y OAuth; crear dataset y kernel privados con identificadores únicos, solicitar T4 y ejecutar LTX-Video 2B 0.9.8 distilled desde un commit fijado. Descargar el MP4, limpiar temporales locales y ofrecer limpieza remota activada por defecto.
+- Motivo: aprovechar GPU gratuita compartida sin incrustar credenciales, modelos gigantes ni datos del usuario en el repositorio, y mantener el flujo tradicional enteramente local.
+
+## D-008 - Umbrales de cobertura posteriores a Kaggle
+
+- Estado: vigente; reemplaza D-005.
+- Fecha: 2026-08-20.
+- Decisión: exigir 78 % de líneas, 48 % de ramas y 72 % de métodos para el núcleo cubierto.
+- Motivo: la base verificada después de Kaggle mide 80,61 %, 48,98 % y 73,72 % respectivamente.
+
+## D-009 - Empaquetado Linux y releases diferidos
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: no crear todavía ejecutables Linux ni releases descargables; hacerlo cuando el flujo Kaggle tenga una prueba real aprobada.
+- Motivo: el usuario pidió probar primero la aplicación actual y posponer la distribución multiplataforma.
