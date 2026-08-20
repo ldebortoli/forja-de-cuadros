@@ -44,6 +44,7 @@ Kaggle CLI 2.2.0 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere P
 - El instalador estándar usa `%LOCALAPPDATA%\Programs\Forja de Cuadros` y el menú Inicio; `-CodexApps` usa la carpeta personal del usuario.
 - Cerrar la UI cancela el árbol FFmpeg activo.
 - La barra superior propia y el ajuste al área útil del monitor deben permanecer accesibles en pantallas compactas.
+- Todas las superficies WPF usan una barra de scroll global tipo overlay: sin canal sólido, pulgar redondeado verde apagado y estados hover/drag sobrios; mantenerla consistente en vertical, horizontal y campos internos.
 - Kaggle es estrictamente opcional: input y kernel privados, OAuth manejado por la CLI oficial, limpieza remota activada por defecto y temporales locales eliminados después de una descarga correcta.
 - Computer Use contra Explorer produjo `Interfaz no compatible (0x80004002)` en agosto de 2026. No reintentar captura/coordenadas antes de septiembre de 2026 salvo cambio de versión; usar las capturas internas, la identidad de proceso y las propiedades COM del acceso como fallback.
 - Actualizar `.codex/` cuando cambie estado, arquitectura o workflow.

@@ -71,3 +71,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: mostrar dentro del paso 01 una guía numerada para crear la cuenta, confirmar correo y completar la verificación requerida; antes de abrir OAuth, exigir una confirmación explícita y mostrar un aviso si falta.
 - Motivo: una conexión técnica no debe comenzar sin que la persona entienda que necesita una cuenta Kaggle creada y habilitada para GPU.
+
+## D-011 - Barras de scroll globales tipo overlay
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: reemplazar el template nativo de WPF por un estilo global compacto sin flechas ni canal sólido, con pulgar redondeado verde apagado, mayor presencia en hover y estado de arrastre más oscuro. Aplicarlo a orientación vertical/horizontal y a scrolls internos sin alterar la UI aprobada restante.
+- Motivo: las barras nativas claras desentonaban tanto sobre el panel de tinta como sobre las superficies de papel; un overlay sobrio integra ambas zonas sin sumar brillo visual.
