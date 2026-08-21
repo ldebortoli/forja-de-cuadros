@@ -165,6 +165,35 @@ namespace ForjaDeCuadros
             return output;
         }
 
+        public FrameBuffer ApplyAlphaCutoff(ProcessingOptions options)
+        {
+            var output = Clone();
+            if (!options.AlphaCutoffEnabled) return output;
+
+            double cutoff = Math.Clamp(options.AlphaCutoffPercent / 100.0, 0.0, 1.0);
+            double softness = Math.Clamp(options.AlphaSoftnessPercent / 100.0, 0.0, 0.5);
+            double lower = Math.Max(0.0, cutoff - softness);
+            double upper = Math.Min(1.0, cutoff + softness);
+
+            for (int index = 0; index < output.Pixels.Length; index += 4)
+            {
+                double alpha = output.Pixels[index + 3] / 255.0;
+                double adjusted;
+                if (alpha <= 0.0) adjusted = 0.0;
+                else if (softness <= 0.000001) adjusted = alpha < cutoff ? 0.0 : 1.0;
+                else if (upper <= lower) adjusted = alpha < cutoff ? 0.0 : 1.0;
+                else
+                {
+                    double normalized = Math.Clamp((alpha - lower) / (upper - lower), 0.0, 1.0);
+                    adjusted = normalized * normalized * (3.0 - 2.0 * normalized);
+                }
+
+                output.Pixels[index + 3] = (byte)Math.Clamp((int)Math.Round(adjusted * 255.0), 0, 255);
+                if (output.Pixels[index + 3] == 0) output.Pixels[index] = output.Pixels[index + 1] = output.Pixels[index + 2] = 0;
+            }
+            return output;
+        }
+
         private static void RgbToHsv(double r, double g, double b, out double hue, out double saturation, out double value)
         {
             r /= 255.0; g /= 255.0; b /= 255.0;

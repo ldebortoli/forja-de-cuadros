@@ -109,7 +109,7 @@
 
         <!-- Taller / controles -->
         <Border Grid.Column="0" Background="#181716">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="WorkflowScrollViewer" VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="24,24,24,30">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,26">
                         <Border Width="62" Height="62" CornerRadius="13" Background="#0D0D0C" BorderBrush="#51473B" BorderThickness="1">
@@ -169,7 +169,7 @@
                     <TextBlock Text="03  FONDO / CHROMA" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
                     <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
                         <StackPanel>
-                            <CheckBox x:Name="ChromaEnabledCheck" IsChecked="True" Margin="0,0,0,10"><TextBlock Text="Quitar fondo por color" Foreground="#F2E9D5"/></CheckBox>
+                            <CheckBox x:Name="ChromaEnabledCheck" IsChecked="True" Margin="0,0,0,10" Checked="EdgeControl_Changed" Unchecked="EdgeControl_Changed"><TextBlock Text="Quitar fondo por color" Foreground="#F2E9D5"/></CheckBox>
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <StackPanel><TextBlock Text="Color clave" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="ChromaHexText" Text="#00FF00"/></StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="7,0,0,0">
@@ -179,14 +179,32 @@
                             </Grid>
                             <TextBlock Text="También podés hacer clic sobre el fondo en la vista original para tomar el color." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,7,0,10"/>
                             <TextBlock Text="Tolerancia" Foreground="#9D927F" FontSize="11"/>
-                            <Slider x:Name="ToleranceSlider" Minimum="0" Maximum="100" Value="30" TickFrequency="5"/>
+                            <Slider x:Name="ToleranceSlider" Minimum="0" Maximum="100" Value="30" TickFrequency="5" ValueChanged="EdgeControl_ValueChanged"/>
                             <TextBlock Text="Suavidad de borde" Foreground="#9D927F" FontSize="11" Margin="0,6,0,0"/>
-                            <Slider x:Name="SoftnessSlider" Minimum="1" Maximum="40" Value="12" TickFrequency="2"/>
+                            <Slider x:Name="SoftnessSlider" Minimum="1" Maximum="40" Value="12" TickFrequency="2" ValueChanged="EdgeControl_ValueChanged"/>
                             <Grid Margin="0,7,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,4,0"><TextBlock Text="Derrame %" Foreground="#9D927F" FontSize="10"/><TextBox x:Name="SpillText" Text="65"/></StackPanel>
                                 <StackPanel Grid.Column="1" Margin="3,0"><TextBlock Text="Halo px" Foreground="#9D927F" FontSize="10"/><TextBox x:Name="HaloText" Text="1"/></StackPanel>
                                 <StackPanel Grid.Column="2" Margin="4,0,0,0"><TextBlock Text="Islas ≤ px" Foreground="#9D927F" FontSize="10"/><TextBox x:Name="IslandText" Text="24"/></StackPanel>
                             </Grid>
+                            <Border Height="1" Background="#51473B" Margin="0,12,0,10"/>
+                            <CheckBox x:Name="AlphaCutoffEnabledCheck" IsChecked="True" Margin="0,0,0,8" Checked="EdgeControl_Changed" Unchecked="EdgeControl_Changed"><TextBlock Text="Limpiar halo con corte alfa" Foreground="#F2E9D5"/></CheckBox>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="Corte alfa" Foreground="#9D927F" FontSize="11"/>
+                                <TextBlock x:Name="AlphaCutoffValueText" Grid.Column="1" Text="10 %" Foreground="#9DC8C1" FontSize="11" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Slider x:Name="AlphaCutoffSlider" Minimum="0" Maximum="100" Value="10" TickFrequency="1" ValueChanged="EdgeControl_ValueChanged"/>
+                            <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="Suavizado del corte" Foreground="#9D927F" FontSize="11"/>
+                                <TextBlock x:Name="AlphaSoftnessValueText" Grid.Column="1" Text="4 %" Foreground="#9DC8C1" FontSize="11" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Slider x:Name="AlphaSoftnessSlider" Minimum="0" Maximum="25" Value="4" TickFrequency="1" ValueChanged="EdgeControl_ValueChanged"/>
+                            <TextBlock Text="Subí el corte hasta que desaparezca el halo; si el borde queda dentado, aumentá un poco el suavizado." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                            <TextBlock Text="Vista del cuadro elegido" Foreground="#9D927F" FontSize="10" Margin="0,8,0,4"/>
+                            <Border Height="132" Background="{StaticResource CheckerBrush}" CornerRadius="7" BorderBrush="#51473B" BorderThickness="1">
+                                <Image x:Name="AlphaPreviewImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            </Border>
+                            <TextBlock x:Name="AlphaPreviewHintText" Text="Elegí un candidato para revisar sus bordes mientras movés los controles." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Border>
 

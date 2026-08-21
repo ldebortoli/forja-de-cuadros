@@ -12,7 +12,7 @@ La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, We
 
 - Extrae candidatos de un tramo preciso del video.
 - Distribuye automáticamente una selección inicial de 16 cuadros.
-- Quita fondos verdes o azules con tolerancia, suavizado, despill, erosión de halo y limpieza de islas.
+- Quita fondos verdes o azules con tolerancia, suavizado, despill, erosión de halo, limpieza de islas y corte alfa ajustable.
 - Mantiene una escala común y registra raíz/suelo según el tipo de movimiento.
 - Detecta cuadros vacíos, duplicados, recortes, deriva de altura/suelo/raíz y una mala costura del loop.
 - Exporta PNG individuales, atlas 4×4 u horizontal, GIF, revisión HTML, metadata JSON y `SpriteFrames.tres`.
@@ -54,12 +54,15 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 3. En `01 CONVERTIR A VIDEO`, abrí Kaggle I2V —o usá cualquier otra herramienta— y pedí cámara fija, personaje completo y una sola acción de 2–4 segundos.
 4. En `02 VIDEO`, cargá el clip, definí inicio/final y extraé candidatos.
 5. Elegí exactamente 16 cuadros; `AUTO 16` distribuye la selección sobre todo el tramo.
-6. Tomá el color del fondo y elegí el registro:
+6. En `03 FONDO / CHROMA`, tomá el color del fondo. Si queda un contorno semitransparente, dejá activa `Limpiar halo con corte alfa`, subí **Corte alfa** hasta eliminarlo y compensá un borde dentado con un poco de **Suavizado del corte**. La vista sobre damero se actualiza mientras movés ambos controles.
+7. Elegí el registro:
    - **Suelo + raíz fijos:** loops in-place.
    - **Suelo fijo, conservar avance:** locomoción a través del canvas.
    - **Cámara fija:** saltos, caídas o dash con movimiento vertical.
-7. Procesá y revisá el GIF, los bordes, las huellas únicas y la costura `16 → 01`.
-8. Exportá el paquete e integrá el atlas aprobado a la ruta declarada para Godot.
+8. Procesá y revisá el GIF, los bordes, las huellas únicas y la costura `16 → 01`.
+9. Exportá el paquete e integrá el atlas aprobado a la ruta declarada para Godot.
+
+El corte alfa viene activo en `10 %` con `4 %` de suavizado. Forja lo aplica antes de calcular los límites y de nuevo después del escalado: la primera pasada evita que el halo altere la alineación y la segunda elimina transparencias débiles introducidas por el remuestreo. Los PNG originales nunca se modifican.
 
 ### Generar el clip desde la propia aplicación
 
@@ -92,9 +95,17 @@ $process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net8.0-window
 exit $process.ExitCode
 ```
 
+Captura reproducible del panel de limpieza alfa:
+
+```powershell
+$capture = Join-Path $PWD 'artifacts\alpha-controls.png'
+$process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net8.0-windows\ForjaDeCuadros.exe' -ArgumentList @('--capture-alpha', $capture, '--capture-width', '1440', '--capture-height', '960') -WindowStyle Hidden -Wait -PassThru
+exit $process.ExitCode
+```
+
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,33 % de líneas, 50,21 % de ramas y 75,34 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,14 % de líneas, 50,40 % de ramas y 76,00 % de métodos.
 
 ## Privacidad y alcance
 

@@ -46,6 +46,7 @@ namespace ForjaDeCuadros
             }
 
             string? capturePath = ValueAfter(e.Args, "--capture");
+            string? alphaCapturePath = ValueAfter(e.Args, "--capture-alpha");
             string? kaggleCapturePath = ValueAfter(e.Args, "--capture-kaggle");
             string? splashCapturePath = ValueAfter(e.Args, "--capture-splash");
             int? captureWidth = int.TryParse(ValueAfter(e.Args, "--capture-width"), out int parsedWidth) && parsedWidth > 0 ? parsedWidth : (int?)null;
@@ -72,13 +73,13 @@ namespace ForjaDeCuadros
                 return;
             }
 
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(capturePath == null && kaggleCapturePath == null ? 850 : 120) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(capturePath == null && alphaCapturePath == null && kaggleCapturePath == null ? 850 : 120) };
             timer.Tick += (_, __) =>
             {
                 timer.Stop();
                 Window main = !string.IsNullOrWhiteSpace(kaggleCapturePath)
                     ? new KaggleWindow(kaggleCapturePath, captureWidth, captureHeight)
-                    : new MainWindow(capturePath, captureWidth, captureHeight);
+                    : new MainWindow(alphaCapturePath ?? capturePath, captureWidth, captureHeight, alphaCapturePath != null);
                 MainWindow = main;
                 main.Show();
                 splash.Close();

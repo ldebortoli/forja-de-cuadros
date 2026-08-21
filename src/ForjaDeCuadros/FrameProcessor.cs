@@ -23,7 +23,7 @@ namespace ForjaDeCuadros
 
             var sources = selected.OrderBy(item => item.Number).Select(item =>
             {
-                var buffer = FrameBuffer.LoadPng(item.ImagePath).ApplyChroma(options);
+                var buffer = FrameBuffer.LoadPng(item.ImagePath).ApplyChroma(options).ApplyAlphaCutoff(options);
                 var bounds = buffer.FindBounds();
                 return new SourceFrame { Item = item, Buffer = buffer, Bounds = bounds, RootX = buffer.FindRootX(bounds) };
             }).ToList();
@@ -59,7 +59,7 @@ namespace ForjaDeCuadros
                     offsetY = AlignGround(options.GroundY, reference.Bounds.Bottom, scale);
                 }
 
-                FrameBuffer rendered = source.Buffer.RenderToCanvas(options.CanvasWidth, options.CanvasHeight, scale, offsetX, offsetY);
+                FrameBuffer rendered = source.Buffer.RenderToCanvas(options.CanvasWidth, options.CanvasHeight, scale, offsetX, offsetY).ApplyAlphaCutoff(options);
                 PixelBounds renderedBounds = rendered.FindBounds();
                 string path = Path.Combine(outputFolder, "frame_" + (index + 1).ToString("00") + ".png");
                 rendered.SavePng(path);

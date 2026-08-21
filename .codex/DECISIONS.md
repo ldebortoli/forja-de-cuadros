@@ -113,3 +113,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-21.
 - Decisión: al elegir una imagen en 00, generar chroma verde inmediatamente y rellenar con su ruta el campo de entrada visible de 01; regenerar y reemplazarla si se elige chroma azul. Mantener el MP4 devuelto por Kaggle como carga automática del campo de video de 02.
 - Motivo: cada paso que produce un archivo debe completar el consumidor siguiente sin obligar a buscar de nuevo el mismo archivo ni ocultar qué ruta se está usando.
+
+## D-017 - Corte alfa en dos pasadas con previsualización
+
+- Estado: vigente.
+- Fecha: 2026-08-21.
+- Decisión: añadir al paso 03 un corte alfa activado por defecto en 10 %, un suavizado independiente en 4 % y una previsualización sobre damero. Aplicar la máscara después del chroma antes de medir límites y repetirla después del escalado/remuestreo.
+- Motivo: los píxeles de alfa muy bajo forman halos y además falsean el encuadre; la segunda pasada limpia transparencias débiles reintroducidas por interpolación sin obligar a destruir detalle con un umbral duro.

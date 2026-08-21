@@ -6,7 +6,7 @@ Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada 
 
 ## Tarea actual
 
-Esperar a que el usuario pruebe el handoff automático con una imagen real y complete, cuando quiera, el primer trabajo Kaggle GPU. Linux y releases ejecutables continúan diferidos.
+Esperar la primera prueba real del usuario con una animación generada. La prueba GPU Kaggle y Linux/releases continúan diferidos.
 
 ## Estado actual
 
@@ -23,14 +23,16 @@ Esperar a que el usuario pruebe el handoff automático con una imagen real y com
 - El paso 00 elige PNG/JPG/WebP/WIC y convierte localmente la transparencia a chroma verde o azul, incluyendo composición correcta de bordes alfa; Kaggle se abre con ese PNG ya preseleccionado.
 - Elegir la imagen dispara chroma verde sin un segundo clic y escribe su ruta en un campo visible del paso 01; pulsar verde o azul regenera el PNG y reemplaza ese campo. Si la preparación faltara, abrir Kaggle la reintenta antes de avanzar.
 - El handoff 01 → 02 ya existente se conserva: `USAR ESTE VIDEO` cierra Kaggle, verifica el MP4 y carga su ruta en el campo de video principal.
+- El paso 03 suma `Limpiar halo con corte alfa`, activo en 10 %, y `Suavizado del corte`, activo en 4 %. Ambos sliders muestran su valor y actualizan una previsualización sobre damero del cuadro elegido.
+- El corte alfa se aplica después del chroma antes de medir límites/alineación y se repite después del escalado para eliminar transparencia débil reintroducida por interpolación. Los originales no se modifican y la exportación registra ambos parámetros.
 - Inputs y dropdowns tienen una altura mínima común de 40 px; los botones de filas emparejadas también usan 40 px. Principal y Kaggle tienen minimizar, maximizar/restaurar y cerrar en celdas idénticas de 46 × 40 px.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
-- Tests locales: 21/21. La CI remota del último push no se espera ni monitorea por política.
-- Cobertura: líneas 81,33 %, ramas 50,21 %, métodos 75,34 %; umbrales 78/48/72.
+- Tests locales: 24/24. La CI remota posterior al push no se espera ni monitorea por política.
+- Cobertura: líneas 81,14 %, ramas 50,40 %, métodos 76,00 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
-- La captura principal 1280×900 confirma el nuevo campo de ruta visible en 01 sin romper el layout; las capturas anteriores de Kaggle 900×640 siguen vigentes.
-- Instalación personal actualizada desde el repositorio; acceso real, destino/icono, ventana única, cierre normal y AppUserModelID `io.github.ldebortoli.ForjaDeCuadros` verificados.
+- La captura interna `--capture-alpha` 1440×960 enfoca el panel completo: controles cacao/turquesa, valores 10/4, ayuda, damero y barra superior fija sin romper el layout. Las capturas anteriores principal/Kaggle siguen vigentes.
+- Instalación personal actualizada desde el repositorio; acceso real en `Codex Apps`, destino/icono, ventana única, cierre normal y AppUserModelID de proceso `io.github.ldebortoli.ForjaDeCuadros` verificados.
 - Gitleaks: cero hallazgos en archivos e historial.
 - Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.
 - CI usa versiones oficiales de GitHub Actions compatibles con Node 24.
@@ -41,11 +43,12 @@ Esperar a que el usuario pruebe el handoff automático con una imagen real y com
 
 1. En Forja: elegir un PNG transparente en el paso 00, preparar chroma verde/azul y abrir Kaggle en el paso 01.
 2. Seguir la guía visible para crear/verificar la cuenta; marcar la confirmación → `CONECTAR CUENTA` → `VERIFICAR` → generar.
-3. Confirmar que el MP4 vuelve al paso 02 y sirve para extraer candidatos; después preparar Linux/releases sólo cuando el usuario lo pida.
+3. Confirmar que el MP4 vuelve al paso 02 y sirve para extraer candidatos; elegir uno y ajustar el corte alfa hasta perder el halo sin cortar detalles, compensando serrucho con suavizado.
+4. Preparar Linux/releases sólo cuando el usuario lo pida después de esa prueba real.
 
 ## Riesgos
 
 - No publicar `bin/`, `obj/`, `coverage/`, videos, reportes temporales ni datos del usuario.
 - La autoprueba FFmpeg de CI es manual para evitar consumo recurrente de cuota.
 - El primer job Kaggle puede esperar cola y descargar dependencias/pesos; no afirmar validación GPU real hasta que se ejecute con la cuenta del usuario.
-- Computer Use contra Explorer falló en agosto de 2026 con `Interfaz no compatible (0x80004002)` y geometría no disponible. Fallback validado: captura interna de la app, AppUserModelID y propiedades del acceso. No reintentar antes de septiembre salvo cambio de versión/configuración.
+- Computer Use contra Explorer y Forja WPF falló en agosto de 2026 con `Interfaz no compatible (0x80004002)` y geometría no disponible. Fallback validado: captura interna de la app, AppUserModelID y propiedades del acceso. No reintentar antes de septiembre salvo cambio de versión/configuración.

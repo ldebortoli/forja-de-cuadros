@@ -65,6 +65,9 @@ namespace ForjaDeCuadros
         public double SpillSuppression { get; set; } = 0.65;
         public int HaloPixels { get; set; } = 1;
         public int IslandCleanupPixels { get; set; } = 24;
+        public bool AlphaCutoffEnabled { get; set; } = true;
+        public double AlphaCutoffPercent { get; set; } = 10;
+        public double AlphaSoftnessPercent { get; set; } = 4;
         public int CanvasWidth { get; set; } = 256;
         public int CanvasHeight { get; set; } = 256;
         public int GroundY { get; set; } = 234;

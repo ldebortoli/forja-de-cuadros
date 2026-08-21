@@ -25,7 +25,9 @@ namespace ForjaDeCuadros
         private readonly FfmpegService _ffmpeg;
         private readonly string _sessionFolder;
         private readonly DispatcherTimer _previewTimer;
+        private DispatcherTimer? _edgePreviewTimer;
         private readonly string? _capturePath;
+        private readonly bool _captureAlphaControls;
         private CancellationTokenSource? _operationCancellation;
         private VideoInfo? _videoInfo;
         private string? _selectedVideo;
@@ -45,11 +47,12 @@ namespace ForjaDeCuadros
         private const int WmGetMinMaxInfo = 0x0024;
         private const uint MonitorDefaultToNearest = 0x00000002;
 
-        public MainWindow(string? capturePath = null, int? captureWidth = null, int? captureHeight = null)
+        public MainWindow(string? capturePath = null, int? captureWidth = null, int? captureHeight = null, bool captureAlphaControls = false)
         {
             InitializeComponent();
             DataContext = this;
             _capturePath = capturePath;
+            _captureAlphaControls = captureAlphaControls;
             if (captureWidth.HasValue) Width = Math.Max(MinWidth, captureWidth.Value);
             if (captureHeight.HasValue) Height = Math.Max(MinHeight, captureHeight.Value);
             _ffmpeg = new FfmpegService();
@@ -59,6 +62,13 @@ namespace ForjaDeCuadros
             _previewTimer = new DispatcherTimer();
             _previewTimer.Tick += PreviewTimer_Tick;
             UpdatePreviewInterval();
+            _edgePreviewTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(90) };
+            _edgePreviewTimer.Tick += (_, __) =>
+            {
+                _edgePreviewTimer.Stop();
+                RefreshEdgePreview();
+            };
+            UpdateEdgeControlLabels();
             AuditFindings.Add(new AuditFinding { Level = FindingLevel.Info, Message = "Todavia no hay una seleccion procesada." });
             Loaded += (_, __) => Dispatcher.BeginInvoke(new Action(() => WindowsIdentity.Apply(this)), DispatcherPriority.ApplicationIdle);
             SourceInitialized += MainWindow_SourceInitialized;
@@ -190,7 +200,18 @@ namespace ForjaDeCuadros
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_capturePath)) return;
-            await Task.Delay(900);
+            await Task.Delay(500);
+            if (_captureAlphaControls)
+            {
+                AlphaCutoffEnabledCheck.BringIntoView();
+                await Task.Delay(120);
+                WorkflowScrollViewer.ScrollToVerticalOffset(WorkflowScrollViewer.VerticalOffset + 300);
+                await Task.Delay(280);
+            }
+            else
+            {
+                await Task.Delay(400);
+            }
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(_capturePath) ?? ".");
@@ -415,6 +436,7 @@ namespace ForjaDeCuadros
             _previewCandidate = item;
             CandidatePreview.Source = ImageLoading.LoadBitmap(item.ImagePath);
             SampleHintText.Text = item.Caption + " · hacé clic sobre el fondo para tomar ese color.";
+            QueueEdgePreview();
         }
 
         private void CandidatePreview_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -431,11 +453,66 @@ namespace ForjaDeCuadros
             var color = buffer.PixelAt(x, y);
             ChromaHexText.Text = "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
             SampleHintText.Text = "Color tomado: " + ChromaHexText.Text + ". Procesá de nuevo para aplicarlo.";
+            QueueEdgePreview();
         }
 
         private void ChromaPreset_Click(object sender, RoutedEventArgs e)
         {
-            if ((sender as FrameworkElement)?.Tag is string color) ChromaHexText.Text = color;
+            if ((sender as FrameworkElement)?.Tag is string color)
+            {
+                ChromaHexText.Text = color;
+                QueueEdgePreview();
+            }
+        }
+
+        private void EdgeControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UpdateEdgeControlLabels();
+            QueueEdgePreview();
+        }
+
+        private void EdgeControl_Changed(object sender, RoutedEventArgs e)
+        {
+            UpdateEdgeControlLabels();
+            QueueEdgePreview();
+        }
+
+        private void UpdateEdgeControlLabels()
+        {
+            if (AlphaCutoffValueText == null || AlphaSoftnessValueText == null || AlphaCutoffSlider == null || AlphaSoftnessSlider == null) return;
+            AlphaCutoffValueText.Text = Math.Round(AlphaCutoffSlider.Value) + " %";
+            AlphaSoftnessValueText.Text = Math.Round(AlphaSoftnessSlider.Value) + " %";
+        }
+
+        private void QueueEdgePreview()
+        {
+            if (_edgePreviewTimer == null || !IsInitialized) return;
+            _edgePreviewTimer.Stop();
+            _edgePreviewTimer.Start();
+        }
+
+        private void RefreshEdgePreview()
+        {
+            if (_previewCandidate == null)
+            {
+                AlphaPreviewImage.Source = null;
+                AlphaPreviewHintText.Text = "Elegí un candidato para revisar sus bordes mientras movés los controles.";
+                return;
+            }
+
+            try
+            {
+                ProcessingOptions options = ReadProcessingOptions();
+                FrameBuffer preview = FrameBuffer.LoadPng(_previewCandidate.ImagePath).ApplyChroma(options).ApplyAlphaCutoff(options);
+                AlphaPreviewImage.Source = preview.ToBitmapSource();
+                AlphaPreviewHintText.Text = options.AlphaCutoffEnabled
+                    ? $"Vista en vivo · corte {options.AlphaCutoffPercent:0} % · suavizado {options.AlphaSoftnessPercent:0} %."
+                    : "Vista en vivo · corte alfa desactivado.";
+            }
+            catch
+            {
+                AlphaPreviewHintText.Text = "No pude actualizar la vista: revisá el color y los valores del paso 03.";
+            }
         }
 
         private async void Process_Click(object sender, RoutedEventArgs e)
@@ -476,6 +553,9 @@ namespace ForjaDeCuadros
                 SpillSuppression = Math.Clamp(ReadDouble(SpillText.Text, 65) / 100.0, 0, 1),
                 HaloPixels = Math.Clamp(ReadInt(HaloText.Text, 1), 0, 3),
                 IslandCleanupPixels = Math.Clamp(ReadInt(IslandText.Text, 24), 0, 4096),
+                AlphaCutoffEnabled = AlphaCutoffEnabledCheck.IsChecked == true,
+                AlphaCutoffPercent = Math.Clamp(AlphaCutoffSlider.Value, 0, 100),
+                AlphaSoftnessPercent = Math.Clamp(AlphaSoftnessSlider.Value, 0, 25),
                 CanvasWidth = ReadInt(CanvasWidthText.Text, 256),
                 CanvasHeight = ReadInt(CanvasHeightText.Text, 256),
                 RootX = ReadInt(RootXText.Text, 128),
@@ -608,6 +688,7 @@ namespace ForjaDeCuadros
         {
             _windowSource?.RemoveHook(WindowMessageHook);
             _previewTimer.Stop();
+            _edgePreviewTimer?.Stop();
             _operationCancellation?.Cancel();
             _ffmpeg.CancelActive();
             _ffmpeg.Dispose();

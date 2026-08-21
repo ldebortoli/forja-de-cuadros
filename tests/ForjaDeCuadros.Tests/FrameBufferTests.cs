@@ -63,6 +63,60 @@ public sealed class FrameBufferTests
     }
 
     [Fact]
+    public void ApplyAlphaCutoff_RemovesWeakHaloAndKeepsSubjectOpaque()
+    {
+        FrameBuffer source = FrameBuffer.CreateSolid(4, 1, 220, 30, 20, 255);
+        source.Pixels[3] = 0;
+        source.Pixels[7] = 13;
+        source.Pixels[11] = 128;
+        var options = new ProcessingOptions
+        {
+            AlphaCutoffEnabled = true,
+            AlphaCutoffPercent = 10,
+            AlphaSoftnessPercent = 0
+        };
+
+        FrameBuffer result = source.ApplyAlphaCutoff(options);
+
+        Assert.Equal(0, result.PixelAt(0, 0).A);
+        Assert.Equal(0, result.PixelAt(1, 0).A);
+        Assert.Equal(255, result.PixelAt(2, 0).A);
+        Assert.Equal(255, result.PixelAt(3, 0).A);
+        Assert.Equal(13, source.PixelAt(1, 0).A);
+    }
+
+    [Fact]
+    public void ApplyAlphaCutoff_SoftensTransitionAroundThreshold()
+    {
+        FrameBuffer source = FrameBuffer.CreateSolid(3, 1, 220, 30, 20, 255);
+        source.Pixels[3] = 102;
+        source.Pixels[7] = 128;
+        source.Pixels[11] = 153;
+        var options = new ProcessingOptions
+        {
+            AlphaCutoffEnabled = true,
+            AlphaCutoffPercent = 50,
+            AlphaSoftnessPercent = 10
+        };
+
+        FrameBuffer result = source.ApplyAlphaCutoff(options);
+
+        Assert.Equal(0, result.PixelAt(0, 0).A);
+        Assert.InRange(result.PixelAt(1, 0).A, 130, 132);
+        Assert.Equal(255, result.PixelAt(2, 0).A);
+    }
+
+    [Fact]
+    public void ApplyAlphaCutoff_WhenDisabledPreservesOriginalAlpha()
+    {
+        FrameBuffer source = FrameBuffer.CreateSolid(1, 1, 220, 30, 20, 37);
+
+        FrameBuffer result = source.ApplyAlphaCutoff(new ProcessingOptions { AlphaCutoffEnabled = false });
+
+        Assert.Equal(37, result.PixelAt(0, 0).A);
+    }
+
+    [Fact]
     public void BoundsRootBorderAndDifference_ReportExpectedGeometry()
     {
         FrameBuffer buffer = FrameBuffer.CreateSolid(8, 8, 0, 0, 0, 0);

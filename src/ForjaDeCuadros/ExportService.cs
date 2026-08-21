@@ -53,6 +53,7 @@ namespace ForjaDeCuadros
                 loop = true,
                 canvas = new { width = processing.CanvasWidth, height = processing.CanvasHeight, ground_y = processing.GroundY, root_x = processing.RootX },
                 registration = processing.RegistrationMode.ToString(),
+                alpha_cleanup = new { enabled = processing.AlphaCutoffEnabled, cutoff_percent = processing.AlphaCutoffPercent, softness_percent = processing.AlphaSoftnessPercent },
                 atlas = new { file = Path.GetFileName(atlasPath), columns, rows, texture_path = texturePath },
                 audit = new { passed = !audit.HasErrors, unique_frames = audit.UniqueFrames, height_drift_percent = audit.HeightDriftPercent, loop_seam_ratio = audit.LoopSeamRatio, findings = audit.Findings.Select(f => new { level = f.Level.ToString(), message = f.Message }) },
                 frames = frames.Select((frame, index) => new { number = index + 1, file = "frames/frame_" + (index + 1).ToString("00") + ".png", source_time = frame.Timestamp, sha256_rgba = frame.Sha256, region = new { x = (index % columns) * processing.CanvasWidth, y = (index / columns) * processing.CanvasHeight, width = processing.CanvasWidth, height = processing.CanvasHeight } })
