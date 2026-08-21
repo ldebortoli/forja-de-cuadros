@@ -12,6 +12,7 @@ Esperar a que el usuario pruebe el nuevo recorrido con una imagen real y complet
 
 - Repositorio público: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria: `main`.
+- Cambios de este recorrido publicados en `codex/image-video-workflow`, commit `49a4954`, con PR borrador `https://github.com/ldebortoli/forja-de-cuadros/pull/1`; no se esperó ni monitoreó la CI.
 - Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.0 aislada, job privado T4, espera, descarga y limpieza.
