@@ -78,3 +78,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: reemplazar el template nativo de WPF por un estilo global compacto sin flechas ni canal sólido, con pulgar redondeado verde apagado, mayor presencia en hover y estado de arrastre más oscuro. Aplicarlo a orientación vertical/horizontal y a scrolls internos sin alterar la UI aprobada restante.
 - Motivo: las barras nativas claras desentonaban tanto sobre el panel de tinta como sobre las superficies de papel; un overlay sobrio integra ambas zonas sin sumar brillo visual.
+
+## D-012 - Controles de entrada en paleta cacao
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: reemplazar los templates claros del sistema por una familia global de superficies cacao mate, bordes marrones y foco verde apagado para TextBox, ComboBox, ComboBoxItem, CheckBox y Slider. Distinguir campos de solo lectura con un marrón más profundo y mantener el popup completo del dropdown dentro de la misma paleta.
+- Motivo: los fondos blancos y los controles nativos rompían la continuidad visual de Forja; la nueva familia reduce el brillo sin alterar la identidad aprobada ni sacrificar legibilidad.

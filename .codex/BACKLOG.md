@@ -20,3 +20,4 @@ No hay tareas en curso.
 - [2026-08-20] Integrar Kaggle I2V: onboarding y OAuth, CLI oficial aislada, dataset/kernel privados T4 con LTX-Video fijado, espera, descarga, limpieza, UI compacta, 17 tests y documentación pública.
 - [2026-08-20] Reforzar el alta Kaggle dentro del asistente con guía numerada, enlaces de cuenta/verificación, confirmación explícita y bloqueo con aviso antes de OAuth; captura instalada 900×640, identidad y 17 tests correctos.
 - [2026-08-20] Reemplazar globalmente los scrollbars WPF por un diseño overlay compacto, redondeado y verde apagado, sin canal claro ni flechas; capturas principal/Kaggle, instalación, identidad y 17 tests correctos.
+- [2026-08-20] Reemplazar campos, dropdowns y su popup, checks y sliders por una familia cacao mate con foco verde; capturas compacta/amplia, instalación, identidad, cierre normal y 17 tests correctos.
