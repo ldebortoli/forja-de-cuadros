@@ -1,4 +1,5 @@
 using ForjaDeCuadros;
+using System.IO;
 using Xunit;
 
 namespace ForjaDeCuadros.Tests;
@@ -77,5 +78,84 @@ public sealed class FrameBufferTests
         buffer.DrawRectangle(0, 0, 1, 1, 255, 255, 255);
         Assert.True(buffer.TouchesBorder());
         Assert.True(FrameBuffer.MeanAbsoluteDifference(buffer, FrameBuffer.CreateSolid(8, 8, 0, 0, 0, 0)) > 0);
+    }
+
+    [Fact]
+    public void CompositeOnColor_FlattensTransparentAndSemitransparentPixels()
+    {
+        FrameBuffer source = FrameBuffer.CreateSolid(3, 1, 255, 0, 0, 255);
+        source.Pixels[3] = 0;
+        source.Pixels[7] = 128;
+
+        FrameBuffer result = source.CompositeOnColor(0, 255, 0);
+
+        Assert.Equal((0, 255, 0, 255), result.PixelAt(0, 0));
+        Assert.InRange(result.PixelAt(1, 0).R, 127, 128);
+        Assert.InRange(result.PixelAt(1, 0).G, 127, 128);
+        Assert.Equal((255, 0, 0, 255), result.PixelAt(2, 0));
+        Assert.Equal(0, source.PixelAt(0, 0).A);
+    }
+
+    [Fact]
+    public void ImagePreparationService_WritesOpaqueChromaPngAndReportsTransparency()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "forja-image-prep-" + Guid.NewGuid().ToString("N"));
+        string sourcePath = Path.Combine(folder, "personaje.png");
+        string outputPath = Path.Combine(folder, "salida.png");
+        try
+        {
+            FrameBuffer source = FrameBuffer.CreateSolid(2, 1, 30, 40, 50, 255);
+            source.Pixels[3] = 0;
+            source.SavePng(sourcePath);
+
+            PreparedImageResult result = ImagePreparationService.Prepare(sourcePath, outputPath, 0, 102, 255);
+            FrameBuffer prepared = FrameBuffer.LoadPng(outputPath);
+
+            Assert.True(result.HadTransparency);
+            Assert.Equal(1, result.TransparentPixelCount);
+            Assert.Equal(2, result.PixelCount);
+            Assert.Equal((0, 102, 255, 255), prepared.PixelAt(0, 0));
+            Assert.Equal((30, 40, 50, 255), prepared.PixelAt(1, 0));
+        }
+        finally
+        {
+            if (Directory.Exists(folder)) Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public void ImagePreparationService_CreatesSafeUniqueOutputPaths()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "forja-prepared-images");
+
+        string named = ImagePreparationService.CreateOutputPath("personaje.png", folder, "chroma-verde");
+        string fallback = ImagePreparationService.CreateOutputPath(".png", folder, "");
+
+        Assert.Equal(folder, Path.GetDirectoryName(named));
+        Assert.StartsWith("personaje-chroma-verde-", Path.GetFileName(named));
+        Assert.StartsWith("imagen-chroma-", Path.GetFileName(fallback));
+        Assert.EndsWith(".png", named);
+        Assert.Throws<ArgumentException>(() => ImagePreparationService.CreateOutputPath("", folder, "verde"));
+        Assert.Throws<ArgumentException>(() => ImagePreparationService.CreateOutputPath("personaje.png", "", "verde"));
+    }
+
+    [Fact]
+    public void ImagePreparationService_RejectsMissingOrUnreadableInputs()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "forja-image-invalid-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        string invalidPath = Path.Combine(folder, "invalida.png");
+        File.WriteAllText(invalidPath, "esto no es una imagen");
+        try
+        {
+            Assert.Throws<FileNotFoundException>(() => ImagePreparationService.Prepare(Path.Combine(folder, "falta.png"), Path.Combine(folder, "salida.png"), 0, 255, 0));
+            Assert.Throws<ArgumentException>(() => ImagePreparationService.Prepare(invalidPath, "", 0, 255, 0));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => ImagePreparationService.Prepare(invalidPath, Path.Combine(folder, "salida.png"), 0, 255, 0));
+            Assert.Contains("Windows no pudo abrir", exception.Message);
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
     }
 }

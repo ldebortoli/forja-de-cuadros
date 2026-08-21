@@ -47,6 +47,11 @@
         <Style x:Key="WindowButton" TargetType="Button">
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="46"/>
+            <Setter Property="MaxWidth" Value="46"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="MaxHeight" Value="40"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#EEE5D4"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -85,13 +90,13 @@
                 <StackPanel Orientation="Horizontal" Margin="13,0,0,0" VerticalAlignment="Center">
                     <Image Source="pack://application:,,,/Assets/forja-de-cuadros-icon.png" Width="23" Height="23"/>
                     <TextBlock Text="FORJA DE CUADROS" Foreground="#F5ECDB" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="9,0,0,0"/>
-                    <TextBlock Text="  ·  video a sprites" Foreground="#8DB9B2" FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Text="  ·  imagen y video a sprites" Foreground="#8DB9B2" FontSize="11" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                <UniformGrid Grid.Column="1" Rows="1" Columns="3" Width="138" Height="40" shell:WindowChrome.IsHitTestVisibleInChrome="True">
                     <Button Content="—" Style="{StaticResource WindowButton}" ToolTip="Minimizar" Click="MinimizeWindow_Click"/>
                     <Button x:Name="MaximizeWindowButton" Content="□" Style="{StaticResource WindowButton}" ToolTip="Maximizar" Click="MaximizeWindow_Click"/>
                     <Button Content="×" Style="{StaticResource CloseWindowButton}" ToolTip="Cerrar" Click="CloseWindow_Click"/>
-                </StackPanel>
+                </UniformGrid>
             </Grid>
         </Border>
 
@@ -116,19 +121,40 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <TextBlock Text="01  FUENTE" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <TextBlock Text="00  GENERAR IMAGEN" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="Generala donde prefieras y traé un PNG transparente. Forja le agrega el chroma localmente, sin créditos ni pagos." Foreground="#BEB29F" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,9"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBox x:Name="InitialImagePathText" IsReadOnly="True" Text="Elegí un PNG, JPG o WebP" Foreground="#575044"/>
+                                <Button Grid.Column="1" Content="ELEGIR" Style="{StaticResource SecondaryButton}" Height="40" Margin="8,0,0,0" Click="BrowseInitialImage_Click" Padding="12,8"/>
+                            </Grid>
+                            <TextBlock Text="Fondo para las zonas transparentes" Foreground="#9D927F" FontSize="11" Margin="0,9,0,5"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                <Button Content="CHROMA VERDE" Tag="#00FF00" Style="{StaticResource SecondaryButton}" Height="40" Margin="0,0,4,0" Padding="8,7" Click="PrepareInitialImage_Click"/>
+                                <Button Grid.Column="1" Content="CHROMA AZUL" Tag="#0066FF" Style="{StaticResource SecondaryButton}" Height="40" Margin="4,0,0,0" Padding="8,7" Click="PrepareInitialImage_Click"/>
+                            </Grid>
+                            <TextBlock x:Name="ImagePrepStatusText" Text="La imagen preparada quedará lista para Kaggle automáticamente." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="01  CONVERTIR A VIDEO" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="Kaggle recibe la imagen del paso 00 y devuelve un clip corto. También podés elegir otra imagen dentro del asistente." Foreground="#BEB29F" FontSize="11" TextWrapping="Wrap"/>
+                            <Button Content="ABRIR KAGGLE I2V" Style="{StaticResource PrimaryButton}" Height="40" Margin="0,10,0,0" Click="Kaggle_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="02  VIDEO" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
                     <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
                         <StackPanel>
                             <TextBlock Text="Video corto" Foreground="#BEB29F" FontSize="12" Margin="0,0,0,5"/>
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <TextBox x:Name="VideoPathText" IsReadOnly="True" Text="Elegí un MP4, MOV, WebM o GIF" Foreground="#575044"/>
-                                <Button Grid.Column="1" Content="ABRIR" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Click="BrowseVideo_Click" Padding="12,8"/>
+                                <Button Grid.Column="1" Content="ABRIR" Style="{StaticResource PrimaryButton}" Height="40" Margin="8,0,0,0" Click="BrowseVideo_Click" Padding="12,8"/>
                             </Grid>
                             <TextBlock x:Name="VideoInfoText" Text="Todavía no hay video cargado." Foreground="#8E8372" FontSize="11" Margin="0,8,0,10" TextWrapping="Wrap"/>
-                            <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="¿Solo tenés una imagen?" Foreground="#9DC8C1" FontSize="11" VerticalAlignment="Center"/>
-                                <Button Grid.Column="1" Content="KAGGLE I2V" Style="{StaticResource SecondaryButton}" Padding="11,7" Click="Kaggle_Click"/>
-                            </Grid>
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,6,0"><TextBlock Text="Inicio (s)" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="StartText" Text="0"/></StackPanel>
                                 <StackPanel Grid.Column="1" Margin="3,0"><TextBlock Text="Final (s)" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="EndText" Text="2"/></StackPanel>
@@ -138,15 +164,15 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBlock Text="02  FONDO / CHROMA" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <TextBlock Text="03  FONDO / CHROMA" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
                     <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
                         <StackPanel>
                             <CheckBox x:Name="ChromaEnabledCheck" IsChecked="True" Margin="0,0,0,10"><TextBlock Text="Quitar fondo por color" Foreground="#F2E9D5"/></CheckBox>
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <StackPanel><TextBlock Text="Color clave" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="ChromaHexText" Text="#00FF00"/></StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="7,0,0,0">
-                                    <Button Content="VERDE" Tag="#00FF00" Style="{StaticResource SecondaryButton}" Padding="8,7" Click="ChromaPreset_Click"/>
-                                    <Button Content="AZUL" Tag="#0066FF" Style="{StaticResource SecondaryButton}" Padding="8,7" Margin="5,0,0,0" Click="ChromaPreset_Click"/>
+                                    <Button Content="VERDE" Tag="#00FF00" Style="{StaticResource SecondaryButton}" Height="40" Padding="8,7" Click="ChromaPreset_Click"/>
+                                    <Button Content="AZUL" Tag="#0066FF" Style="{StaticResource SecondaryButton}" Height="40" Padding="8,7" Margin="5,0,0,0" Click="ChromaPreset_Click"/>
                                 </StackPanel>
                             </Grid>
                             <TextBlock Text="También podés hacer clic sobre el fondo en la vista original para tomar el color." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,7,0,10"/>
@@ -162,7 +188,7 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBlock Text="03  REGISTRO" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <TextBlock Text="04  REGISTRO" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
                     <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
                         <StackPanel>
                             <TextBlock Text="Modo" Foreground="#9D927F" FontSize="11"/>
@@ -181,7 +207,7 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBlock Text="04  EXPORTACIÓN" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <TextBlock Text="05  EXPORTACIÓN" Foreground="#D65B50" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
                     <Border Background="#252321" CornerRadius="10" Padding="13">
                         <StackPanel>
                             <TextBlock Text="Nombre de animación" Foreground="#9D927F" FontSize="11"/><TextBox x:Name="AnimationNameText" Text="nueva_animacion"/>

@@ -25,15 +25,21 @@ namespace ForjaDeCuadros
         private bool _isFitting;
         private bool _fitQueued;
 
-        public KaggleWindow(string? capturePath = null, int? captureWidth = null, int? captureHeight = null)
+        public KaggleWindow(string? capturePath = null, int? captureWidth = null, int? captureHeight = null, string? initialImagePath = null)
         {
             InitializeComponent();
             _capturePath = capturePath;
             if (captureWidth.HasValue) Width = Math.Max(MinWidth, captureWidth.Value);
             if (captureHeight.HasValue) Height = Math.Max(MinHeight, captureHeight.Value);
+            if (!string.IsNullOrWhiteSpace(initialImagePath))
+            {
+                ImagePathText.Text = initialImagePath;
+                ImagePathText.ToolTip = initialImagePath;
+            }
             OutputFolderText.Text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "Forja de Cuadros", "Kaggle");
             SourceInitialized += (_, __) => Dispatcher.BeginInvoke(new Action(() => FitToCurrentMonitor(true)), DispatcherPriority.Loaded);
             LocationChanged += (_, __) => QueueFit();
+            StateChanged += KaggleWindow_StateChanged;
             Loaded += KaggleWindow_Loaded;
             Closing += KaggleWindow_Closing;
         }
@@ -72,12 +78,32 @@ namespace ForjaDeCuadros
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton != MouseButton.Left || WindowState != WindowState.Normal) return;
+            if (e.ChangedButton != MouseButton.Left) return;
+            if (e.ClickCount == 2)
+            {
+                ToggleMaximizedState();
+                return;
+            }
+            if (WindowState != WindowState.Normal) return;
             try { DragMove(); } catch (InvalidOperationException) { }
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void Maximize_Click(object sender, RoutedEventArgs e) => ToggleMaximizedState();
         private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void ToggleMaximizedState()
+        {
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void KaggleWindow_StateChanged(object? sender, EventArgs e)
+        {
+            bool maximized = WindowState == WindowState.Maximized;
+            MaximizeWindowButton.Content = maximized ? "❐" : "□";
+            MaximizeWindowButton.ToolTip = maximized ? "Restaurar" : "Maximizar";
+            Dispatcher.BeginInvoke(new Action(() => FitToCurrentMonitor(true)), DispatcherPriority.Background);
+        }
 
         private void OpenSignup_Click(object sender, RoutedEventArgs e) => OpenUrl("https://www.kaggle.com/account/login?phase=startRegisterTab");
         private void OpenAccountSettings_Click(object sender, RoutedEventArgs e) => OpenUrl("https://www.kaggle.com/settings/account");
@@ -126,7 +152,11 @@ namespace ForjaDeCuadros
         private void BrowseImage_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog { Title = "Elegir imagen inicial", Filter = "Imagen|*.png;*.jpg;*.jpeg;*.webp|Todos los archivos|*.*" };
-            if (dialog.ShowDialog(this) == true) ImagePathText.Text = dialog.FileName;
+            if (dialog.ShowDialog(this) == true)
+            {
+                ImagePathText.Text = dialog.FileName;
+                ImagePathText.ToolTip = dialog.FileName;
+            }
         }
 
         private void BrowseOutput_Click(object sender, RoutedEventArgs e)

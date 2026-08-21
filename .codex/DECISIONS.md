@@ -92,3 +92,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: después de validar localmente y hacer push, no ejecutar `watch`, no sondear ni esperar GitHub Actions salvo que el usuario lo pida explícitamente en la solicitud actual.
 - Motivo: esperar una ejecución remota consume tiempo y tokens sin aportar valor al flujo habitual; el push puede quedar con CI pendiente.
+
+## D-014 - Imagen transparente como inicio local del workflow
+
+- Estado: vigente.
+- Fecha: 2026-08-21.
+- Decisión: iniciar la UI en `00 GENERAR IMAGEN`, aplanar localmente PNG/formatos WIC transparentes sobre chroma verde o azul y entregar el PNG opaco resultante preseleccionado a `01 CONVERTIR A VIDEO` con Kaggle; `02 VIDEO` recibe el MP4. Unificar a 40 px la altura mínima de inputs y filas de acción, y usar tres celdas de ventana idénticas de 46 × 40 px en principal y Kaggle.
+- Motivo: convertir transparencia en un fondo uniforme no necesita IA ni créditos, evita halos en bordes semitransparentes y vuelve explícito el recorrido imagen → video → cuadros. Las métricas fijas eliminan las disparidades visuales señaladas por el usuario.

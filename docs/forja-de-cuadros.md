@@ -2,12 +2,13 @@
 
 `Forja de Cuadros` vive en `src/ForjaDeCuadros/`. El instalador crea un acceso directo en el menú Inicio; con `-CodexApps`, usa la carpeta personal `Codex Apps`.
 
-La herramienta separa dos responsabilidades:
+La herramienta separa tres responsabilidades:
 
+- **Preparacion local de imagen:** convierte la transparencia de un PNG en chroma verde o azul sin usar servicios ni creditos.
 - **Generacion I2V intercambiable:** produce un MP4 corto desde una imagen aprobada. El asistente integrado usa Kaggle/LTX; también se puede importar manualmente un clip de Grok u otra fuente.
 - **Postprocesado local reproducible:** extrae, selecciona, limpia, registra, audita y exporta los 16 cuadros sin enviar el video a ningun servicio.
 
-El botón `KAGGLE I2V` automatiza el primer tramo con OAuth oficial, dataset/kernel privados, GPU T4, espera y descarga del MP4. El postprocesado posterior no usa la nube. Ver `docs/kaggle.md`.
+El paso 00 prepara la imagen y el botón `ABRIR KAGGLE I2V` del paso 01 la entrega preseleccionada al asistente. Kaggle automatiza OAuth oficial, dataset/kernel privados, GPU T4, espera y descarga del MP4. El postprocesado posterior no usa la nube. Ver `docs/kaggle.md`.
 
 ## Contrato recomendado para el video fuente
 

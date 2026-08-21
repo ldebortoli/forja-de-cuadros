@@ -54,6 +54,21 @@ namespace ForjaDeCuadros
 
         public FrameBuffer Clone() => new FrameBuffer(Width, Height, (byte[])Pixels.Clone());
 
+        public FrameBuffer CompositeOnColor(byte r, byte g, byte b)
+        {
+            var output = Clone();
+            for (int i = 0; i < output.Pixels.Length; i += 4)
+            {
+                int alpha = output.Pixels[i + 3];
+                int inverseAlpha = 255 - alpha;
+                output.Pixels[i] = (byte)((output.Pixels[i] * alpha + b * inverseAlpha + 127) / 255);
+                output.Pixels[i + 1] = (byte)((output.Pixels[i + 1] * alpha + g * inverseAlpha + 127) / 255);
+                output.Pixels[i + 2] = (byte)((output.Pixels[i + 2] * alpha + r * inverseAlpha + 127) / 255);
+                output.Pixels[i + 3] = 255;
+            }
+            return output;
+        }
+
         public void DrawRectangle(int x, int y, int width, int height, byte r, byte g, byte b, byte a = 255)
         {
             int left = Math.Max(0, x);

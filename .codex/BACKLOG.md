@@ -22,3 +22,4 @@ No hay tareas en curso.
 - [2026-08-20] Reemplazar globalmente los scrollbars WPF por un diseño overlay compacto, redondeado y verde apagado, sin canal claro ni flechas; capturas principal/Kaggle, instalación, identidad y 17 tests correctos.
 - [2026-08-20] Reemplazar campos, dropdowns y su popup, checks y sliders por una familia cacao mate con foco verde; capturas compacta/amplia, instalación, identidad, cierre normal y 17 tests correctos.
 - [2026-08-20] Registrar globalmente y en Forja que la CI remota no se espera ni monitorea después del push salvo pedido explícito.
+- [2026-08-21] Reordenar el flujo visual a 00 imagen, 01 conversión Kaggle y 02 video; preparar transparencia sobre chroma local con entrega automática a Kaggle, unificar alturas de controles y uniformar los botones de ventana principal/Kaggle. Validado con 21 tests, cobertura 81,33/50,31/75,34, capturas e instalación real.

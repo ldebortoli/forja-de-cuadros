@@ -50,6 +50,7 @@
             <Setter Property="Foreground" Value="{StaticResource Ink}"/>
         </Style>
         <Style TargetType="{x:Type TextBox}">
+            <Setter Property="MinHeight" Value="40"/>
             <Setter Property="Background" Value="{StaticResource InputSurface}"/>
             <Setter Property="Foreground" Value="#211E1A"/>
             <Setter Property="CaretBrush" Value="{StaticResource Teal}"/>
@@ -122,6 +123,7 @@
             </Setter>
         </Style>
         <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="MinHeight" Value="40"/>
             <Setter Property="Background" Value="{StaticResource InputSurface}"/>
             <Setter Property="Foreground" Value="#211E1A"/>
             <Setter Property="BorderBrush" Value="{StaticResource InputBorder}"/>

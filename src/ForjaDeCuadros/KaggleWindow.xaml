@@ -11,6 +11,9 @@
     <Window.Resources>
         <Style x:Key="WindowButton" TargetType="Button">
             <Setter Property="Width" Value="46"/><Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="46"/><Setter Property="MaxWidth" Value="46"/>
+            <Setter Property="MinHeight" Value="40"/><Setter Property="MaxHeight" Value="40"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="#EEE5D4"/>
             <Setter Property="BorderThickness" Value="0"/><Setter Property="FontSize" Value="17"/><Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}"><TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Setter.Value></Setter>
@@ -41,10 +44,11 @@
                     <TextBlock Text="KAGGLE I2V" Foreground="#F5ECDB" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="9,0,0,0"/>
                     <TextBlock Text="  ·  imagen a video privado" Foreground="#8DB9B2" FontSize="11" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                <UniformGrid Grid.Column="1" Rows="1" Columns="3" Width="138" Height="40" shell:WindowChrome.IsHitTestVisibleInChrome="True">
                     <Button Content="—" Style="{StaticResource WindowButton}" ToolTip="Minimizar" Click="Minimize_Click"/>
+                    <Button x:Name="MaximizeWindowButton" Content="□" Style="{StaticResource WindowButton}" ToolTip="Maximizar" Click="Maximize_Click"/>
                     <Button Content="×" Style="{StaticResource CloseWindowButton}" ToolTip="Cerrar" Click="Close_Click"/>
-                </StackPanel>
+                </UniformGrid>
             </Grid>
         </Border>
 
@@ -110,7 +114,7 @@
                                     <TextBlock Text="Imagen inicial" Style="{StaticResource Label}"/>
                                     <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                         <TextBox x:Name="ImagePathText" IsReadOnly="True"/>
-                                        <Button Grid.Column="1" Content="ELEGIR" Style="{StaticResource SecondaryButton}" Padding="12,8" Margin="7,0,0,0" Click="BrowseImage_Click"/>
+                                        <Button Grid.Column="1" Content="ELEGIR" Style="{StaticResource SecondaryButton}" Height="40" Padding="12,8" Margin="7,0,0,0" Click="BrowseImage_Click"/>
                                     </Grid>
                                 </StackPanel>
                             </Grid>
@@ -127,7 +131,7 @@
                             <TextBlock Text="Carpeta local para el MP4" Style="{StaticResource Label}" Margin="0,11,0,4"/>
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <TextBox x:Name="OutputFolderText" IsReadOnly="True"/>
-                                <Button Grid.Column="1" Content="…" Style="{StaticResource SecondaryButton}" Padding="12,8" Margin="7,0,0,0" Click="BrowseOutput_Click"/>
+                                <Button Grid.Column="1" Content="…" Style="{StaticResource SecondaryButton}" Height="40" Padding="12,8" Margin="7,0,0,0" Click="BrowseOutput_Click"/>
                             </Grid>
                             <CheckBox x:Name="DeleteRemoteCheck" IsChecked="True" Margin="0,11,0,0"><TextBlock Text="Borrar de Kaggle el dataset y script privados despues de descargar el MP4" TextWrapping="Wrap"/></CheckBox>
                             <TextBlock Text="Modelo: LTX-Video 2B 0.9.8 distilled · GPU solicitada: NVIDIA T4 · notebook e input: privados" Foreground="#287F76" FontSize="11" FontWeight="SemiBold" Margin="0,9,0,0"/>

@@ -6,7 +6,7 @@ Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada 
 
 ## Tarea actual
 
-Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y ejecute el primer trabajo Kaggle GPU real. Linux y releases ejecutables continúan diferidos.
+Esperar a que el usuario pruebe el nuevo recorrido con una imagen real y complete, cuando quiera, el primer trabajo Kaggle GPU. Linux y releases ejecutables continúan diferidos.
 
 ## Estado actual
 
@@ -18,12 +18,16 @@ Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y eje
 - El paso 01 ahora contiene una guía numerada y confirmación explícita; un intento de conectar antes de completarla muestra un aviso y no abre OAuth.
 - Las barras de scroll verticales, horizontales e internas comparten un template overlay sin canal sólido, con pulgar redondeado verde apagado y hover/drag discretos; el resto del diseño no cambió.
 - TextBox, ComboBox y su popup, ComboBoxItem, CheckBox y Slider comparten ahora superficies cacao mate, borde marrón y foco verde apagado; los campos de solo lectura usan un marrón algo más profundo y ya no aparecen superficies blancas del sistema.
+- La navegación principal ahora es `00 GENERAR IMAGEN` → `01 CONVERTIR A VIDEO` → `02 VIDEO` → `03 FONDO / CHROMA` → `04 REGISTRO` → `05 EXPORTACIÓN`.
+- El paso 00 elige PNG/JPG/WebP/WIC y convierte localmente la transparencia a chroma verde o azul, incluyendo composición correcta de bordes alfa; Kaggle se abre con ese PNG ya preseleccionado.
+- Inputs y dropdowns tienen una altura mínima común de 40 px; los botones de filas emparejadas también usan 40 px. Principal y Kaggle tienen minimizar, maximizar/restaurar y cerrar en celdas idénticas de 46 × 40 px.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
-- Tests locales y CI pública: 17/17; la paleta global de controles de entrada pasó el run `32433364771`.
-- Cobertura: líneas 80,61 %, ramas 48,76 %, métodos 73,72 %; umbrales 78/48/72.
+- Tests locales: 21/21. La CI remota del último push no se espera ni monitorea por política.
+- Cobertura: líneas 81,33 %, ramas 50,31 %, métodos 75,34 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
-- Capturas principal 1060×680/1280×900 y Kaggle 900×640 confirman barra superior, cierre, scrollbars y controles de entrada coherentes sobre fondos oscuros y claros.
+- Capturas principal 1280×900 y Kaggle 900×640 confirman el nuevo flujo, la barra superior de tres botones iguales, el cierre, scrollbars y controles de entrada coherentes sobre fondos oscuros y claros.
+- Instalación personal actualizada desde el repositorio; acceso real, destino/icono, ventana única, cierre normal y AppUserModelID `io.github.ldebortoli.ForjaDeCuadros` verificados.
 - Gitleaks: cero hallazgos en archivos e historial.
 - Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.
 - CI usa versiones oficiales de GitHub Actions compatibles con Node 24.
@@ -31,9 +35,9 @@ Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y eje
 
 ## Próximos pasos
 
-1. En Forja: `KAGGLE I2V` y seguir la guía visible del paso 01 para crear/verificar la cuenta.
-2. Marcar la confirmación → `CONECTAR CUENTA` → `VERIFICAR` → generar con una imagen de prueba.
-3. Si el MP4 se aprueba, preparar después Linux y releases cuando el usuario lo pida.
+1. En Forja: elegir un PNG transparente en el paso 00, preparar chroma verde/azul y abrir Kaggle en el paso 01.
+2. Seguir la guía visible para crear/verificar la cuenta; marcar la confirmación → `CONECTAR CUENTA` → `VERIFICAR` → generar.
+3. Confirmar que el MP4 vuelve al paso 02 y sirve para extraer candidatos; después preparar Linux/releases sólo cuando el usuario lo pida.
 
 ## Riesgos
 

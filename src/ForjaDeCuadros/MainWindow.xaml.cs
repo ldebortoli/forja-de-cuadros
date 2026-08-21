@@ -29,6 +29,8 @@ namespace ForjaDeCuadros
         private CancellationTokenSource? _operationCancellation;
         private VideoInfo? _videoInfo;
         private string? _selectedVideo;
+        private string? _selectedImage;
+        private string? _preparedImage;
         private FrameItem? _previewCandidate;
         private AuditReport? _auditReport;
         private ProcessingOptions? _lastProcessingOptions;
@@ -216,6 +218,53 @@ namespace ForjaDeCuadros
             await LoadVideoAsync(dialog.FileName);
         }
 
+        private void BrowseInitialImage_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = "Elegir imagen inicial",
+                Filter = "Imagen|*.png;*.jpg;*.jpeg;*.webp;*.bmp;*.tif;*.tiff|Todos los archivos|*.*"
+            };
+            if (dialog.ShowDialog(this) != true) return;
+
+            _selectedImage = dialog.FileName;
+            _preparedImage = null;
+            InitialImagePathText.Text = dialog.FileName;
+            InitialImagePathText.ToolTip = dialog.FileName;
+            ImagePrepStatusText.Text = "Imagen elegida. Aplicá chroma verde o azul si tiene transparencia; si ya tiene fondo, podés abrir Kaggle directamente.";
+            ImagePrepStatusText.ToolTip = null;
+        }
+
+        private void PrepareInitialImage_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(_selectedImage)) throw new InvalidOperationException("Primero elegí una imagen en el paso 00.");
+                string hex = (sender as Button)?.Tag?.ToString() ?? "#00FF00";
+                (byte keyR, byte keyG, byte keyB) = ParseHex(hex);
+                string presetName = hex.Equals("#0066FF", StringComparison.OrdinalIgnoreCase) ? "chroma-azul" : "chroma-verde";
+                string outputFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ForjaDeCuadros", "PreparedImages");
+                string outputPath = ImagePreparationService.CreateOutputPath(_selectedImage, outputFolder, presetName);
+                PreparedImageResult result = ImagePreparationService.Prepare(_selectedImage, outputPath, keyR, keyG, keyB);
+                _preparedImage = result.OutputPath;
+
+                if (result.HadTransparency)
+                {
+                    double transparentPercent = 100.0 * result.TransparentPixelCount / Math.Max(1, result.PixelCount);
+                    ImagePrepStatusText.Text = $"Chroma listo · {result.Width} × {result.Height} · {transparentPercent:0.#} % con transparencia. Kaggle usará este PNG.";
+                }
+                else
+                {
+                    ImagePrepStatusText.Text = $"PNG listo · {result.Width} × {result.Height}. La imagen era opaca, por eso el chroma no queda visible.";
+                }
+                ImagePrepStatusText.ToolTip = result.OutputPath;
+            }
+            catch (Exception exception)
+            {
+                ShowError("No pude preparar la imagen", exception);
+            }
+        }
+
         private async Task LoadVideoAsync(string path)
         {
             try
@@ -241,7 +290,7 @@ namespace ForjaDeCuadros
 
         private async void Kaggle_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new KaggleWindow { Owner = this };
+            var dialog = new KaggleWindow(initialImagePath: _preparedImage ?? _selectedImage) { Owner = this };
             if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.GeneratedVideoPath))
             {
                 await LoadVideoAsync(dialog.GeneratedVideoPath);

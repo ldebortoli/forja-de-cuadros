@@ -20,7 +20,7 @@ No hace falta crear manualmente un notebook ni descargar `kaggle.json`. Forja us
 4. Pulsá `PREPARAR KAGGLE`. La primera vez crea `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli` e instala allí la CLI oficial; requiere Python 3.11 o superior.
 5. Pulsá `CONECTAR CUENTA`. Se abre Kaggle en el navegador. Iniciá sesión, autorizá el acceso y volvé a Forja.
 6. Pulsá `VERIFICAR`. Esto confirma que la CLI puede consultar tu cuenta.
-7. Escribí tu usuario de Kaggle, elegí una imagen PNG/JPG/WebP y ajustá el prompt, formato, duración, FPS y semilla.
+7. Escribí tu usuario de Kaggle y ajustá el prompt, formato, duración, FPS y semilla. Si llegaste desde el paso 00 de Forja, la imagen ya aparece preseleccionada; igual podés reemplazarla.
 8. Dejá activada la limpieza remota salvo que necesites conservar el trabajo para depurarlo.
 9. Pulsá `SINCRONIZAR Y GENERAR`. Forja esperará aunque Kaggle ponga el trabajo en cola.
 10. Cuando aparezca `MP4 LISTO`, pulsá `USAR ESTE VIDEO`; la ventana principal lo carga automáticamente.
