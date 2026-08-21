@@ -99,3 +99,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-21.
 - Decisión: iniciar la UI en `00 GENERAR IMAGEN`, aplanar localmente PNG/formatos WIC transparentes sobre chroma verde o azul y entregar el PNG opaco resultante preseleccionado a `01 CONVERTIR A VIDEO` con Kaggle; `02 VIDEO` recibe el MP4. Unificar a 40 px la altura mínima de inputs y filas de acción, y usar tres celdas de ventana idénticas de 46 × 40 px en principal y Kaggle.
 - Motivo: convertir transparencia en un fondo uniforme no necesita IA ni créditos, evita halos en bordes semitransparentes y vuelve explícito el recorrido imagen → video → cuadros. Las métricas fijas eliminan las disparidades visuales señaladas por el usuario.
+
+## D-015 - Publicación directa a main sin PR
+
+- Estado: vigente.
+- Fecha: 2026-08-21.
+- Decisión: para Forja, integrar y empujar los cambios directamente a `main`; no crear pull requests ni ramas de entrega salvo pedido explícito del usuario.
+- Motivo: el usuario prefiere que las entregas terminadas queden disponibles inmediatamente en la rama pública principal y pidió expresamente no usar PRs.

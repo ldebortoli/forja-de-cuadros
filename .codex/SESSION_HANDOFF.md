@@ -12,7 +12,7 @@ Esperar a que el usuario pruebe el nuevo recorrido con una imagen real y complet
 
 - Repositorio público: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria: `main`.
-- Cambios de este recorrido publicados en `codex/image-video-workflow`, commit `49a4954`, con PR borrador `https://github.com/ldebortoli/forja-de-cuadros/pull/1`; no se esperó ni monitoreó la CI.
+- El recorrido imagen → video quedó fusionado directamente en `main` hasta `c04f2d0`; GitHub marcó el PR borrador preexistente como fusionado y la rama auxiliar fue eliminada local y remotamente. No se esperó ni monitoreó la CI.
 - Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.0 aislada, job privado T4, espera, descarga y limpieza.
@@ -33,6 +33,7 @@ Esperar a que el usuario pruebe el nuevo recorrido con una imagen real y complet
 - Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.
 - CI usa versiones oficiales de GitHub Actions compatibles con Node 24.
 - Por regla global y del proyecto, después de cada push no se espera ni monitorea GitHub Actions salvo pedido explícito; se entrega con validación local y la CI puede quedar pendiente.
+- Por instrucción del usuario, las próximas entregas de Forja se publican directamente en `main`, sin PR ni rama auxiliar salvo pedido explícito.
 
 ## Próximos pasos
 

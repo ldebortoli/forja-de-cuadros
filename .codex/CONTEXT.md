@@ -48,6 +48,7 @@ Kaggle CLI 2.2.0 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere P
 - Los controles de entrada WPF usan superficies cacao mate, borde marrón y foco verde apagado: campos editables/solo lectura, dropdowns y su popup, checks y sliders deben conservar esta familia sin fondos blancos del sistema.
 - TextBox y ComboBox usan una altura mínima común de 40 px; los botones que comparten fila deben usar esa misma altura. Las barras superiores principal y Kaggle distribuyen minimizar, maximizar/restaurar y cerrar en tres celdas idénticas de 46 × 40 px.
 - Después de un push no se espera, monitorea ni sondea la CI remota salvo pedido explícito del usuario; las validaciones locales siguen siendo obligatorias.
+- Publicar los cambios mantenidos directamente en `main`; no crear ramas auxiliares ni pull requests salvo que el usuario lo pida explícitamente.
 - Kaggle es estrictamente opcional: input y kernel privados, OAuth manejado por la CLI oficial, limpieza remota activada por defecto y temporales locales eliminados después de una descarga correcta.
 - El flujo visible comienza en `00 GENERAR IMAGEN`, prepara localmente la transparencia sobre chroma verde/azul, pasa la ruta resultante a `01 CONVERTIR A VIDEO` y continúa con `02 VIDEO`.
 - Computer Use contra Explorer produjo `Interfaz no compatible (0x80004002)` en agosto de 2026. No reintentar captura/coordenadas antes de septiembre de 2026 salvo cambio de versión; usar las capturas internas, la identidad de proceso y las propiedades COM del acceso como fallback.
