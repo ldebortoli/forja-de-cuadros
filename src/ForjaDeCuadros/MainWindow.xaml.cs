@@ -231,22 +231,32 @@ namespace ForjaDeCuadros
             _preparedImage = null;
             InitialImagePathText.Text = dialog.FileName;
             InitialImagePathText.ToolTip = dialog.FileName;
-            ImagePrepStatusText.Text = "Imagen elegida. Aplicá chroma verde o azul si tiene transparencia; si ya tiene fondo, podés abrir Kaggle directamente.";
+            KaggleImagePathText.Text = "Preparando chroma verde…";
+            KaggleImagePathText.ToolTip = null;
+            ImagePrepStatusText.Text = "Imagen elegida. Preparando chroma verde automáticamente…";
             ImagePrepStatusText.ToolTip = null;
+            PrepareInitialImage("#00FF00");
         }
 
         private void PrepareInitialImage_Click(object sender, RoutedEventArgs e)
         {
+            string hex = (sender as Button)?.Tag?.ToString() ?? "#00FF00";
+            PrepareInitialImage(hex);
+        }
+
+        private bool PrepareInitialImage(string hex)
+        {
             try
             {
                 if (string.IsNullOrWhiteSpace(_selectedImage)) throw new InvalidOperationException("Primero elegí una imagen en el paso 00.");
-                string hex = (sender as Button)?.Tag?.ToString() ?? "#00FF00";
                 (byte keyR, byte keyG, byte keyB) = ParseHex(hex);
                 string presetName = hex.Equals("#0066FF", StringComparison.OrdinalIgnoreCase) ? "chroma-azul" : "chroma-verde";
                 string outputFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ForjaDeCuadros", "PreparedImages");
                 string outputPath = ImagePreparationService.CreateOutputPath(_selectedImage, outputFolder, presetName);
                 PreparedImageResult result = ImagePreparationService.Prepare(_selectedImage, outputPath, keyR, keyG, keyB);
                 _preparedImage = result.OutputPath;
+                KaggleImagePathText.Text = result.OutputPath;
+                KaggleImagePathText.ToolTip = result.OutputPath;
 
                 if (result.HadTransparency)
                 {
@@ -258,10 +268,15 @@ namespace ForjaDeCuadros
                     ImagePrepStatusText.Text = $"PNG listo · {result.Width} × {result.Height}. La imagen era opaca, por eso el chroma no queda visible.";
                 }
                 ImagePrepStatusText.ToolTip = result.OutputPath;
+                return true;
             }
             catch (Exception exception)
             {
+                _preparedImage = null;
+                KaggleImagePathText.Text = "No se pudo preparar la imagen";
+                KaggleImagePathText.ToolTip = null;
                 ShowError("No pude preparar la imagen", exception);
+                return false;
             }
         }
 
@@ -273,6 +288,7 @@ namespace ForjaDeCuadros
                 _selectedVideo = path;
                 _videoInfo = await _ffmpeg.ProbeAsync(path);
                 VideoPathText.Text = path;
+                VideoPathText.ToolTip = path;
                 VideoInfoText.Text = _videoInfo.Summary;
                 StartText.Text = "0";
                 EndText.Text = Math.Min(4, _videoInfo.Duration).ToString("0.###", CultureInfo.CurrentCulture);
@@ -290,6 +306,7 @@ namespace ForjaDeCuadros
 
         private async void Kaggle_Click(object sender, RoutedEventArgs e)
         {
+            if (!string.IsNullOrWhiteSpace(_selectedImage) && string.IsNullOrWhiteSpace(_preparedImage) && !PrepareInitialImage("#00FF00")) return;
             var dialog = new KaggleWindow(initialImagePath: _preparedImage ?? _selectedImage) { Owner = this };
             if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.GeneratedVideoPath))
             {

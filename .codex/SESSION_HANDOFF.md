@@ -6,7 +6,7 @@ Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada 
 
 ## Tarea actual
 
-Esperar a que el usuario pruebe el nuevo recorrido con una imagen real y complete, cuando quiera, el primer trabajo Kaggle GPU. Linux y releases ejecutables continúan diferidos.
+Esperar a que el usuario pruebe el handoff automático con una imagen real y complete, cuando quiera, el primer trabajo Kaggle GPU. Linux y releases ejecutables continúan diferidos.
 
 ## Estado actual
 
@@ -21,13 +21,15 @@ Esperar a que el usuario pruebe el nuevo recorrido con una imagen real y complet
 - TextBox, ComboBox y su popup, ComboBoxItem, CheckBox y Slider comparten ahora superficies cacao mate, borde marrón y foco verde apagado; los campos de solo lectura usan un marrón algo más profundo y ya no aparecen superficies blancas del sistema.
 - La navegación principal ahora es `00 GENERAR IMAGEN` → `01 CONVERTIR A VIDEO` → `02 VIDEO` → `03 FONDO / CHROMA` → `04 REGISTRO` → `05 EXPORTACIÓN`.
 - El paso 00 elige PNG/JPG/WebP/WIC y convierte localmente la transparencia a chroma verde o azul, incluyendo composición correcta de bordes alfa; Kaggle se abre con ese PNG ya preseleccionado.
+- Elegir la imagen dispara chroma verde sin un segundo clic y escribe su ruta en un campo visible del paso 01; pulsar verde o azul regenera el PNG y reemplaza ese campo. Si la preparación faltara, abrir Kaggle la reintenta antes de avanzar.
+- El handoff 01 → 02 ya existente se conserva: `USAR ESTE VIDEO` cierra Kaggle, verifica el MP4 y carga su ruta en el campo de video principal.
 - Inputs y dropdowns tienen una altura mínima común de 40 px; los botones de filas emparejadas también usan 40 px. Principal y Kaggle tienen minimizar, maximizar/restaurar y cerrar en celdas idénticas de 46 × 40 px.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
 - Tests locales: 21/21. La CI remota del último push no se espera ni monitorea por política.
-- Cobertura: líneas 81,33 %, ramas 50,31 %, métodos 75,34 %; umbrales 78/48/72.
+- Cobertura: líneas 81,33 %, ramas 50,21 %, métodos 75,34 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
-- Capturas principal 1280×900 y Kaggle 900×640 confirman el nuevo flujo, la barra superior de tres botones iguales, el cierre, scrollbars y controles de entrada coherentes sobre fondos oscuros y claros.
+- La captura principal 1280×900 confirma el nuevo campo de ruta visible en 01 sin romper el layout; las capturas anteriores de Kaggle 900×640 siguen vigentes.
 - Instalación personal actualizada desde el repositorio; acceso real, destino/icono, ventana única, cierre normal y AppUserModelID `io.github.ldebortoli.ForjaDeCuadros` verificados.
 - Gitleaks: cero hallazgos en archivos e historial.
 - Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.

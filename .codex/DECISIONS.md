@@ -106,3 +106,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-21.
 - Decisión: para Forja, integrar y empujar los cambios directamente a `main`; no crear pull requests ni ramas de entrega salvo pedido explícito del usuario.
 - Motivo: el usuario prefiere que las entregas terminadas queden disponibles inmediatamente en la rama pública principal y pidió expresamente no usar PRs.
+
+## D-016 - Handoff visible y automático de archivos
+
+- Estado: vigente.
+- Fecha: 2026-08-21.
+- Decisión: al elegir una imagen en 00, generar chroma verde inmediatamente y rellenar con su ruta el campo de entrada visible de 01; regenerar y reemplazarla si se elige chroma azul. Mantener el MP4 devuelto por Kaggle como carga automática del campo de video de 02.
+- Motivo: cada paso que produce un archivo debe completar el consumidor siguiente sin obligar a buscar de nuevo el mismo archivo ni ocultar qué ruta se está usando.

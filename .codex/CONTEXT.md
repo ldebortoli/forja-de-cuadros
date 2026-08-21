@@ -50,6 +50,6 @@ Kaggle CLI 2.2.0 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere P
 - Después de un push no se espera, monitorea ni sondea la CI remota salvo pedido explícito del usuario; las validaciones locales siguen siendo obligatorias.
 - Publicar los cambios mantenidos directamente en `main`; no crear ramas auxiliares ni pull requests salvo que el usuario lo pida explícitamente.
 - Kaggle es estrictamente opcional: input y kernel privados, OAuth manejado por la CLI oficial, limpieza remota activada por defecto y temporales locales eliminados después de una descarga correcta.
-- El flujo visible comienza en `00 GENERAR IMAGEN`, prepara localmente la transparencia sobre chroma verde/azul, pasa la ruta resultante a `01 CONVERTIR A VIDEO` y continúa con `02 VIDEO`.
+- El flujo visible comienza en `00 GENERAR IMAGEN`: elegir el archivo prepara chroma verde automáticamente y rellena la ruta visible de `01 CONVERTIR A VIDEO`; cambiar a azul reemplaza esa ruta. El MP4 aceptado en Kaggle rellena automáticamente `02 VIDEO`.
 - Computer Use contra Explorer produjo `Interfaz no compatible (0x80004002)` en agosto de 2026. No reintentar captura/coordenadas antes de septiembre de 2026 salvo cambio de versión; usar las capturas internas, la identidad de proceso y las propiedades COM del acceso como fallback.
 - Actualizar `.codex/` cuando cambie estado, arquitectura o workflow.

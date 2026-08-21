@@ -142,6 +142,8 @@
                     <Border Background="#252321" CornerRadius="10" Padding="13" Margin="0,0,0,18">
                         <StackPanel>
                             <TextBlock Text="Kaggle recibe la imagen del paso 00 y devuelve un clip corto. También podés elegir otra imagen dentro del asistente." Foreground="#BEB29F" FontSize="11" TextWrapping="Wrap"/>
+                            <TextBlock Text="Imagen preparada para Kaggle" Foreground="#9D927F" FontSize="11" Margin="0,9,0,5"/>
+                            <TextBox x:Name="KaggleImagePathText" IsReadOnly="True" Text="Se completa al elegir la imagen del paso 00" Foreground="#575044"/>
                             <Button Content="ABRIR KAGGLE I2V" Style="{StaticResource PrimaryButton}" Height="40" Margin="0,10,0,0" Click="Kaggle_Click"/>
                         </StackPanel>
                     </Border>

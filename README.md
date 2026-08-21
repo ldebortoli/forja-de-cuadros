@@ -50,7 +50,7 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 ## Workflow recomendado
 
 1. Generá el personaje donde prefieras y, si es posible, guardalo como PNG transparente.
-2. En `00 GENERAR IMAGEN`, elegí el archivo y preparalo con chroma verde o azul. Este paso es local y no consume créditos.
+2. En `00 GENERAR IMAGEN`, elegí el archivo: Forja prepara chroma verde automáticamente y completa la ruta del paso 01. Podés cambiarla a azul con un clic. Este paso es local y no consume créditos.
 3. En `01 CONVERTIR A VIDEO`, abrí Kaggle I2V —o usá cualquier otra herramienta— y pedí cámara fija, personaje completo y una sola acción de 2–4 segundos.
 4. En `02 VIDEO`, cargá el clip, definí inicio/final y extraé candidatos.
 5. Elegí exactamente 16 cuadros; `AUTO 16` distribuye la selección sobre todo el tramo.
@@ -94,7 +94,7 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,33 % de líneas, 50,31 % de ramas y 75,34 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,33 % de líneas, 50,21 % de ramas y 75,34 % de métodos.
 
 ## Privacidad y alcance
 
