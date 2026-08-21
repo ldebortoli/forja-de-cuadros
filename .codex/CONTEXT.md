@@ -46,6 +46,7 @@ Kaggle CLI 2.2.0 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere P
 - La barra superior propia y el ajuste al área útil del monitor deben permanecer accesibles en pantallas compactas.
 - Todas las superficies WPF usan una barra de scroll global tipo overlay: sin canal sólido, pulgar redondeado verde apagado y estados hover/drag sobrios; mantenerla consistente en vertical, horizontal y campos internos.
 - Los controles de entrada WPF usan superficies cacao mate, borde marrón y foco verde apagado: campos editables/solo lectura, dropdowns y su popup, checks y sliders deben conservar esta familia sin fondos blancos del sistema.
+- Después de un push no se espera, monitorea ni sondea la CI remota salvo pedido explícito del usuario; las validaciones locales siguen siendo obligatorias.
 - Kaggle es estrictamente opcional: input y kernel privados, OAuth manejado por la CLI oficial, limpieza remota activada por defecto y temporales locales eliminados después de una descarga correcta.
 - Computer Use contra Explorer produjo `Interfaz no compatible (0x80004002)` en agosto de 2026. No reintentar captura/coordenadas antes de septiembre de 2026 salvo cambio de versión; usar las capturas internas, la identidad de proceso y las propiedades COM del acceso como fallback.
 - Actualizar `.codex/` cuando cambie estado, arquitectura o workflow.

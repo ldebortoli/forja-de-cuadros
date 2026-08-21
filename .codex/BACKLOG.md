@@ -21,3 +21,4 @@ No hay tareas en curso.
 - [2026-08-20] Reforzar el alta Kaggle dentro del asistente con guía numerada, enlaces de cuenta/verificación, confirmación explícita y bloqueo con aviso antes de OAuth; captura instalada 900×640, identidad y 17 tests correctos.
 - [2026-08-20] Reemplazar globalmente los scrollbars WPF por un diseño overlay compacto, redondeado y verde apagado, sin canal claro ni flechas; capturas principal/Kaggle, instalación, identidad y 17 tests correctos.
 - [2026-08-20] Reemplazar campos, dropdowns y su popup, checks y sliders por una familia cacao mate con foco verde; capturas compacta/amplia, instalación, identidad, cierre normal y 17 tests correctos.
+- [2026-08-20] Registrar globalmente y en Forja que la CI remota no se espera ni monitorea después del push salvo pedido explícito.

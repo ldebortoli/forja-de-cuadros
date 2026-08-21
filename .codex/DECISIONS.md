@@ -85,3 +85,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-20.
 - Decisión: reemplazar los templates claros del sistema por una familia global de superficies cacao mate, bordes marrones y foco verde apagado para TextBox, ComboBox, ComboBoxItem, CheckBox y Slider. Distinguir campos de solo lectura con un marrón más profundo y mantener el popup completo del dropdown dentro de la misma paleta.
 - Motivo: los fondos blancos y los controles nativos rompían la continuidad visual de Forja; la nueva familia reduce el brillo sin alterar la identidad aprobada ni sacrificar legibilidad.
+
+## D-013 - No esperar CI remota por defecto
+
+- Estado: vigente.
+- Fecha: 2026-08-20.
+- Decisión: después de validar localmente y hacer push, no ejecutar `watch`, no sondear ni esperar GitHub Actions salvo que el usuario lo pida explícitamente en la solicitud actual.
+- Motivo: esperar una ejecución remota consume tiempo y tokens sin aportar valor al flujo habitual; el push puede quedar con CI pendiente.

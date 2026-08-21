@@ -27,6 +27,7 @@ Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y eje
 - Gitleaks: cero hallazgos en archivos e historial.
 - Secret Scanning, Push Protection, alertas y actualizaciones automáticas de seguridad activos.
 - CI usa versiones oficiales de GitHub Actions compatibles con Node 24.
+- Por regla global y del proyecto, después de cada push no se espera ni monitorea GitHub Actions salvo pedido explícito; se entrega con validación local y la CI puede quedar pendiente.
 
 ## Próximos pasos
 
