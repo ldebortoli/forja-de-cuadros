@@ -19,7 +19,7 @@ Esperar a que el usuario siga la guía integrada, cree/verifique su cuenta y eje
 - Las barras de scroll verticales, horizontales e internas comparten un template overlay sin canal sólido, con pulgar redondeado verde apagado y hover/drag discretos; el resto del diseño no cambió.
 - TextBox, ComboBox y su popup, ComboBoxItem, CheckBox y Slider comparten ahora superficies cacao mate, borde marrón y foco verde apagado; los campos de solo lectura usan un marrón algo más profundo y ya no aparecen superficies blancas del sistema.
 - CLI 2.2.0 instalada y su sintaxis actual contrastada localmente; falta únicamente el job remoto por no existir todavía la cuenta del usuario.
-- Tests locales y CI pública: 17/17; el estilo global de scroll pasó el run `32430904319`.
+- Tests locales y CI pública: 17/17; la paleta global de controles de entrada pasó el run `32433364771`.
 - Cobertura: líneas 80,61 %, ramas 48,76 %, métodos 73,72 %; umbrales 78/48/72.
 - Autoprueba FFmpeg: correcta, incluidos 16 cuadros y todos los artefactos.
 - Instalador estándar probado en `%LOCALAPPDATA%`; acceso real, iconos, AppUserModelID, ventana única y cierre normal verificados.
