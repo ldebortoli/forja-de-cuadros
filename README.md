@@ -17,7 +17,7 @@ La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, We
 - Detecta cuadros vacíos, duplicados, recortes, deriva de altura/suelo/raíz y una mala costura del loop.
 - Exporta PNG individuales, atlas 4×4 u horizontal, GIF, revisión HTML, metadata JSON y `SpriteFrames.tres`.
 - Conserva cada exportación en una carpeta nueva: no pisa animaciones previas.
-- Convierte localmente la transparencia de una imagen en fondo verde o azul, con bordes alfa correctamente compuestos, y la entrega preseleccionada al asistente I2V.
+- Convierte localmente la transparencia de una imagen en fondo verde o azul, muestra lado a lado el original y el chroma preparado, y la entrega preseleccionada al asistente I2V.
 - Incluye un asistente Kaggle I2V para convertir una imagen en MP4 mediante un trabajo privado con GPU T4 y cargar el resultado directamente en la mesa de selección.
 
 ## Requisitos
@@ -66,7 +66,7 @@ El corte alfa viene activo en `10 %` con `4 %` de suavizado. Forja lo aplica ant
 
 ### Generar el clip desde la propia aplicación
 
-El botón `ABRIR KAGGLE I2V` del paso **01 CONVERTIR A VIDEO** abre el asistente integrado y recibe automáticamente la imagen elegida o preparada en el paso 00. Antes de OAuth muestra una guía de alta, correo y verificación de cuenta, exige confirmar que esos pasos terminaron y avisa si se intenta conectar antes de tiempo. Después prepara la CLI oficial en un entorno aislado, conecta la cuenta mediante OAuth en el navegador, sube la imagen como dataset privado temporal, ejecuta LTX-Video 2B en una GPU T4, espera el resultado y recupera el MP4. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
+El botón `ABRIR KAGGLE I2V` del paso **01 CONVERTIR A VIDEO** abre el asistente integrado y recibe automáticamente la imagen elegida o preparada en el paso 00. Antes de OAuth muestra una guía de alta, correo y verificación de cuenta, exige confirmar que esos pasos terminaron y avisa si se intenta conectar antes de tiempo. Después prepara o actualiza Kaggle CLI 2.2.2 en un entorno aislado, conecta la cuenta mediante OAuth en el navegador y detecta automáticamente el usuario autenticado. Al generar, sube la imagen con licencia temporal `other` como dataset privado, ejecuta LTX-Video 2B en una GPU T4, espera el resultado y recupera el MP4. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
 
 La cuenta debe tener correo y teléfono verificados para acceder a GPU. La disponibilidad es compartida, puede haber cola y la cuota semanal varía. Consultá el [instructivo completo de Kaggle](docs/kaggle.md).
 
@@ -105,7 +105,7 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,14 % de líneas, 50,40 % de ramas y 76,00 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,14 % de líneas, 49,90 % de ramas y 76,00 % de métodos.
 
 ## Privacidad y alcance
 

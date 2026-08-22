@@ -52,6 +52,7 @@ namespace ForjaDeCuadros
             FitToCurrentMonitor(true);
             if (!string.IsNullOrWhiteSpace(_capturePath))
             {
+                AccountReadyCheck.IsChecked = true;
                 await Task.Delay(900);
                 try
                 {
@@ -69,9 +70,24 @@ namespace ForjaDeCuadros
 
             try
             {
-                bool prepared = await _kaggle.IsPreparedAsync();
-                ConnectionStatusText.Text = prepared ? "CLI LISTA · FALTA VERIFICAR" : "SIN CONFIGURAR";
-                AppendProgress(prepared ? "Kaggle CLI ya esta preparado. Conecta o verifica tu cuenta." : "Primero crea/verifica tu cuenta y despues pulsa PREPARAR KAGGLE.");
+                Version? installedVersion = await _kaggle.GetInstalledVersionAsync();
+                if (installedVersion == null)
+                {
+                    ConnectionStatusText.Text = "SIN CONFIGURAR";
+                    AppendProgress("Primero crea/verifica tu cuenta y despues pulsa PREPARAR KAGGLE.");
+                }
+                else
+                {
+                    string? username = await _kaggle.GetConfiguredUsernameAsync();
+                    ApplyDetectedUsername(username);
+                    bool current = installedVersion == new Version(KaggleCliService.KaggleCliVersion);
+                    ConnectionStatusText.Text = current
+                        ? username == null ? "CLI LISTA · FALTA CONECTAR" : "CUENTA @" + username + " DETECTADA"
+                        : "CLI " + installedVersion + " · ACTUALIZAR";
+                    AppendProgress(current
+                        ? username == null ? "Kaggle CLI ya esta preparado. Conecta tu cuenta." : "Detecté la cuenta @" + username + ". Pulsá VERIFICAR o generá directamente."
+                        : "Kaggle CLI " + installedVersion + " esta desactualizada. PREPARAR KAGGLE la actualiza a " + KaggleCliService.KaggleCliVersion + ".");
+                }
             }
             catch { ConnectionStatusText.Text = "SIN CONFIGURAR"; }
         }
@@ -115,7 +131,9 @@ namespace ForjaDeCuadros
             await RunOperationAsync(async token =>
             {
                 await _kaggle.PrepareAsync(CreateProgress(), token);
-                ConnectionStatusText.Text = "CLI LISTA · FALTA CONECTAR";
+                string? username = await _kaggle.GetConfiguredUsernameAsync(token);
+                ApplyDetectedUsername(username);
+                ConnectionStatusText.Text = username == null ? "CLI LISTA · FALTA CONECTAR" : "CUENTA @" + username + " DETECTADA";
             }, "Preparando Kaggle CLI…");
         }
 
@@ -135,8 +153,9 @@ namespace ForjaDeCuadros
 
             await RunOperationAsync(async token =>
             {
-                await _kaggle.AuthenticateAsync(CreateProgress(), token);
-                ConnectionStatusText.Text = "CONECTADA · VERIFICA GPU";
+                string? username = await _kaggle.AuthenticateAsync(CreateProgress(), token);
+                ApplyDetectedUsername(username);
+                ConnectionStatusText.Text = username == null ? "CONECTADA · VERIFICA GPU" : "CONECTADA COMO @" + username;
             }, "Abriendo OAuth de Kaggle…");
         }
 
@@ -144,8 +163,9 @@ namespace ForjaDeCuadros
         {
             await RunOperationAsync(async token =>
             {
-                await _kaggle.VerifyAuthenticationAsync(CreateProgress(), token);
-                ConnectionStatusText.Text = "CONECTADA · VERIFICA GPU";
+                string? username = await _kaggle.VerifyAuthenticationAsync(CreateProgress(), token);
+                ApplyDetectedUsername(username);
+                ConnectionStatusText.Text = username == null ? "CONECTADA · VERIFICA GPU" : "CONECTADA COMO @" + username;
             }, "Verificando la cuenta…");
         }
 
@@ -169,6 +189,7 @@ namespace ForjaDeCuadros
         {
             try
             {
+                ApplyDetectedUsername(await _kaggle.GetConfiguredUsernameAsync());
                 KaggleJobRequest request = ReadRequest();
                 await RunOperationAsync(async token =>
                 {
@@ -225,6 +246,14 @@ namespace ForjaDeCuadros
                 Seed = int.TryParse(SeedText.Text, NumberStyles.Integer, CultureInfo.CurrentCulture, out int seed) ? seed : 171198,
                 DeleteRemoteAfterDownload = DeleteRemoteCheck.IsChecked == true
             };
+        }
+
+        private void ApplyDetectedUsername(string? username)
+        {
+            if (string.IsNullOrWhiteSpace(username)) return;
+            UsernameText.Text = username;
+            UsernameHelpText.Text = "Cuenta detectada: @" + username + " · perfil: kaggle.com/" + username;
+            UsernameText.ToolTip = "https://www.kaggle.com/" + username;
         }
 
         private async Task RunOperationAsync(Func<CancellationToken, Task> operation, string startMessage)

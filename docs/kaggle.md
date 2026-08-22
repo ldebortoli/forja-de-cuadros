@@ -20,7 +20,7 @@ No hace falta crear manualmente un notebook ni descargar `kaggle.json`. Forja us
 4. Pulsá `PREPARAR KAGGLE`. La primera vez crea `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli` e instala allí la CLI oficial; requiere Python 3.11 o superior.
 5. Pulsá `CONECTAR CUENTA`. Se abre Kaggle en el navegador. Iniciá sesión, autorizá el acceso y volvé a Forja.
 6. Pulsá `VERIFICAR`. Esto confirma que la CLI puede consultar tu cuenta.
-7. Escribí tu usuario de Kaggle y ajustá el prompt, formato, duración, FPS y semilla. Si llegaste desde el paso 00 de Forja, la imagen ya aparece preseleccionada; igual podés reemplazarla.
+7. Forja completa automáticamente tu usuario de Kaggle al conectar o verificar OAuth. Es el texto que aparece después de `kaggle.com/` en la URL de tu perfil. Ajustá el prompt, formato, duración, FPS y semilla. Si llegaste desde el paso 00 de Forja, la imagen ya aparece preseleccionada; igual podés reemplazarla.
 8. Dejá activada la limpieza remota salvo que necesites conservar el trabajo para depurarlo.
 9. Pulsá `SINCRONIZAR Y GENERAR`. Forja esperará aunque Kaggle ponga el trabajo en cola.
 10. Cuando aparezca `MP4 LISTO`, pulsá `USAR ESTE VIDEO`; la ventana principal lo carga automáticamente.
@@ -66,5 +66,7 @@ Revisá siempre la información vigente en [Notebooks](https://www.kaggle.com/do
 - **OAuth no termina:** cerrá la pestaña fallida, repetí `CONECTAR CUENTA` y aceptá que el navegador abra el callback local.
 - **El trabajo falla:** pulsá `ABRIR TRABAJO` y revisá el log. Conservá temporalmente el input desmarcando la limpieza solo cuando necesites depuración.
 - **HTTP 429 / demasiadas solicitudes:** esperá unos minutos. Kaggle usa límites dinámicos y recomienda pausar antes de reintentar.
+- **`Please select a valid license`:** las versiones actuales de Forja usan la licencia `other` admitida por Kaggle para el input privado y transitorio. Actualizá Forja si una versión anterior muestra este mensaje.
+- **HTTP 403 justo después de crear el dataset:** normalmente es la consecuencia del error de licencia anterior: el dataset nunca llegó a existir. Forja ahora detiene el flujo en el primer error y evita esa consulta engañosa.
 
 Referencias oficiales: [API y autenticación](https://www.kaggle.com/docs/api), [Kaggle CLI](https://github.com/Kaggle/kaggle-cli), [comandos de kernels](https://github.com/Kaggle/kaggle-cli/blob/main/docs/kernels.md) y [metadata de kernels](https://github.com/Kaggle/kaggle-cli/blob/main/docs/kernels_metadata.md).

@@ -124,8 +124,8 @@ namespace ForjaDeCuadros
                 title = "Forja private input " + definition.JobId,
                 id = definition.DatasetHandle,
                 subtitle = "Private temporary input for Forja de Cuadros",
-                description = "Private transient image and generation request. Copyright remains with the original author.",
-                licenses = new[] { new { name = "copyright-authors" } }
+                description = "Private transient image and generation request. Copyright remains with the original author; this temporary upload is not licensed for reuse.",
+                licenses = new[] { new { name = "other" } }
             };
             WriteJson(Path.Combine(definition.DatasetFolder, "dataset-metadata.json"), datasetMetadata);
 

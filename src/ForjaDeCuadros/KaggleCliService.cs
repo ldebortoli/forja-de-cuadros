@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace ForjaDeCuadros
 {
     public sealed class KaggleCliService : IDisposable
     {
-        public const string KaggleCliVersion = "2.2.0";
+        public const string KaggleCliVersion = "2.2.2";
         private readonly object _processLock = new object();
         private Process? _activeProcess;
 
@@ -29,53 +30,78 @@ namespace ForjaDeCuadros
 
         public async Task<bool> IsPreparedAsync(CancellationToken cancellationToken = default)
         {
-            if (!File.Exists(KaggleExecutable)) return false;
+            return await GetInstalledVersionAsync(cancellationToken).ConfigureAwait(false) != null;
+        }
+
+        public async Task<Version?> GetInstalledVersionAsync(CancellationToken cancellationToken = default)
+        {
+            if (!File.Exists(KaggleExecutable)) return null;
             ProcessResult result = await RunAsync(KaggleExecutable, new[] { "--version" }, null, cancellationToken, false).ConfigureAwait(false);
-            return result.ExitCode == 0;
+            return result.ExitCode == 0 ? ParseCliVersion(result.StandardOutput + " " + result.StandardError) : null;
+        }
+
+        public async Task<string?> GetConfiguredUsernameAsync(CancellationToken cancellationToken = default)
+        {
+            if (!await IsPreparedAsync(cancellationToken).ConfigureAwait(false)) return null;
+            ProcessResult result = await RunAsync(KaggleExecutable, new[] { "config", "view" }, null, cancellationToken, false).ConfigureAwait(false);
+            return result.ExitCode == 0 ? ParseConfiguredUsername(result.StandardOutput + Environment.NewLine + result.StandardError) : null;
         }
 
         public async Task PrepareAsync(IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
-            if (await IsPreparedAsync(cancellationToken).ConfigureAwait(false))
+            Version targetVersion = new Version(KaggleCliVersion);
+            Version? installedVersion = await GetInstalledVersionAsync(cancellationToken).ConfigureAwait(false);
+            if (installedVersion == targetVersion)
             {
-                progress?.Report("Kaggle CLI ya esta preparado en el entorno privado de Forja.");
+                progress?.Report("Kaggle CLI " + KaggleCliVersion + " ya esta preparado en el entorno privado de Forja.");
                 return;
             }
 
             Directory.CreateDirectory(RootFolder);
-            progress?.Report("Buscando Python 3.11 o superior…");
-            PythonCommand python = await FindPythonAsync(cancellationToken).ConfigureAwait(false) ?? throw new InvalidOperationException("No encontre Python 3.11 o superior. Instalalo desde https://www.python.org/downloads/ y volve a intentar.");
-            progress?.Report("Creando el entorno aislado para Kaggle…");
-            var createArguments = new List<string>(python.PrefixArguments) { "-m", "venv", EnvironmentFolder };
-            await RunCheckedAsync(python.Executable, createArguments, progress, cancellationToken).ConfigureAwait(false);
-
             string environmentPython = OperatingSystem.IsWindows() ? Path.Combine(EnvironmentFolder, "Scripts", "python.exe") : Path.Combine(EnvironmentFolder, "bin", "python");
-            progress?.Report("Instalando Kaggle CLI oficial " + KaggleCliVersion + "…");
+            if (!File.Exists(environmentPython))
+            {
+                progress?.Report("Buscando Python 3.11 o superior…");
+                PythonCommand python = await FindPythonAsync(cancellationToken).ConfigureAwait(false) ?? throw new InvalidOperationException("No encontre Python 3.11 o superior. Instalalo desde https://www.python.org/downloads/ y volve a intentar.");
+                progress?.Report("Creando el entorno aislado para Kaggle…");
+                var createArguments = new List<string>(python.PrefixArguments) { "-m", "venv", EnvironmentFolder };
+                await RunCheckedAsync(python.Executable, createArguments, progress, cancellationToken).ConfigureAwait(false);
+            }
+
+            progress?.Report(installedVersion == null
+                ? "Instalando Kaggle CLI oficial " + KaggleCliVersion + "…"
+                : "Actualizando Kaggle CLI " + installedVersion + " → " + KaggleCliVersion + "…");
             await RunCheckedAsync(environmentPython, new[] { "-m", "pip", "install", "--disable-pip-version-check", "--upgrade", "kaggle==" + KaggleCliVersion }, progress, cancellationToken).ConfigureAwait(false);
-            if (!await IsPreparedAsync(cancellationToken).ConfigureAwait(false)) throw new InvalidOperationException("Kaggle CLI se instalo pero no responde correctamente.");
+            if (await GetInstalledVersionAsync(cancellationToken).ConfigureAwait(false) != targetVersion) throw new InvalidOperationException("Kaggle CLI se instalo pero no responde con la version esperada " + KaggleCliVersion + ".");
             progress?.Report("Kaggle CLI listo. Forja no guardo ninguna credencial.");
         }
 
-        public async Task AuthenticateAsync(IProgress<string>? progress = null, CancellationToken cancellationToken = default)
+        public async Task<string?> AuthenticateAsync(IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
             await PrepareAsync(progress, cancellationToken).ConfigureAwait(false);
             progress?.Report("Se abrira Kaggle en tu navegador. Acepta el acceso y volve a Forja.");
             await RunCheckedAsync(KaggleExecutable, new[] { "auth", "login", "--force" }, progress, cancellationToken).ConfigureAwait(false);
             progress?.Report("OAuth termino. Verificando la cuenta…");
-            await VerifyAuthenticationAsync(progress, cancellationToken).ConfigureAwait(false);
+            return await VerifyAuthenticationAsync(progress, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task VerifyAuthenticationAsync(IProgress<string>? progress = null, CancellationToken cancellationToken = default)
+        public async Task<string?> VerifyAuthenticationAsync(IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
             if (!await IsPreparedAsync(cancellationToken).ConfigureAwait(false)) throw new InvalidOperationException("Primero prepara Kaggle CLI.");
             ProcessResult result = await RunAsync(KaggleExecutable, new[] { "datasets", "list", "--mine", "--page", "1" }, progress, cancellationToken, false).ConfigureAwait(false);
             if (result.ExitCode != 0) throw new InvalidOperationException("Kaggle no esta conectado. Usa CONECTAR CUENTA y completa OAuth en el navegador.\n\n" + LastUsefulLine(result));
-            progress?.Report("Cuenta Kaggle conectada. Recorda verificar el telefono para habilitar GPU.");
+            string? username = await GetConfiguredUsernameAsync(cancellationToken).ConfigureAwait(false);
+            progress?.Report(username == null
+                ? "Cuenta Kaggle conectada. Recorda verificar el telefono para habilitar GPU."
+                : "Cuenta Kaggle conectada como @" + username + ". Recorda verificar el telefono para habilitar GPU.");
+            return username;
         }
 
         public async Task<KaggleJobResult> RunImageToVideoAsync(KaggleJobRequest request, IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
-            await VerifyAuthenticationAsync(progress, cancellationToken).ConfigureAwait(false);
+            await PrepareAsync(progress, cancellationToken).ConfigureAwait(false);
+            string? authenticatedUsername = await VerifyAuthenticationAsync(progress, cancellationToken).ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(authenticatedUsername)) request.Username = authenticatedUsername;
             string suffix = Guid.NewGuid().ToString("N").Substring(0, 6);
             KaggleJobDefinition definition = KaggleJobTemplate.Create(request, JobsFolder, DateTimeOffset.UtcNow, suffix);
             KaggleJobTemplate.WriteFiles(request, definition);
@@ -220,10 +246,30 @@ namespace ForjaDeCuadros
             return Version.TryParse(cleaned, out Version? version) ? version : null;
         }
 
+        public static Version? ParseCliVersion(string value)
+        {
+            Match match = Regex.Match(value ?? string.Empty, @"Kaggle CLI\s+(\d+\.\d+\.\d+)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            return match.Success && Version.TryParse(match.Groups[1].Value, out Version? version) ? version : null;
+        }
+
+        public static string? ParseConfiguredUsername(string value)
+        {
+            foreach (string line in (value ?? string.Empty).Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                Match match = Regex.Match(line, "^\\s*-?\\s*username\\s*:\\s*['\\\"]?([A-Za-z0-9_-]{2,50})['\\\"]?\\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                if (match.Success) return match.Groups[1].Value;
+            }
+            return null;
+        }
+
         private async Task RunCheckedAsync(string executable, IEnumerable<string> arguments, IProgress<string>? progress, CancellationToken cancellationToken)
         {
             ProcessResult result = await RunAsync(executable, arguments, progress, cancellationToken, false).ConfigureAwait(false);
-            if (result.ExitCode != 0) throw new InvalidOperationException(Path.GetFileName(executable) + " termino con codigo " + result.ExitCode + ".\n\n" + LastUsefulLine(result));
+            string combined = result.StandardError + Environment.NewLine + result.StandardOutput;
+            if (result.ExitCode != 0 || ContainsReportedCliFailure(combined))
+            {
+                throw new InvalidOperationException(Path.GetFileName(executable) + " no pudo completar la operacion (codigo " + result.ExitCode + ").\n\n" + LastUsefulLine(result));
+            }
         }
 
         private async Task<ProcessResult> RunAsync(string executable, IEnumerable<string> arguments, IProgress<string>? progress, CancellationToken cancellationToken, bool unused)
@@ -271,6 +317,14 @@ namespace ForjaDeCuadros
         private static bool IsRateLimited(string value)
         {
             return value.Contains("429", StringComparison.OrdinalIgnoreCase) || value.Contains("TOO MANY REQUESTS", StringComparison.OrdinalIgnoreCase) || value.Contains("RATE LIMIT", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool ContainsReportedCliFailure(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return false;
+            return value.Contains("Dataset creation error:", StringComparison.OrdinalIgnoreCase)
+                || value.Contains("Kernel push error:", StringComparison.OrdinalIgnoreCase)
+                || value.Contains("403 Client Error:", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string UniqueOutputPath(string folder, string baseName, string extension)

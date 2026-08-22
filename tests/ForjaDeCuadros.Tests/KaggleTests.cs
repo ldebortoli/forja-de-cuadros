@@ -44,7 +44,8 @@ public sealed class KaggleTests
             Assert.Equal(definition.DatasetHandle, kernel.RootElement.GetProperty("dataset_sources")[0].GetString());
 
             using JsonDocument dataset = JsonDocument.Parse(File.ReadAllText(Path.Combine(definition.DatasetFolder, "dataset-metadata.json")));
-            Assert.Equal("copyright-authors", dataset.RootElement.GetProperty("licenses")[0].GetProperty("name").GetString());
+            Assert.Equal("other", dataset.RootElement.GetProperty("licenses")[0].GetProperty("name").GetString());
+            Assert.Contains("not licensed for reuse", dataset.RootElement.GetProperty("description").GetString());
             string script = File.ReadAllText(Path.Combine(definition.KernelFolder, "forja_ltx.py"));
             Assert.Contains(KaggleJobTemplate.LtxCommit, script);
             Assert.Contains("forja-output.mp4", script);
@@ -79,6 +80,27 @@ public sealed class KaggleTests
         Assert.NotNull(version);
         Assert.Equal(major, version!.Major);
         Assert.Equal(minor, version.Minor);
+    }
+
+    [Fact]
+    public void CliParsers_ReadVersionAndOauthUsername()
+    {
+        Version? version = KaggleCliService.ParseCliVersion("Kaggle CLI 2.2.2\r\n");
+        string? username = KaggleCliService.ParseConfiguredUsername("Configuration values\n- username: detected_user\n- auth_method: OAUTH");
+
+        Assert.Equal(new Version(2, 2, 2), version);
+        Assert.Equal("detected_user", username);
+        Assert.Null(KaggleCliService.ParseConfiguredUsername("- auth_method: OAUTH"));
+    }
+
+    [Theory]
+    [InlineData("Dataset creation error: Please select a valid license.")]
+    [InlineData("403 Client Error: Forbidden")]
+    [InlineData("Kernel push error: GPU quota exceeded")]
+    public void CliFailureParser_DetectsErrorsReportedWithSuccessfulExitCode(string output)
+    {
+        Assert.True(KaggleCliService.ContainsReportedCliFailure(output));
+        Assert.False(KaggleCliService.ContainsReportedCliFailure("Dataset created successfully"));
     }
 
     [Fact]

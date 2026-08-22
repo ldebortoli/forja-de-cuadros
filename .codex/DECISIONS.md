@@ -120,3 +120,17 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-21.
 - Decisión: añadir al paso 03 un corte alfa activado por defecto en 10 %, un suavizado independiente en 4 % y una previsualización sobre damero. Aplicar la máscara después del chroma antes de medir límites y repetirla después del escalado/remuestreo.
 - Motivo: los píxeles de alfa muy bajo forman halos y además falsean el encuadre; la segunda pasada limpia transparencias débiles reintroducidas por interpolación sin obligar a destruir detalle con un umbral duro.
+
+## D-018 - Identidad Kaggle automática y dataset transitorio compatible
+
+- Estado: vigente; reemplaza la versión de CLI y la entrada manual de usuario de D-007.
+- Fecha: 2026-08-22.
+- Decisión: fijar Kaggle CLI 2.2.2 con actualización automática, detectar el usuario OAuth mediante `kaggle config view`, sobrescribir el slug manual con la identidad autenticada, declarar el dataset privado temporal con licencia `other` y tratar mensajes `Dataset creation error`, `Kernel push error` o HTTP 403 como fallos aunque la CLI devuelva código 0.
+- Motivo: la primera prueba real confirmó que la identidad ingresada coincidía con OAuth, pero el endpoint rechazó `copyright-authors`; la CLI continuó y produjo un 403 secundario. Una prueba privada mínima con `other` terminó en estado `ready` y se eliminó correctamente sin usar GPU.
+
+## D-019 - Checkmark estable y doble visor en el paso 00
+
+- Estado: vigente.
+- Fecha: 2026-08-22.
+- Decisión: renderizar el checkmark como un path no estirado, centrado dentro de una caja redondeada de 18 px, y mostrar en el paso 00 dos visores gemelos sobre damero para la imagen original y el chroma que recibirá Kaggle.
+- Motivo: el escalado automático deformaba el tilde y no existía confirmación visual de la imagen cargada ni del archivo preparado que se entregaba al paso siguiente.

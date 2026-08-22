@@ -232,24 +232,29 @@
                     <ControlTemplate TargetType="{x:Type CheckBox}">
                         <Grid x:Name="CheckRoot" Background="Transparent">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="18"/>
+                                <ColumnDefinition Width="21"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Border x:Name="CheckShell"
-                                    Width="16"
-                                    Height="16"
+                                    Width="18"
+                                    Height="18"
                                     Background="{StaticResource InputSurface}"
                                     BorderBrush="{StaticResource InputBorder}"
                                     BorderThickness="1"
-                                    CornerRadius="3"
+                                    CornerRadius="5"
                                     HorizontalAlignment="Left"
-                                    VerticalAlignment="Center">
+                                    VerticalAlignment="Center"
+                                    SnapsToDevicePixels="True">
                                 <Path x:Name="CheckMark"
-                                      Data="M 2.5 7.5 L 6.2 11 L 13.2 3.5"
-                                      Stroke="{StaticResource PaperLight}"
-                                      StrokeThickness="2"
+                                      Data="M 1.5 5.5 L 5 9 L 11.5 1.8"
+                                      Stroke="#FFF8EA"
+                                      StrokeThickness="2.2"
                                       StrokeStartLineCap="Round"
                                       StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Stretch="None"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
                                       Visibility="Collapsed"/>
                             </Border>
                             <ContentPresenter Grid.Column="1"
@@ -266,8 +271,8 @@
                                 <Setter TargetName="CheckShell" Property="BorderThickness" Value="2"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="CheckShell" Property="Background" Value="{StaticResource Teal}"/>
-                                <Setter TargetName="CheckShell" Property="BorderBrush" Value="#205F58"/>
+                                <Setter TargetName="CheckShell" Property="Background" Value="#2B716A"/>
+                                <Setter TargetName="CheckShell" Property="BorderBrush" Value="#75AAA3"/>
                                 <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">

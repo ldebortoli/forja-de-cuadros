@@ -250,6 +250,9 @@ namespace ForjaDeCuadros
 
             _selectedImage = dialog.FileName;
             _preparedImage = null;
+            ShowInitialPreview(dialog.FileName, false);
+            InitialPreparedPreviewImage.Source = null;
+            InitialPreparedPreviewHint.Visibility = Visibility.Visible;
             InitialImagePathText.Text = dialog.FileName;
             InitialImagePathText.ToolTip = dialog.FileName;
             KaggleImagePathText.Text = "Preparando chroma verde…";
@@ -276,6 +279,7 @@ namespace ForjaDeCuadros
                 string outputPath = ImagePreparationService.CreateOutputPath(_selectedImage, outputFolder, presetName);
                 PreparedImageResult result = ImagePreparationService.Prepare(_selectedImage, outputPath, keyR, keyG, keyB);
                 _preparedImage = result.OutputPath;
+                ShowInitialPreview(result.OutputPath, true);
                 KaggleImagePathText.Text = result.OutputPath;
                 KaggleImagePathText.ToolTip = result.OutputPath;
 
@@ -294,10 +298,45 @@ namespace ForjaDeCuadros
             catch (Exception exception)
             {
                 _preparedImage = null;
+                InitialPreparedPreviewImage.Source = null;
+                InitialPreparedPreviewHint.Visibility = Visibility.Visible;
                 KaggleImagePathText.Text = "No se pudo preparar la imagen";
                 KaggleImagePathText.ToolTip = null;
                 ShowError("No pude preparar la imagen", exception);
                 return false;
+            }
+        }
+
+        private void ShowInitialPreview(string path, bool prepared)
+        {
+            try
+            {
+                ImageSource source = ImageLoading.LoadBitmap(path);
+                if (prepared)
+                {
+                    InitialPreparedPreviewImage.Source = source;
+                    InitialPreparedPreviewHint.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    InitialOriginalPreviewImage.Source = source;
+                    InitialOriginalPreviewHint.Visibility = Visibility.Collapsed;
+                }
+            }
+            catch
+            {
+                if (prepared)
+                {
+                    InitialPreparedPreviewImage.Source = null;
+                    InitialPreparedPreviewHint.Text = "NO SE PUDO MOSTRAR";
+                    InitialPreparedPreviewHint.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    InitialOriginalPreviewImage.Source = null;
+                    InitialOriginalPreviewHint.Text = "NO SE PUDO MOSTRAR";
+                    InitialOriginalPreviewHint.Visibility = Visibility.Visible;
+                }
             }
         }
 
