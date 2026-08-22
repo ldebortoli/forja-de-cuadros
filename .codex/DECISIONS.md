@@ -162,3 +162,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-22.
 - Decisión: usar por ahora una aplicación I2V externa y cargar su MP4 directamente en `02 VIDEO`; conservar Kaggle sólo como opción técnica, sin nuevas ejecuciones automáticas.
 - Motivo: Forja ya desacopla la generación del procesamiento de cuadros, y la calidad de LTX 2B no sirve para preservar este personaje.
+
+## D-024 - Eliminar el backend cloud integrado y aprobar proveedores de a uno
+
+- Estado: vigente; reemplaza D-007, D-009, D-010, D-014/D-016 en sus referencias a Kaggle y D-018 a D-023 en lo relativo a conservar esa integración.
+- Fecha: 2026-08-22.
+- Decisión: eliminar de la aplicación mantenida la ventana, CLI, modelos, tests, captura, documentación y caché local del backend Kaggle/LTX. El paso 01 conserva el PNG croma, permite copiar su ruta o abrir la carpeta y abre solamente sitios I2V aprobados; no conecta cuentas, ejecuta modelos ni sube archivos. Grok Imagine es el único proveedor aprobado. Cualquier candidato nuevo entra a la UI sólo después de una prueba real y aprobación expresa del usuario.
+- Motivo: el backend requirió correcciones costosas y, aun completando un job válido, destruyó identidad, anatomía y chroma. Mantener Forja independiente del generador reduce fallos, elimina credenciales/cuotas internas y permite comparar servicios sobre la misma imagen canónica.

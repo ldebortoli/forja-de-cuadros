@@ -6,6 +6,8 @@
 
 # DONE
 
+- [2026-08-22] Retirar por completo la integración Kaggle/LTX: borrar ventana, cliente, modelos, tests, captura, documentación y caché local; sustituir el paso 01 por un puente manual a proveedores externos con ruta/copiar/carpeta y Grok Imagine como único aprobado. Documentar candidatos I2V sin agregarlos a la UI antes de la aprobación del usuario. Validado con build 0/0, 14/14 tests, cobertura 84,84/65,72/78,37, autoprueba FFmpeg 5/5, captura compacta, acceso real, iconos, identidad y cierre normal.
+
 - [2026-08-20] Inicializar memoria persistente y estructura Git independiente.
 - [2026-08-20] Migrar la aplicación de .NET 5 a .NET 8 y asignar identidad pública estable.
 - [2026-08-20] Generalizar el instalador para menú Inicio y conservar `-CodexApps` como opción.

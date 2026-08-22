@@ -255,8 +255,8 @@ namespace ForjaDeCuadros
             InitialPreparedPreviewHint.Visibility = Visibility.Visible;
             InitialImagePathText.Text = dialog.FileName;
             InitialImagePathText.ToolTip = dialog.FileName;
-            KaggleImagePathText.Text = "Preparando chroma verde…";
-            KaggleImagePathText.ToolTip = null;
+            PreparedImagePathText.Text = "Preparando chroma verde…";
+            PreparedImagePathText.ToolTip = null;
             ImagePrepStatusText.Text = "Imagen elegida. Preparando chroma verde automáticamente…";
             ImagePrepStatusText.ToolTip = null;
             PrepareInitialImage("#00FF00");
@@ -280,13 +280,13 @@ namespace ForjaDeCuadros
                 PreparedImageResult result = ImagePreparationService.Prepare(_selectedImage, outputPath, keyR, keyG, keyB);
                 _preparedImage = result.OutputPath;
                 ShowInitialPreview(result.OutputPath, true);
-                KaggleImagePathText.Text = result.OutputPath;
-                KaggleImagePathText.ToolTip = result.OutputPath;
+                PreparedImagePathText.Text = result.OutputPath;
+                PreparedImagePathText.ToolTip = result.OutputPath;
 
                 if (result.HadTransparency)
                 {
                     double transparentPercent = 100.0 * result.TransparentPixelCount / Math.Max(1, result.PixelCount);
-                    ImagePrepStatusText.Text = $"Chroma listo · {result.Width} × {result.Height} · {transparentPercent:0.#} % con transparencia. Kaggle usará este PNG.";
+                    ImagePrepStatusText.Text = $"Chroma listo · {result.Width} × {result.Height} · {transparentPercent:0.#} % con transparencia. Ya podés subir este PNG al generador de video.";
                 }
                 else
                 {
@@ -300,8 +300,8 @@ namespace ForjaDeCuadros
                 _preparedImage = null;
                 InitialPreparedPreviewImage.Source = null;
                 InitialPreparedPreviewHint.Visibility = Visibility.Visible;
-                KaggleImagePathText.Text = "No se pudo preparar la imagen";
-                KaggleImagePathText.ToolTip = null;
+                PreparedImagePathText.Text = "No se pudo preparar la imagen";
+                PreparedImagePathText.ToolTip = null;
                 ShowError("No pude preparar la imagen", exception);
                 return false;
             }
@@ -364,14 +364,35 @@ namespace ForjaDeCuadros
             finally { SetBusy(false); }
         }
 
-        private async void Kaggle_Click(object sender, RoutedEventArgs e)
+        private void CopyPreparedPath_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(_selectedImage) && string.IsNullOrWhiteSpace(_preparedImage) && !PrepareInitialImage("#00FF00")) return;
-            var dialog = new KaggleWindow(initialImagePath: _preparedImage ?? _selectedImage) { Owner = this };
-            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.GeneratedVideoPath))
+            if (!EnsurePreparedImage()) return;
+            Clipboard.SetText(_preparedImage!);
+            ImagePrepStatusText.Text = "Ruta copiada. Pegala en el selector de archivos del generador si lo admite.";
+        }
+
+        private void OpenPreparedFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (!EnsurePreparedImage()) return;
+            Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = "/select,\"" + _preparedImage + "\"", UseShellExecute = true });
+        }
+
+        private void OpenGrok_Click(object sender, RoutedEventArgs e)
+        {
+            if (!EnsurePreparedImage()) return;
+            Process.Start(new ProcessStartInfo { FileName = "https://grok.com/imagine", UseShellExecute = true });
+            ImagePrepStatusText.Text = "Grok Imagine abierto. Subí el PNG preparado y, al terminar, descargá el MP4 para el paso 02.";
+        }
+
+        private bool EnsurePreparedImage()
+        {
+            if (string.IsNullOrWhiteSpace(_selectedImage))
             {
-                await LoadVideoAsync(dialog.GeneratedVideoPath);
+                MessageBox.Show(this, "Primero elegí una imagen en el paso 00.", "Falta la imagen", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
             }
+            if (string.IsNullOrWhiteSpace(_preparedImage) && !PrepareInitialImage("#00FF00")) return false;
+            return !string.IsNullOrWhiteSpace(_preparedImage) && File.Exists(_preparedImage);
         }
 
         private async void Extract_Click(object sender, RoutedEventArgs e)

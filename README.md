@@ -4,7 +4,7 @@ Aplicación gratuita y local para convertir un video corto en una animación ras
 
 ![Forja de Cuadros en una pantalla compacta](docs/images/forja-small-monitor.png)
 
-La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, WebM o GIF, extrae fotogramas con FFmpeg y permite seleccionar, limpiar, alinear, auditar y exportar la animación. El procesamiento tradicional es local; el asistente Kaggle I2V es opcional y sólo envía la imagen cuando el usuario inicia la generación.
+La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, WebM o GIF, extrae fotogramas con FFmpeg y permite seleccionar, limpiar, alinear, auditar y exportar la animación. Forja procesa todo localmente; para generar el clip se abre el servicio externo que prefieras y la carga del archivo se hace de forma explícita.
 
 > **English:** A free, local Windows tool that turns a short video into a reviewed 16-frame raster animation package for Godot. The UI is currently in Spanish.
 
@@ -17,8 +17,8 @@ La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, We
 - Detecta cuadros vacíos, duplicados, recortes, deriva de altura/suelo/raíz y una mala costura del loop.
 - Exporta PNG individuales, atlas 4×4 u horizontal, GIF, revisión HTML, metadata JSON y `SpriteFrames.tres`.
 - Conserva cada exportación en una carpeta nueva: no pisa animaciones previas.
-- Convierte localmente la transparencia de una imagen en fondo verde o azul, muestra lado a lado el original y el chroma preparado, y la entrega preseleccionada al asistente I2V.
-- Incluye un asistente Kaggle I2V para convertir una imagen en MP4 mediante un trabajo privado con GPU T4 y cargar el resultado directamente en la mesa de selección.
+- Convierte localmente la transparencia de una imagen en fondo verde o azul y muestra lado a lado el original y el chroma preparado.
+- Deja la ruta preparada lista para copiar o ubicar en su carpeta y ofrece accesos a generadores I2V aprobados sin guardar cuentas ni enviar archivos por su cuenta.
 
 ## Requisitos
 
@@ -51,7 +51,7 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 
 1. Generá el personaje donde prefieras y, si es posible, guardalo como PNG transparente.
 2. En `00 GENERAR IMAGEN`, elegí el archivo: Forja prepara chroma verde automáticamente y completa la ruta del paso 01. Podés cambiarla a azul con un clic. Este paso es local y no consume créditos.
-3. En `01 CONVERTIR A VIDEO`, abrí Kaggle I2V —o usá cualquier otra herramienta— y pedí cámara fija, personaje completo y una sola acción de 2–4 segundos.
+3. En `01 CONVERTIR A VIDEO`, copiá o localizá el PNG preparado, abrí un generador externo aprobado y pedí cámara fija, personaje completo y una sola acción de 2–4 segundos. Por ahora la lista incluye Grok Imagine.
 4. En `02 VIDEO`, cargá el clip, definí inicio/final y extraé candidatos.
 5. Elegí exactamente 16 cuadros; `AUTO 16` distribuye la selección sobre todo el tramo.
 6. En `03 FONDO / CHROMA`, tomá el color del fondo. Si queda un contorno semitransparente, dejá activa `Limpiar halo con corte alfa`, subí **Corte alfa** hasta eliminarlo y compensá un borde dentado con un poco de **Suavizado del corte**. La vista sobre damero se actualiza mientras movés ambos controles.
@@ -64,13 +64,13 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 
 El corte alfa viene activo en `10 %` con `4 %` de suavizado. Forja lo aplica antes de calcular los límites y de nuevo después del escalado: la primera pasada evita que el halo altere la alineación y la segunda elimina transparencias débiles introducidas por el remuestreo. Los PNG originales nunca se modifican.
 
-### Generar el clip desde la propia aplicación
+### Generar el clip con un servicio externo
 
-El botón `ABRIR KAGGLE I2V` del paso **01 CONVERTIR A VIDEO** abre el asistente integrado y recibe automáticamente la imagen elegida o preparada en el paso 00. Antes de OAuth muestra una guía de alta, correo y verificación de cuenta, exige confirmar que esos pasos terminaron y avisa si se intenta conectar antes de tiempo. Después prepara o actualiza Kaggle CLI 2.2.2 en un entorno aislado, conecta la cuenta mediante OAuth en el navegador y detecta automáticamente el usuario autenticado. `VERIFICAR` muestra un resultado persistente de éxito o fallo, y el mismo panel consulta el porcentaje y las horas de cuota GPU semanal restante. Al generar, sube la imagen con licencia temporal `other` como dataset privado, ejecuta LTX-Video 2B con descarga secuencial CPU/GPU en una T4, espera el resultado y recupera el MP4. Si el kernel falla, Forja descarga su log y explica causas conocidas. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
+El paso **01 CONVERTIR A VIDEO** no ejecuta modelos ni conecta cuentas. Conserva la ruta exacta del PNG preparado, permite copiarla o mostrarla en el Explorador y abre los servicios que el proyecto haya aprobado. La lista inicial contiene solamente **Grok Imagine**. Subí el archivo manualmente, descargá el resultado y cargalo en `02 VIDEO`.
 
-La cuenta debe tener correo y teléfono verificados para acceder a GPU. La disponibilidad es compartida, puede haber cola y la cuota semanal varía. Consultá el [instructivo completo de Kaggle](docs/kaggle.md).
+Separar la generación evita atar Forja a una cuenta, cuota o modelo concreto. También permite comparar varios proveedores sobre la misma imagen canónica antes de invertir tiempo en la extracción. Revisá siempre identidad, anatomía, equipo rígido y uniformidad del chroma antes de convertir el clip en cuadros.
 
-> **Calidad:** que el kernel termine no garantiza fidelidad visual. LTX-Video 2B puede alterar cara, manos, anatomía, ropa/equipo y uniformidad del chroma; revisá el MP4 antes de convertirlo en cuadros y no uses este modo para personajes cuya identidad deba preservarse estrictamente.
+La [comparación de proveedores](docs/proveedores-i2v.md) distingue cupos recurrentes, pruebas únicas, marcas de agua y restricciones de uso. Solamente los servicios aprobados aparecen como botones dentro de la aplicación.
 
 La auditoría automática encuentra problemas mecánicos, pero no reemplaza la revisión de anatomía, dirección de pies, ropa, pelo o equipo rígido.
 
@@ -107,14 +107,14 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 85,57 % de líneas, 51,40 % de ramas y 77,35 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 84,84 % de líneas, 65,72 % de ramas y 78,37 % de métodos. Los conectores WPF generados por XAML se excluyen de forma explícita; no contienen lógica mantenida a mano.
 
 ## Privacidad y alcance
 
 - La preparación de transparencia/chroma, la selección de cuadros y la exportación ocurren enteramente en tu PC.
 - El flujo local no requiere cuentas, telemetría, API keys ni servicios en la nube.
-- El procesamiento tradicional sigue siendo enteramente local. `KAGGLE I2V` es opcional y sí envía la imagen y el prompt a Kaggle cuando el usuario pulsa `SINCRONIZAR Y GENERAR`.
-- Los trabajos Kaggle creados por Forja son privados. La limpieza remota posterior a la descarga está activada por defecto.
+- Forja no conecta cuentas ni sube imágenes o videos a terceros. Los botones de proveedores solamente abren su sitio web.
+- El usuario decide qué archivo subir y queda sujeto a los términos y políticas del servicio externo elegido.
 - Los logs de fallos, si existen, quedan en `%LOCALAPPDATA%\ForjaDeCuadros\Logs`.
 - Los binarios, videos, exportaciones, logs y contenido del usuario están excluidos del repositorio.
 
