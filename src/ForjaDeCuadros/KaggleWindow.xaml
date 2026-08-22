@@ -32,6 +32,15 @@
         <Style x:Key="Label" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#665C4C"/><Setter Property="FontSize" Value="11"/><Setter Property="Margin" Value="0,0,0,4"/>
         </Style>
+        <Style x:Key="QuotaProgress" TargetType="ProgressBar">
+            <Setter Property="Height" Value="8"/><Setter Property="Minimum" Value="0"/><Setter Property="Maximum" Value="100"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ProgressBar">
+                <Grid x:Name="PART_Track" ClipToBounds="True">
+                    <Border Background="#CBBE9F" CornerRadius="4"/>
+                    <Border x:Name="PART_Indicator" Background="#317466" CornerRadius="4" HorizontalAlignment="Left"/>
+                </Grid>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -98,6 +107,29 @@
                                 <Button x:Name="VerifyButton" Content="VERIFICAR" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="Verify_Click"/>
                                 <Button Content="AJUSTES API" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="OpenApiSettings_Click"/>
                             </WrapPanel>
+                            <Border x:Name="VerificationResultBorder" Background="#EFE4CD" BorderBrush="#C9B895" BorderThickness="1" CornerRadius="9" Padding="11,9" Margin="0,11,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="30"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <Border x:Name="VerificationResultIconBorder" Width="24" Height="24" CornerRadius="12" Background="#B6A98E" VerticalAlignment="Top">
+                                        <TextBlock x:Name="VerificationResultIcon" Text="?" Foreground="#FFF9EB" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock x:Name="VerificationResultTitle" Text="VERIFICACION PENDIENTE" Foreground="#5C5243" FontSize="11" FontWeight="Bold"/>
+                                        <TextBlock x:Name="VerificationResultText" Text="Pulsa VERIFICAR para comprobar que OAuth y la API de Kaggle responden." Foreground="#665C4C" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Border x:Name="GpuQuotaBorder" Background="#E7DDC7" BorderBrush="#C9B895" BorderThickness="1" CornerRadius="9" Padding="11,9" Margin="0,8,0,0">
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="CUOTA GPU SEMANAL" Foreground="#5C5243" FontSize="11" FontWeight="Bold"/>
+                                        <TextBlock x:Name="GpuQuotaValueText" Grid.Column="1" Text="SIN CONSULTAR" Foreground="#1E615A" FontSize="11" FontWeight="Bold"/>
+                                    </Grid>
+                                    <ProgressBar x:Name="GpuQuotaProgress" Style="{StaticResource QuotaProgress}" Value="0" Margin="0,6,0,0"/>
+                                    <TextBlock x:Name="GpuQuotaDetailText" Text="Se actualiza al abrir, conectar, verificar y terminar un trabajo." Foreground="#665C4C" FontSize="10" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </Border>
 

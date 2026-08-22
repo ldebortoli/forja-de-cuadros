@@ -134,3 +134,31 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-22.
 - Decisión: renderizar el checkmark como un path no estirado, centrado dentro de una caja redondeada de 18 px, y mostrar en el paso 00 dos visores gemelos sobre damero para la imagen original y el chroma que recibirá Kaggle.
 - Motivo: el escalado automático deformaba el tilde y no existía confirmación visual de la imagen cargada ni del archivo preparado que se entregaba al paso siguiente.
+
+## D-020 - Compatibilidad LTX 2B con Kaggle T4
+
+- Estado: vigente.
+- Fecha: 2026-08-22.
+- Decisión: mantener LTX-Video 2B 0.9.8 distilled fijado y adaptar en cada kernel su source exacto para desactivar Florence/Llama, usar offload secuencial de Diffusers, conservar condicionamiento/reescalado/VAE en dispositivos coherentes y decodificar el VAE mediante bloques temporales causales solapados. Fallar de forma segura si cambia cualquier marcador del source o si se reconstruyen menos cuadros que los pedidos.
+- Motivo: la prueba GPU real reveló agotamiento de VRAM al cargar modelos y decodificar 97 cuadros, además de tres incompatibilidades CPU/CUDA en el source fijado. La estrategia terminó una generación T4 real H.264 de 512×512, 30 FPS y exactamente 97 cuadros sin reducir el formato solicitado.
+
+## D-021 - Verificación visible, diagnóstico remoto y cuota oficial
+
+- Estado: vigente.
+- Fecha: 2026-08-22.
+- Decisión: mostrar el resultado de `VERIFICAR` como panel persistente y mensaje modal; descargar logs fallidos con `python -X utf8 -m kaggle kernels logs`, traducir causas conocidas y mostrar la cuota GPU semanal desde `kaggle quota --csv` en porcentaje, horas y fecha de reinicio.
+- Motivo: el badge anterior no confirmaba inequívocamente éxito o fallo y el estado `KernelWorkerStatus.ERROR` ocultaba su causa. Kaggle CLI 2.2.2 expone datos de cuota estructurados, por lo que no hace falta estimarlos ni enviar al usuario a otra página para conocerlos.
+
+## D-022 - Kaggle/LTX descartado para producción artística actual
+
+- Estado: vigente.
+- Fecha: 2026-08-22.
+- Decisión: conservar la integración como opción técnica pública, pero no usarla ni gastar más cuota para las animaciones reales del personaje salvo pedido explícito o cambio de modelo. Documentar que LTX 2B puede deformar identidad, anatomía, equipo y chroma aun cuando el job termine correctamente.
+- Motivo: el primer MP4 real validado entregó los 97 cuadros pedidos, pero la revisión visual mostró una degradación severa e inaceptable de cara, manos, silueta y fondo. El usuario descartó expresamente Kaggle si ésa es la calidad obtenida.
+
+## D-023 - Video externo como fuente de producción
+
+- Estado: vigente.
+- Fecha: 2026-08-22.
+- Decisión: usar por ahora una aplicación I2V externa y cargar su MP4 directamente en `02 VIDEO`; conservar Kaggle sólo como opción técnica, sin nuevas ejecuciones automáticas.
+- Motivo: Forja ya desacopla la generación del procesamiento de cuadros, y la calidad de LTX 2B no sirve para preservar este personaje.

@@ -50,6 +50,19 @@ public sealed class KaggleTests
             Assert.Contains(KaggleJobTemplate.LtxCommit, script);
             Assert.Contains("forja-output.mp4", script);
             Assert.Contains("--offload_to_cpu", script);
+            Assert.Contains("pipeline.enable_model_cpu_offload()", script);
+            Assert.Contains("PYTORCH_ALLOC_CONF", script);
+            Assert.Contains("Pinned LTX inference source changed", script);
+            Assert.Contains("prompt_enhancement_words_threshold: 0", script);
+            Assert.Contains("device=init_latents.device", script);
+            Assert.Contains("latents.to(self.latent_upsampler.device)", script);
+            Assert.Contains("self.vae = self.vae.to(latents.device)", script);
+            Assert.Contains("vae.enable_z_tiling(32)", script);
+            Assert.Contains("target_shape=target_shape_split, timestep=timestep", script);
+            Assert.Contains("reduction_factor = int(self.temporal_downscale_factor)", script);
+            Assert.Contains("start = end - 1", script);
+            Assert.Contains("decoded_tile = decoded_tile[:, :, 1:]", script);
+            Assert.Contains("LTX decoded only {images.shape[2]}", script);
             Assert.DoesNotContain(request.Prompt, script);
             Assert.DoesNotContain(root, script);
         }
@@ -93,6 +106,21 @@ public sealed class KaggleTests
         Assert.Null(KaggleCliService.ParseConfiguredUsername("- auth_method: OAUTH"));
     }
 
+    [Fact]
+    public void QuotaParser_ReadsGpuHoursPercentAndRefreshDate()
+    {
+        const string csv = "resource,used,remaining,total,refreshAt\r\nGPU,0.22h,29.78h,30.00h,2026-08-29T00:00:00\r\nTPU,0.00h,20.00h,20.00h,2026-08-29T00:00:00\r\n";
+
+        KaggleGpuQuota? quota = KaggleQuotaParser.ParseGpuCsv(csv);
+
+        Assert.NotNull(quota);
+        Assert.Equal(0.22, quota!.UsedHours, 2);
+        Assert.Equal(29.78, quota.RemainingHours, 2);
+        Assert.Equal(30, quota.TotalHours, 2);
+        Assert.Equal(99.27, quota.RemainingPercent, 2);
+        Assert.Equal(new DateTime(2026, 8, 29), quota.RefreshAt.Date);
+    }
+
     [Theory]
     [InlineData("Dataset creation error: Please select a valid license.")]
     [InlineData("403 Client Error: Forbidden")]
@@ -101,6 +129,77 @@ public sealed class KaggleTests
     {
         Assert.True(KaggleCliService.ContainsReportedCliFailure(output));
         Assert.False(KaggleCliService.ContainsReportedCliFailure("Dataset created successfully"));
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_ExplainsCudaOutOfMemoryAsModelLoadingFailure()
+    {
+        const string logs = """
+            [
+              { "data": "Loading pipeline" },
+              { "data": "torch.OutOfMemoryError: CUDA out of memory. GPU 0 has a total capacity of 14.56 GiB" }
+            ]
+            """;
+
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs(logs);
+
+        Assert.Contains("GPU T4", summary);
+        Assert.Contains("No es un problema de tu cuenta", summary);
+        Assert.Contains("mejorador de prompt opcional", summary);
+        Assert.Contains("descarga secuencial CPU/GPU", summary);
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_PreservesUsefulTailForUnknownFailures()
+    {
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs("line one\nRuntimeError: unexpected tensor shape");
+
+        Assert.Contains("RuntimeError: unexpected tensor shape", summary);
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_ExplainsCpuGpuConditioningMismatch()
+    {
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs("RuntimeError: Expected all tensors to be on the same device, but found cuda:0 and cpu");
+
+        Assert.Contains("tensores de condicionamiento", summary);
+        Assert.Contains("mismo dispositivo", summary);
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_ExplainsMultiscaleUpsamplerMismatch()
+    {
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs("assert latents.device == latest_upsampler.device\nAssertionError");
+
+        Assert.Contains("reescalador multiescala", summary);
+        Assert.Contains("primera pasada", summary);
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_ExplainsVaeDecodeMismatch()
+    {
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs("in un_normalize_latents\nlatents * vae.std_of_means\nRuntimeError: Expected all tensors to be on the same device");
+
+        Assert.Contains("decodificacion final", summary);
+        Assert.Contains("reconstruir los cuadros", summary);
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_ExplainsVaeDecodeOutOfMemory()
+    {
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs("in _run_decoder\nimage = vae.decode\ntorch.OutOfMemoryError: CUDA out of memory");
+
+        Assert.Contains("todos los cuadros juntos", summary);
+        Assert.Contains("decodificacion temporal por bloques", summary);
+    }
+
+    [Fact]
+    public void KernelLogDiagnostics_ExplainsBrokenTemporalTilingAttribute()
+    {
+        string summary = KaggleFailureDiagnostics.SummarizeKernelLogs("AttributeError: 'Encoder' object has no attribute 'patch_size_t'");
+
+        Assert.Contains("atributo", summary);
+        Assert.Contains("propio VAE", summary);
     }
 
     [Fact]

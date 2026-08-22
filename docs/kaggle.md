@@ -15,11 +15,11 @@ No hace falta crear manualmente un notebook ni descargar `kaggle.json`. Forja us
 ## Configurarlo dentro de Forja
 
 1. Abrí `Forja de Cuadros` desde el acceso instalado.
-2. En **01 Fuente**, pulsá `KAGGLE I2V`.
+2. En **01 Convertir a video**, pulsá `ABRIR KAGGLE I2V`.
 3. Seguí la guía visible del paso **01 Cuenta y GPU**. Cuando hayas creado la cuenta, confirmado el correo y completado la verificación requerida, marcá la casilla de confirmación. Si intentás conectar antes, Forja muestra un aviso y no abre OAuth.
 4. Pulsá `PREPARAR KAGGLE`. La primera vez crea `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli` e instala allí la CLI oficial; requiere Python 3.11 o superior.
 5. Pulsá `CONECTAR CUENTA`. Se abre Kaggle en el navegador. Iniciá sesión, autorizá el acceso y volvé a Forja.
-6. Pulsá `VERIFICAR`. Esto confirma que la CLI puede consultar tu cuenta.
+6. Pulsá `VERIFICAR`. Un panel dentro de la ventana y un mensaje indican claramente si OAuth y la API respondieron o si la comprobación falló. Debajo se muestra la cuota GPU semanal restante en porcentaje y horas, tomada del comando oficial `kaggle quota`. Esta prueba no reserva una GPU: Kaggle confirma la disponibilidad física al enviar el trabajo.
 7. Forja completa automáticamente tu usuario de Kaggle al conectar o verificar OAuth. Es el texto que aparece después de `kaggle.com/` en la URL de tu perfil. Ajustá el prompt, formato, duración, FPS y semilla. Si llegaste desde el paso 00 de Forja, la imagen ya aparece preseleccionada; igual podés reemplazarla.
 8. Dejá activada la limpieza remota salvo que necesites conservar el trabajo para depurarlo.
 9. Pulsá `SINCRONIZAR Y GENERAR`. Forja esperará aunque Kaggle ponga el trabajo en cola.
@@ -40,7 +40,9 @@ eliminación remota opcional
 - El input y el script se crean privados; no se publican en el perfil.
 - Forja solicita `NvidiaTeslaT4`. La documentación actual de Kaggle desaconseja el P100 con la imagen PyTorch predeterminada.
 - El script usa una revisión fija del [repositorio oficial LTX-Video](https://github.com/Lightricks/LTX-Video) y descarga los pesos oficiales durante la ejecución. No se redistribuyen modelos dentro de Forja.
+- En una T4, Forja desactiva los modelos opcionales Florence/Llama que sólo reescriben el prompt y activa la descarga secuencial estándar de Diffusers: el codificador de texto, el transformer y el VAE alternan entre RAM y VRAM. El prompt escrito en Forja se conserva tal cual; los latentes de condicionamiento permanecen junto a los latentes de video en GPU, la primera pasada multiescala acompaña al reescalador en CPU y el VAE reconstruye el video mediante bloques temporales causales solapados que conservan el timestep y el conteo original de cuadros.
 - El notebook necesita internet para clonar el código y descargar los pesos.
+- Antes de publicar el MP4, el script comprueba que LTX haya reconstruido al menos la cantidad solicitada y después recorta exactamente a ese número de cuadros.
 - Si cerrás o cancelás Forja después de enviar el trabajo, se detiene solamente la espera local; la GPU puede seguir trabajando. Usá `ABRIR TRABAJO` para verlo en Kaggle.
 
 ## Límites gratuitos
@@ -48,6 +50,10 @@ eliminación remota opcional
 La GPU es gratuita pero compartida. Kaggle informa una cuota semanal —habitualmente alrededor de 30 horas, a veces mayor según demanda— que se reinicia semanalmente. Puede haber cola. Una ejecución de Notebook debe terminar dentro del máximo publicado por Kaggle, actualmente 12 horas para CPU/GPU, y `/kaggle/working` conserva hasta 20 GB de salida.
 
 Revisá siempre la información vigente en [Notebooks](https://www.kaggle.com/docs/notebooks) y [uso eficiente de GPU](https://www.kaggle.com/docs/efficient-gpu-usage). Las cuotas y el hardware pueden cambiar sin que Forja publique una versión nueva.
+
+## Límite de calidad
+
+Un job completo y un MP4 técnicamente válido no implican que la animación sirva. LTX-Video 2B puede deformar identidad, cara, manos, anatomía, ropa/equipo y el fondo de chroma entre cuadros. Forja no puede recuperar esos detalles después: revisá visualmente el clip antes de extraer cuadros y usá otro modelo/proveedor cuando la consistencia del personaje sea prioritaria.
 
 ## Privacidad y seguridad
 
@@ -61,10 +67,12 @@ Revisá siempre la información vigente en [Notebooks](https://www.kaggle.com/do
 ## Solución de problemas
 
 - **No aparece GPU:** completá la verificación telefónica y revisá la cuota.
+- **La cuota dice `NO DISPONIBLE`:** verificá la conexión. Forja consulta `kaggle quota --csv` al abrir la ventana, conectar, verificar y terminar un trabajo; `VER CUOTA GPU` abre la alternativa web.
 - **Trabajo en cola:** dejá Forja abierta; consulta el estado cada 20 segundos para respetar los límites dinámicos de la API.
 - **Python no encontrado:** instalá Python 3.11+ desde [python.org](https://www.python.org/downloads/) y repetí `PREPARAR KAGGLE`.
 - **OAuth no termina:** cerrá la pestaña fallida, repetí `CONECTAR CUENTA` y aceptá que el navegador abra el callback local.
-- **El trabajo falla:** pulsá `ABRIR TRABAJO` y revisá el log. Conservá temporalmente el input desmarcando la limpieza solo cuando necesites depuración.
+- **El trabajo falla:** Forja descarga el log y traduce causas conocidas —por ejemplo memoria de GPU o cuota agotada— dentro del estado y del aviso. Pulsá `ABRIR TRABAJO` para revisar el log completo. Conservá temporalmente el input desmarcando la limpieza solo cuando necesites depuración.
+- **`CUDA out of memory` al cargar el modelo:** actualizá Forja. Los trabajos nuevos usan descarga secuencial CPU/GPU; las versiones anteriores intentaban cargar todos los componentes a la vez.
 - **HTTP 429 / demasiadas solicitudes:** esperá unos minutos. Kaggle usa límites dinámicos y recomienda pausar antes de reintentar.
 - **`Please select a valid license`:** las versiones actuales de Forja usan la licencia `other` admitida por Kaggle para el input privado y transitorio. Actualizá Forja si una versión anterior muestra este mensaje.
 - **HTTP 403 justo después de crear el dataset:** normalmente es la consecuencia del error de licencia anterior: el dataset nunca llegó a existir. Forja ahora detiene el flujo en el primer error y evita esa consulta engañosa.

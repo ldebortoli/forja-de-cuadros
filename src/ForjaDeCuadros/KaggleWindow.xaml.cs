@@ -74,6 +74,7 @@ namespace ForjaDeCuadros
                 if (installedVersion == null)
                 {
                     ConnectionStatusText.Text = "SIN CONFIGURAR";
+                    SetVerificationResult(null, "VERIFICACION PENDIENTE", "Prepara Kaggle y conecta tu cuenta antes de verificar.");
                     AppendProgress("Primero crea/verifica tu cuenta y despues pulsa PREPARAR KAGGLE.");
                 }
                 else
@@ -84,9 +85,13 @@ namespace ForjaDeCuadros
                     ConnectionStatusText.Text = current
                         ? username == null ? "CLI LISTA · FALTA CONECTAR" : "CUENTA @" + username + " DETECTADA"
                         : "CLI " + installedVersion + " · ACTUALIZAR";
+                    SetVerificationResult(null, "VERIFICACION PENDIENTE", username == null
+                        ? "Conecta tu cuenta y despues pulsa VERIFICAR."
+                        : "Cuenta detectada como @" + username + ". Pulsa VERIFICAR para comprobar la conexion.");
                     AppendProgress(current
                         ? username == null ? "Kaggle CLI ya esta preparado. Conecta tu cuenta." : "Detecté la cuenta @" + username + ". Pulsá VERIFICAR o generá directamente."
                         : "Kaggle CLI " + installedVersion + " esta desactualizada. PREPARAR KAGGLE la actualiza a " + KaggleCliService.KaggleCliVersion + ".");
+                    if (current && username != null) await RefreshGpuQuotaAsync(false);
                 }
             }
             catch { ConnectionStatusText.Text = "SIN CONFIGURAR"; }
@@ -128,13 +133,14 @@ namespace ForjaDeCuadros
 
         private async void Prepare_Click(object sender, RoutedEventArgs e)
         {
-            await RunOperationAsync(async token =>
+            bool prepared = await RunOperationAsync(async token =>
             {
                 await _kaggle.PrepareAsync(CreateProgress(), token);
                 string? username = await _kaggle.GetConfiguredUsernameAsync(token);
                 ApplyDetectedUsername(username);
                 ConnectionStatusText.Text = username == null ? "CLI LISTA · FALTA CONECTAR" : "CUENTA @" + username + " DETECTADA";
             }, "Preparando Kaggle CLI…");
+            if (prepared && !string.IsNullOrWhiteSpace(UsernameText.Text)) await RefreshGpuQuotaAsync(false);
         }
 
         private async void Connect_Click(object sender, RoutedEventArgs e)
@@ -151,22 +157,41 @@ namespace ForjaDeCuadros
                 return;
             }
 
-            await RunOperationAsync(async token =>
+            bool connected = await RunOperationAsync(async token =>
             {
                 string? username = await _kaggle.AuthenticateAsync(CreateProgress(), token);
                 ApplyDetectedUsername(username);
                 ConnectionStatusText.Text = username == null ? "CONECTADA · VERIFICA GPU" : "CONECTADA COMO @" + username;
+                SetVerificationResult(true, "CONEXION VERIFICADA", username == null
+                    ? "OAuth y la API de Kaggle respondieron correctamente."
+                    : "OAuth y la API de Kaggle respondieron correctamente como @" + username + ".");
             }, "Abriendo OAuth de Kaggle…");
+            if (connected) await RefreshGpuQuotaAsync(false);
         }
 
         private async void Verify_Click(object sender, RoutedEventArgs e)
         {
-            await RunOperationAsync(async token =>
+            string? verifiedUsername = null;
+            bool verified = await RunOperationAsync(async token =>
             {
-                string? username = await _kaggle.VerifyAuthenticationAsync(CreateProgress(), token);
-                ApplyDetectedUsername(username);
-                ConnectionStatusText.Text = username == null ? "CONECTADA · VERIFICA GPU" : "CONECTADA COMO @" + username;
-            }, "Verificando la cuenta…");
+                verifiedUsername = await _kaggle.VerifyAuthenticationAsync(CreateProgress(), token);
+                ApplyDetectedUsername(verifiedUsername);
+                ConnectionStatusText.Text = verifiedUsername == null ? "CONEXION VERIFICADA" : "CONECTADA COMO @" + verifiedUsername;
+            }, "Verificando la cuenta…", exception =>
+                SetVerificationResult(false, "VERIFICACION FALLIDA", FirstLine(exception.Message)));
+            if (!verified) return;
+
+            string detail = verifiedUsername == null
+                ? "OAuth y la API de Kaggle respondieron correctamente."
+                : "OAuth y la API de Kaggle respondieron correctamente como @" + verifiedUsername + ".";
+            SetVerificationResult(true, "CONEXION VERIFICADA", detail + " La disponibilidad de GPU se confirma al enviar un trabajo.");
+            await RefreshGpuQuotaAsync(false);
+            MessageBox.Show(
+                this,
+                detail + "\n\nLa conexion esta lista. Kaggle confirma la cuota y disponibilidad de GPU cuando envies una generacion.",
+                "Kaggle verificado correctamente",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
 
         private void BrowseImage_Click(object sender, RoutedEventArgs e)
@@ -200,6 +225,7 @@ namespace ForjaDeCuadros
                     UseVideoButton.IsEnabled = true;
                     ConnectionStatusText.Text = "MP4 LISTO";
                 }, "Sincronizando con Kaggle…");
+                await RefreshGpuQuotaAsync(false);
             }
             catch (Exception exception)
             {
@@ -256,15 +282,17 @@ namespace ForjaDeCuadros
             UsernameText.ToolTip = "https://www.kaggle.com/" + username;
         }
 
-        private async Task RunOperationAsync(Func<CancellationToken, Task> operation, string startMessage)
+        private async Task<bool> RunOperationAsync(Func<CancellationToken, Task> operation, string startMessage, Action<Exception>? onFailure = null)
         {
             if (_operationCancellation != null) throw new InvalidOperationException("Ya hay una operacion en curso.");
             AppendProgress(startMessage);
             SetBusy(true);
             _operationCancellation = new CancellationTokenSource();
+            bool succeeded = false;
             try
             {
                 await operation(_operationCancellation.Token);
+                succeeded = true;
             }
             catch (OperationCanceledException)
             {
@@ -273,6 +301,7 @@ namespace ForjaDeCuadros
             catch (Exception exception)
             {
                 AppendProgress("ERROR: " + exception.Message);
+                onFailure?.Invoke(exception);
                 ShowError(exception);
             }
             finally
@@ -281,6 +310,67 @@ namespace ForjaDeCuadros
                 _operationCancellation = null;
                 SetBusy(false);
             }
+            return succeeded;
+        }
+
+        private void SetVerificationResult(bool? succeeded, string title, string detail)
+        {
+            VerificationResultTitle.Text = title;
+            VerificationResultText.Text = detail;
+            if (succeeded == true)
+            {
+                VerificationResultBorder.Background = BrushFromHex("#DDE9E2");
+                VerificationResultBorder.BorderBrush = BrushFromHex("#83A89B");
+                VerificationResultIconBorder.Background = BrushFromHex("#317466");
+                VerificationResultIcon.Text = "✓";
+                VerificationResultTitle.Foreground = BrushFromHex("#1E615A");
+            }
+            else if (succeeded == false)
+            {
+                VerificationResultBorder.Background = BrushFromHex("#EEDBD2");
+                VerificationResultBorder.BorderBrush = BrushFromHex("#B77B6C");
+                VerificationResultIconBorder.Background = BrushFromHex("#8C352D");
+                VerificationResultIcon.Text = "×";
+                VerificationResultTitle.Foreground = BrushFromHex("#742A25");
+            }
+            else
+            {
+                VerificationResultBorder.Background = BrushFromHex("#EFE4CD");
+                VerificationResultBorder.BorderBrush = BrushFromHex("#C9B895");
+                VerificationResultIconBorder.Background = BrushFromHex("#B6A98E");
+                VerificationResultIcon.Text = "?";
+                VerificationResultTitle.Foreground = BrushFromHex("#5C5243");
+            }
+        }
+
+        private async Task RefreshGpuQuotaAsync(bool showErrors)
+        {
+            GpuQuotaValueText.Text = "CONSULTANDO…";
+            try
+            {
+                KaggleGpuQuota quota = await _kaggle.GetGpuQuotaAsync();
+                GpuQuotaProgress.Value = quota.RemainingPercent;
+                GpuQuotaValueText.Text = quota.RemainingPercent.ToString("0.0", CultureInfo.CurrentCulture) + " % RESTANTE";
+                GpuQuotaDetailText.Text = quota.RemainingHours.ToString("0.00", CultureInfo.CurrentCulture)
+                    + " h de " + quota.TotalHours.ToString("0.00", CultureInfo.CurrentCulture)
+                    + " h · usadas " + quota.UsedHours.ToString("0.00", CultureInfo.CurrentCulture)
+                    + " h · reinicia " + quota.RefreshAt.ToString("dd/MM/yyyy", CultureInfo.CurrentCulture) + ".";
+            }
+            catch (Exception exception)
+            {
+                GpuQuotaProgress.Value = 0;
+                GpuQuotaValueText.Text = "NO DISPONIBLE";
+                GpuQuotaDetailText.Text = FirstLine(exception.Message) + " Usa VER CUOTA GPU para revisarla en Kaggle.";
+                if (showErrors) ShowError(exception);
+            }
+        }
+
+        private static Brush BrushFromHex(string value) => new SolidColorBrush((Color)ColorConverter.ConvertFromString(value));
+
+        private static string FirstLine(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return "Kaggle no devolvio un detalle adicional.";
+            return value.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)[0];
         }
 
         private IProgress<string> CreateProgress()

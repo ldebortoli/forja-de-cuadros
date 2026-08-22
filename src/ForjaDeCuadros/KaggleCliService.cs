@@ -27,6 +27,7 @@ namespace ForjaDeCuadros
         public string EnvironmentFolder { get; }
         public string JobsFolder { get; }
         public string KaggleExecutable => OperatingSystem.IsWindows() ? Path.Combine(EnvironmentFolder, "Scripts", "kaggle.exe") : Path.Combine(EnvironmentFolder, "bin", "kaggle");
+        public string KagglePython => OperatingSystem.IsWindows() ? Path.Combine(EnvironmentFolder, "Scripts", "python.exe") : Path.Combine(EnvironmentFolder, "bin", "python");
 
         public async Task<bool> IsPreparedAsync(CancellationToken cancellationToken = default)
         {
@@ -97,6 +98,20 @@ namespace ForjaDeCuadros
             return username;
         }
 
+        public async Task<KaggleGpuQuota> GetGpuQuotaAsync(CancellationToken cancellationToken = default)
+        {
+            if (!await IsPreparedAsync(cancellationToken).ConfigureAwait(false)) throw new InvalidOperationException("Primero prepara Kaggle CLI.");
+            ProcessResult result = await RunAsync(
+                KagglePython,
+                new[] { "-X", "utf8", "-m", "kaggle", "quota", "--csv" },
+                null,
+                cancellationToken,
+                false).ConfigureAwait(false);
+            if (result.ExitCode != 0) throw new InvalidOperationException("Kaggle no pudo consultar la cuota de GPU.\n\n" + LastUsefulLine(result));
+            return KaggleQuotaParser.ParseGpuCsv(result.StandardOutput)
+                ?? throw new InvalidOperationException("Kaggle respondio, pero no informo una cuota GPU reconocible.");
+        }
+
         public async Task<KaggleJobResult> RunImageToVideoAsync(KaggleJobRequest request, IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
             await PrepareAsync(progress, cancellationToken).ConfigureAwait(false);
@@ -117,7 +132,7 @@ namespace ForjaDeCuadros
 
             progress?.Report("Descargando el MP4 terminado…");
             Directory.CreateDirectory(definition.DownloadFolder);
-            await RunCheckedAsync(KaggleExecutable, new[] { "kernels", "output", definition.KernelHandle, "-p", definition.DownloadFolder, "-o", "--file-pattern", ".*\\.(mp4|json)$" }, progress, cancellationToken).ConfigureAwait(false);
+            await RunCheckedAsync(KaggleExecutable, new[] { "kernels", "output", definition.KernelHandle, "-p", definition.DownloadFolder, "-o", "--file-pattern", "forja-output\\.mp4|forja-result\\.json" }, progress, cancellationToken).ConfigureAwait(false);
             string? downloaded = Directory.EnumerateFiles(definition.DownloadFolder, "forja-output.mp4", SearchOption.AllDirectories).FirstOrDefault();
             if (downloaded == null) downloaded = Directory.EnumerateFiles(definition.DownloadFolder, "*.mp4", SearchOption.AllDirectories).OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault();
             if (downloaded == null) throw new InvalidOperationException("Kaggle termino pero no devolvio ningun MP4. Abri el trabajo remoto para revisar el log.");
@@ -200,11 +215,32 @@ namespace ForjaDeCuadros
                     progress?.Report("Kaggle completo la generacion.");
                     return;
                 }
-                if (state == KaggleRunState.Failed) throw new InvalidOperationException("El trabajo Kaggle fallo. Abri su pagina para revisar el log.\n\n" + LastUsefulLine(result));
+                if (state == KaggleRunState.Failed)
+                {
+                    progress?.Report("Kaggle informo un error; descargando el diagnostico del trabajo…");
+                    string diagnosis = await GetKernelFailureSummaryAsync(handle, cancellationToken).ConfigureAwait(false);
+                    progress?.Report("Diagnostico: " + diagnosis.Replace(Environment.NewLine, " "));
+                    throw new InvalidOperationException("El trabajo Kaggle fallo.\n\n" + diagnosis + "\n\nPodes abrir el trabajo remoto para revisar el log completo.");
+                }
                 progress?.Report(state == KaggleRunState.Running ? "GPU trabajando; Forja seguira esperando…" : "Trabajo en cola; Forja seguira esperando…");
                 await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken).ConfigureAwait(false);
             }
             throw new TimeoutException("El trabajo Kaggle supero tres horas. Puede continuar remoto; revisalo desde su pagina.");
+        }
+
+        private async Task<string> GetKernelFailureSummaryAsync(string handle, CancellationToken cancellationToken)
+        {
+            if (!File.Exists(KagglePython)) return "Kaggle informo un error, pero Forja no encontro su entorno Python para descargar el diagnostico.";
+            ProcessResult logs = await RunAsync(
+                KagglePython,
+                new[] { "-X", "utf8", "-m", "kaggle", "kernels", "logs", handle },
+                null,
+                cancellationToken,
+                false).ConfigureAwait(false);
+            string combined = logs.StandardOutput + Environment.NewLine + logs.StandardError;
+            return logs.ExitCode == 0
+                ? KaggleFailureDiagnostics.SummarizeKernelLogs(combined)
+                : "Kaggle informo un error y no permitio descargar su log. Abri el trabajo remoto para ver el detalle.";
         }
 
         private async Task DeleteRemoteAsync(KaggleJobDefinition definition, IProgress<string>? progress, CancellationToken cancellationToken)

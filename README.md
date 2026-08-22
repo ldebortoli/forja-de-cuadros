@@ -66,9 +66,11 @@ El corte alfa viene activo en `10 %` con `4 %` de suavizado. Forja lo aplica ant
 
 ### Generar el clip desde la propia aplicación
 
-El botón `ABRIR KAGGLE I2V` del paso **01 CONVERTIR A VIDEO** abre el asistente integrado y recibe automáticamente la imagen elegida o preparada en el paso 00. Antes de OAuth muestra una guía de alta, correo y verificación de cuenta, exige confirmar que esos pasos terminaron y avisa si se intenta conectar antes de tiempo. Después prepara o actualiza Kaggle CLI 2.2.2 en un entorno aislado, conecta la cuenta mediante OAuth en el navegador y detecta automáticamente el usuario autenticado. Al generar, sube la imagen con licencia temporal `other` como dataset privado, ejecuta LTX-Video 2B en una GPU T4, espera el resultado y recupera el MP4. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
+El botón `ABRIR KAGGLE I2V` del paso **01 CONVERTIR A VIDEO** abre el asistente integrado y recibe automáticamente la imagen elegida o preparada en el paso 00. Antes de OAuth muestra una guía de alta, correo y verificación de cuenta, exige confirmar que esos pasos terminaron y avisa si se intenta conectar antes de tiempo. Después prepara o actualiza Kaggle CLI 2.2.2 en un entorno aislado, conecta la cuenta mediante OAuth en el navegador y detecta automáticamente el usuario autenticado. `VERIFICAR` muestra un resultado persistente de éxito o fallo, y el mismo panel consulta el porcentaje y las horas de cuota GPU semanal restante. Al generar, sube la imagen con licencia temporal `other` como dataset privado, ejecuta LTX-Video 2B con descarga secuencial CPU/GPU en una T4, espera el resultado y recupera el MP4. Si el kernel falla, Forja descarga su log y explica causas conocidas. Forja nunca pide la contraseña ni escribe tokens dentro del proyecto.
 
 La cuenta debe tener correo y teléfono verificados para acceder a GPU. La disponibilidad es compartida, puede haber cola y la cuota semanal varía. Consultá el [instructivo completo de Kaggle](docs/kaggle.md).
+
+> **Calidad:** que el kernel termine no garantiza fidelidad visual. LTX-Video 2B puede alterar cara, manos, anatomía, ropa/equipo y uniformidad del chroma; revisá el MP4 antes de convertirlo en cuadros y no uses este modo para personajes cuya identidad deba preservarse estrictamente.
 
 La auditoría automática encuentra problemas mecánicos, pero no reemplaza la revisión de anatomía, dirección de pies, ropa, pelo o equipo rígido.
 
@@ -105,7 +107,7 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 81,14 % de líneas, 49,90 % de ramas y 76,00 % de métodos.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 85,57 % de líneas, 51,40 % de ramas y 77,35 % de métodos.
 
 ## Privacidad y alcance
 

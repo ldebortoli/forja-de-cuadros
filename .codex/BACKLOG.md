@@ -1,11 +1,8 @@
 # TODO
 
-- [P1] Probar una generación Kaggle GPU de punta a punta. [BLOCKED: la cuenta, OAuth, CLI y dataset privado ya están validados; falta que el usuario pulse SINCRONIZAR Y GENERAR o autorice expresamente consumir cuota GPU.]
-- [P2] Preparar ejecutables Linux y releases descargables. [BLOCKED: el usuario lo difirió hasta que el flujo Kaggle esté probado.]
+- [P2] Preparar ejecutables Linux y releases descargables. [BLOCKED: el flujo Kaggle ya está probado, pero el usuario lo difirió y todavía no pidió compilar ni publicar esas entregas.]
 
 # IN PROGRESS
-
-- Sin tareas activas.
 
 # DONE
 
@@ -26,3 +23,6 @@
 - [2026-08-21] Completar el handoff de archivos: elegir imagen en 00 genera chroma verde y rellena la ruta visible de 01; verde/azul la reemplazan y el MP4 de Kaggle continúa cargándose en 02. Validado con 21 tests, cobertura 81,33/50,21/75,34, captura e instalación real.
 - [2026-08-21] Integrar corte alfa en dos pasadas y suavizado posterior al chroma en el paso 03, con sliders horizontales, valores visibles, ayuda y previsualización sobre damero. Validado con captura enfocada, 24/24 tests, cobertura 81,14/50,40/76,00, autoprueba FFmpeg, instalación real, identidad propia y cierre normal.
 - [2026-08-22] Corregir el checkmark, agregar visores `ORIGINAL`/`CHROMA PARA KAGGLE`, actualizar Kaggle CLI a 2.2.2, detectar automáticamente la identidad OAuth y reparar la creación del dataset privado con licencia `other` y parada temprana ante errores reportados con exit code 0. Validado con 28/28 tests, cobertura 81,14/49,90/76,00, autoprueba FFmpeg, capturas, prueba Kaggle privada creada/lista/eliminada sin GPU e instalación real.
+- [2026-08-22] Corregir el primer workflow Kaggle GPU real: diagnosticar logs UTF-8, descargar modelos secuencialmente CPU/GPU, desactivar Florence/Llama, mantener condicionamiento y VAE en el dispositivo correcto, reescalar en CPU y decodificar 97 cuadros mediante bloques causales solapados. Generación T4 real validada como H.264 512×512, 30 FPS, 97/97 cuadros; temporales y recursos privados eliminados.
+- [2026-08-22] Hacer que `VERIFICAR` muestre éxito o fallo persistente y modal, e integrar la cuota oficial `kaggle quota --csv` con porcentaje, horas y reinicio. Lectura real validada; 36/36 tests y cobertura 85,57/51,40/77,35.
+- [2026-08-22] Evaluar visualmente el primer MP4 Kaggle real: aunque el pipeline entregó 97 cuadros válidos, LTX 2B deformó identidad, cara, manos y silueta y agregó ruido al chroma. El usuario descartó Kaggle/LTX para las animaciones reales; no consumir más cuota salvo pedido explícito.

@@ -36,7 +36,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File src\ForjaDeCuadros\install_f
 
 La autoprueba completa se ejecuta con `ForjaDeCuadros.exe --self-test <reporte.json>` mediante `Start-Process -Wait`, porque el ejecutable es `WinExe`.
 
-Kaggle CLI 2.2.2 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere Python 3.11+. Forja actualiza automáticamente versiones anteriores, obtiene el usuario desde `kaggle config view` después de OAuth y usa `other` como licencia válida del dataset privado transitorio. Los jobs usan LTX-Video 2B 0.9.8 distilled fijado al commit `4b2d053057623ddd4d0a1d3e9cd28890e9ef487f` y solicitan `NvidiaTeslaT4`.
+Kaggle CLI 2.2.2 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere Python 3.11+. Forja actualiza automáticamente versiones anteriores, obtiene el usuario desde `kaggle config view` después de OAuth, consulta porcentaje/horas mediante `kaggle quota --csv` y usa `other` como licencia válida del dataset privado transitorio. Los jobs usan LTX-Video 2B 0.9.8 distilled fijado al commit `4b2d053057623ddd4d0a1d3e9cd28890e9ef487f`, solicitan `NvidiaTeslaT4` y adaptan el source fijado para offload secuencial, dispositivos coherentes y VAE temporal por bloques causales solapados.
 
 ## Convenciones estables
 
@@ -51,6 +51,8 @@ Kaggle CLI 2.2.2 queda en `%LOCALAPPDATA%\ForjaDeCuadros\Kaggle\cli`; requiere P
 - Después de un push no se espera, monitorea ni sondea la CI remota salvo pedido explícito del usuario; las validaciones locales siguen siendo obligatorias.
 - Publicar los cambios mantenidos directamente en `main`; no crear ramas auxiliares ni pull requests salvo que el usuario lo pida explícitamente.
 - Kaggle es estrictamente opcional: input y kernel privados, OAuth manejado por la CLI oficial, limpieza remota activada por defecto y temporales locales eliminados después de una descarga correcta.
+- La generación Kaggle/LTX quedó técnicamente validada pero artísticamente descartada para el personaje actual por deriva severa de identidad/anatomía y ruido de chroma. No consumir más cuota GPU ni recomendar este flujo para producción salvo que el usuario lo pida explícitamente o se cambie de modelo.
+- El origen I2V puede ser cualquier aplicación externa: el usuario eligió generar los clips fuera de Forja y cargarlos directamente en `02 VIDEO`; el procesamiento posterior no depende de Kaggle.
 - El flujo visible comienza en `00 GENERAR IMAGEN`: elegir el archivo prepara chroma verde automáticamente y rellena la ruta visible de `01 CONVERTIR A VIDEO`; cambiar a azul reemplaza esa ruta. El MP4 aceptado en Kaggle rellena automáticamente `02 VIDEO`.
 - El paso 00 muestra dos visores iguales sobre damero, `ORIGINAL` y `CHROMA PARA KAGGLE`; se actualizan al elegir la imagen y al regenerar verde/azul.
 - La limpieza posterior al chroma usa corte alfa activado por defecto en 10 % y suavizado en 4 %. Se aplica antes de calcular límites/alineación y después del remuestreo; la UI ofrece previsualización sobre damero y `--capture-alpha` permite revisar el panel completo.
