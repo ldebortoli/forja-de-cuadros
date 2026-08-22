@@ -169,3 +169,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-22.
 - Decisión: eliminar de la aplicación mantenida la ventana, CLI, modelos, tests, captura, documentación y caché local del backend Kaggle/LTX. El paso 01 conserva el PNG croma, permite copiar su ruta o abrir la carpeta y abre solamente sitios I2V aprobados; no conecta cuentas, ejecuta modelos ni sube archivos. Grok Imagine es el único proveedor aprobado. Cualquier candidato nuevo entra a la UI sólo después de una prueba real y aprobación expresa del usuario.
 - Motivo: el backend requirió correcciones costosas y, aun completando un job válido, destruyó identidad, anatomía y chroma. Mantener Forja independiente del generador reduce fallos, elimina credenciales/cuotas internas y permite comparar servicios sobre la misma imagen canónica.
+
+## D-025 - Acceso contextual al archivo croma desde el paso 00
+
+- Estado: vigente.
+- Fecha: 2026-08-22.
+- Decisión: mostrar debajo del resultado del paso 00 un botón de ancho completo `MOSTRAR CHROMA EN CARPETA`, desactivado mientras no exista un PNG preparado y habilitado inmediatamente después de generar verde o azul. Conservar también el acceso equivalente del paso 01.
+- Motivo: la ubicación del archivo debe estar disponible junto al visor y al mensaje que confirman la preparación, sin obligar a descubrir la acción en el paso siguiente.

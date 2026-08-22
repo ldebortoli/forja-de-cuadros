@@ -53,6 +53,7 @@ El paso 01 conserva la ruta del PNG croma, permite copiarla o abrir su carpeta y
 - El origen I2V puede ser cualquier aplicación externa aprobada: el usuario genera el clip fuera de Forja y lo carga directamente en `02 VIDEO`.
 - El flujo visible comienza en `00 GENERAR IMAGEN`: elegir el archivo prepara chroma verde automáticamente y rellena la ruta visible de `01 CONVERTIR A VIDEO`; cambiar a azul reemplaza esa ruta.
 - El paso 00 muestra dos visores iguales sobre damero, `ORIGINAL` y `CHROMA PARA VIDEO`; se actualizan al elegir la imagen y al regenerar verde/azul.
+- Cuando el PNG croma del paso 00 existe, se habilita bajo el resultado `MOSTRAR CHROMA EN CARPETA`, que abre el Explorador con ese archivo seleccionado; el acceso redundante del paso 01 permanece disponible.
 - Forja no guarda credenciales ni automatiza uploads. Los botones de proveedores sólo abren el sitio; la persona elige el archivo y descarga el resultado.
 - La limpieza posterior al chroma usa corte alfa activado por defecto en 10 % y suavizado en 4 %. Se aplica antes de calcular límites/alineación y después del remuestreo; la UI ofrece previsualización sobre damero y `--capture-alpha` permite revisar el panel completo.
 - Computer Use contra Explorer y Forja WPF produjo `Interfaz no compatible (0x80004002)` en agosto de 2026. No reintentar captura/coordenadas antes de septiembre de 2026 salvo cambio de versión; usar las capturas internas, la identidad de proceso y las propiedades COM del acceso como fallback.

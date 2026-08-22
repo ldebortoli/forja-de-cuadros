@@ -156,6 +156,15 @@
                                 <Button Grid.Column="1" Content="CHROMA AZUL" Tag="#0066FF" Style="{StaticResource SecondaryButton}" Height="40" Margin="4,0,0,0" Padding="8,7" Click="PrepareInitialImage_Click"/>
                             </Grid>
                             <TextBlock x:Name="ImagePrepStatusText" Text="La imagen preparada quedará lista para el generador de video que elijas." Foreground="#8E8372" FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                            <Button x:Name="OpenPreparedFolderFromStepZeroButton"
+                                    Content="MOSTRAR CHROMA EN CARPETA"
+                                    ToolTip="Abrir el Explorador y seleccionar la imagen con chroma"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Height="40"
+                                    Margin="0,9,0,0"
+                                    Padding="10,7"
+                                    IsEnabled="False"
+                                    Click="OpenPreparedFolder_Click"/>
                         </StackPanel>
                     </Border>
 

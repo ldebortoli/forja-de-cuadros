@@ -6,6 +6,8 @@
 
 # DONE
 
+- [2026-08-22] Agregar en el paso 00 `MOSTRAR CHROMA EN CARPETA`, desactivado hasta que exista el PNG y habilitado al terminar la preparación verde/azul; reutiliza la acción que abre el Explorador con el archivo seleccionado. Validado con build 0/0, 14/14 tests, cobertura 84,84/65,72/78,37, captura compacta e instalación/acceso real con iconos, identidad y cierre normal.
+
 - [2026-08-22] Retirar por completo la integración Kaggle/LTX: borrar ventana, cliente, modelos, tests, captura, documentación y caché local; sustituir el paso 01 por un puente manual a proveedores externos con ruta/copiar/carpeta y Grok Imagine como único aprobado. Documentar candidatos I2V sin agregarlos a la UI antes de la aprobación del usuario. Validado con build 0/0, 14/14 tests, cobertura 84,84/65,72/78,37, autoprueba FFmpeg 5/5, captura compacta, acceso real, iconos, identidad y cierre normal.
 
 - [2026-08-20] Inicializar memoria persistente y estructura Git independiente.

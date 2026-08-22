@@ -250,6 +250,7 @@ namespace ForjaDeCuadros
 
             _selectedImage = dialog.FileName;
             _preparedImage = null;
+            OpenPreparedFolderFromStepZeroButton.IsEnabled = false;
             ShowInitialPreview(dialog.FileName, false);
             InitialPreparedPreviewImage.Source = null;
             InitialPreparedPreviewHint.Visibility = Visibility.Visible;
@@ -282,6 +283,7 @@ namespace ForjaDeCuadros
                 ShowInitialPreview(result.OutputPath, true);
                 PreparedImagePathText.Text = result.OutputPath;
                 PreparedImagePathText.ToolTip = result.OutputPath;
+                OpenPreparedFolderFromStepZeroButton.IsEnabled = true;
 
                 if (result.HadTransparency)
                 {
@@ -298,6 +300,7 @@ namespace ForjaDeCuadros
             catch (Exception exception)
             {
                 _preparedImage = null;
+                OpenPreparedFolderFromStepZeroButton.IsEnabled = false;
                 InitialPreparedPreviewImage.Source = null;
                 InitialPreparedPreviewHint.Visibility = Visibility.Visible;
                 PreparedImagePathText.Text = "No se pudo preparar la imagen";
