@@ -12,7 +12,7 @@ Esperar que el usuario pulse `SINCRONIZAR Y GENERAR` para la primera prueba GPU 
 
 - Repositorio público: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria: `main`.
-- `main` quedó publicado hasta `83e936f`, que integra el corte alfa ajustable sobre el recorrido imagen → video. No se creó PR ni se esperó o monitoreó la CI.
+- `main` quedó publicado hasta `6aca85e`, que corrige la primera prueba Kaggle y agrega los visores del paso 00 sobre el recorrido imagen → video. No se creó PR ni se esperó o monitoreó la CI.
 - Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.2 aislada con actualización automática, job privado T4, espera, descarga y limpieza.
