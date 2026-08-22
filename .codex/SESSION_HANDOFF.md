@@ -12,6 +12,7 @@ La integracion Kaggle/LTX fue retirada por completo por instruccion del usuario.
 
 - Repositorio publico: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria y de entrega: `main`; no usar PR salvo pedido explicito.
+- Entrega funcional publicada directamente en `main` mediante `8d0cf50`; no se creo PR y no se espero ni monitoreo CI remota.
 - .NET 8, C#, WPF/WinForms interop, Windows x64.
 - Flujo visible: `00 GENERAR IMAGEN` → `01 CONVERTIR A VIDEO` → `02 VIDEO` → `03 FONDO / CHROMA` → `04 REGISTRO` → `05 EXPORTACION`.
 - Paso 00: dos visores `ORIGINAL`/`CHROMA PARA VIDEO`; seleccionar imagen genera verde `#00FF00` automaticamente y verde/azul reemplazan la ruta de 01.
