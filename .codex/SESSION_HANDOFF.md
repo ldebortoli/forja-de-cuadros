@@ -6,13 +6,13 @@ Mantener Forja de Cuadros como herramienta Windows gratuita y abierta, separada 
 
 ## Tarea actual
 
-El workflow Kaggle T4 real, el diagnóstico visible, `VERIFICAR` y la cuota GPU quedaron corregidos, validados e instalados. La revisión artística descartó Kaggle/LTX para el personaje actual y el usuario decidió generar el video con otra aplicación y cargarlo en `02 VIDEO`. Esta entrega queda lista para publicar; Linux/releases continúa diferido.
+El workflow Kaggle T4 real, el diagnóstico visible, `VERIFICAR` y la cuota GPU quedaron corregidos, validados, instalados y publicados. La revisión artística descartó Kaggle/LTX para el personaje actual y el usuario decidió generar el video con otra aplicación y cargarlo en `02 VIDEO`. Linux/releases continúa diferido.
 
 ## Estado actual
 
 - Repositorio público: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria: `main`.
-- `main` está publicado hasta `d600991` antes de esta entrega. No se creó PR ni se esperó o monitoreó la CI.
+- La entrega funcional quedó publicada directamente en `main` mediante `c54ad63`. No se creó PR ni se esperó o monitoreó la CI.
 - Entrega inicial publicada con licencia MIT y documentación bilingüe breve.
 - .NET 8.0.424; build Release con 0 advertencias y 0 errores.
 - Asistente Kaggle I2V integrado: alta/verificación, OAuth, CLI 2.2.2 aislada con actualización automática, cuota oficial, job privado T4, espera, diagnóstico, descarga y limpieza.
