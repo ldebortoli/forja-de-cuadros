@@ -1,6 +1,6 @@
 ﻿# Pendientes
 
-No hay pedidos sin procesar.
+- [2026-08-22] Auditar todas las pantallas de carga o `splash` bloqueantes de este proyecto. Desde su primer render, cada una debe ofrecer una `X` visible y funcional independiente de la UI principal, y `Esc` cuando corresponda. Al cerrarla debe cancelar o limpiar de forma segura el arranque o la espera administrados, sin dejar procesos huerfanos ni esperas indefinidas. Agregar validacion visual o automatizada; si una pantalla ya cumple, verificarla y documentarla sin duplicar controles.
 
 # Procesadas
 
