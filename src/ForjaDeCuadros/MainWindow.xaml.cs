@@ -441,7 +441,11 @@ namespace ForjaDeCuadros
 
         private int SelectedCount => Candidates.Count(item => item.IsSelected);
 
-        private void AutoSelect_Click(object sender, RoutedEventArgs e) => AutoSelectFrames();
+        private void AutoSelect_Click(object sender, RoutedEventArgs e)
+        {
+            AutoSelectFrames();
+            LoopDetectionText.Text = "Muestra uniforme de todo el tramo. Usá AUTO LOOP para buscar una costura repetida.";
+        }
 
         private void AutoSelectFrames()
         {
@@ -457,6 +461,64 @@ namespace ForjaDeCuadros
             }
             _selectionGuard = false;
             UpdateSelectionState();
+            LoopDetectionText.Text = Candidates.Count >= 16
+                ? "Muestra uniforme lista. AUTO LOOP puede buscar un ciclo dentro de estos candidatos."
+                : "Hacen falta al menos 16 candidatos para seleccionar o detectar un loop.";
+        }
+
+        private async void AutoLoop_Click(object sender, RoutedEventArgs e)
+        {
+            if (Candidates.Count < LoopDetectionService.RequiredFrames)
+            {
+                LoopDetectionText.Text = "Hacen falta al menos 16 candidatos para detectar un loop.";
+                return;
+            }
+
+            try
+            {
+                string[] paths = Candidates.Select(item => item.ImagePath).ToArray();
+                SetBusy(true, "Buscando inicio y cierre del loop…");
+                LoopDetectionResult result = await Task.Run(() =>
+                {
+                    FrameBuffer[] frames = paths.Select(FrameBuffer.LoadPng).ToArray();
+                    return LoopDetectionService.Detect(frames);
+                });
+
+                if (!result.IsAvailable)
+                {
+                    LoopDetectionText.Text = "No alcanzan los candidatos para formar un loop de 16 cuadros.";
+                    return;
+                }
+
+                _selectionGuard = true;
+                foreach (FrameItem item in Candidates) item.IsSelected = false;
+                foreach (int index in result.SelectedIndices) Candidates[index].IsSelected = true;
+                _selectionGuard = false;
+                UpdateSelectionState();
+
+                if (Candidates.Count == LoopDetectionService.RequiredFrames)
+                {
+                    LoopDetectionText.Text = "Hay exactamente 16 candidatos: se seleccionaron todos. No existe material extra para confirmar la costura.";
+                    return;
+                }
+
+                FrameItem start = Candidates[result.StartIndex];
+                FrameItem closure = Candidates[result.EndExclusiveIndex];
+                string confidence = result.Confidence >= 0.75 ? "alta" : result.Confidence >= 0.55 ? "media" : "baja";
+                string review = result.IsStrongMatch ? "" : " · sugerencia débil: revisala manualmente";
+                LoopDetectionText.Text = "Loop " + start.Timestamp.ToString("0.00") + " s → " + closure.Timestamp.ToString("0.00") +
+                    " s · confianza " + confidence + " " + Math.Round(result.Confidence * 100) + "%" + review + ".";
+                ShowCandidate(start);
+            }
+            catch (Exception exception)
+            {
+                ShowError("No pude detectar el loop", exception);
+            }
+            finally
+            {
+                _selectionGuard = false;
+                SetBusy(false);
+            }
         }
 
         private void ClearSelection_Click(object sender, RoutedEventArgs e)
@@ -465,6 +527,7 @@ namespace ForjaDeCuadros
             foreach (FrameItem item in Candidates) item.IsSelected = false;
             _selectionGuard = false;
             UpdateSelectionState();
+            LoopDetectionText.Text = "Selección vacía. Podés marcar 16 cuadros o volver a ejecutar AUTO LOOP.";
         }
 
         private void Candidate_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -478,6 +541,10 @@ namespace ForjaDeCuadros
                 System.Media.SystemSounds.Beep.Play();
             }
             UpdateSelectionState();
+            if (!LoopDetectionText.Text.Contains("ajustada manualmente", StringComparison.Ordinal))
+            {
+                LoopDetectionText.Text += " · selección ajustada manualmente";
+            }
         }
 
         private void SelectionCheck_Click(object sender, RoutedEventArgs e) => UpdateSelectionState();

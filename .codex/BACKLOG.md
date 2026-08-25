@@ -6,6 +6,10 @@
 
 # DONE
 
+- [2026-08-25] Agregar `AUTO LOOP`: firmas visuales reducidas, continuidad de velocidad en la costura, mínimo 16 candidatos, selección de 16 fases sin incluir el cierre repetido, confianza alta/media/baja y edición manual intacta. Cinco pruebas nuevas cubren mínimos, ciclo repetido, contenido raster y exclusión del terminal; captura real revisada.
+- [2026-08-25] Hacer descartable el splash desde el primer render con `X` visible y `Esc`. Su cierre cancela el temporizador, apaga la app y no abre la principal; prueba instalada confirmó `CANCELLED=1 / MAIN_WINDOW=0` y la captura conserva icono/identidad propios.
+- [2026-08-25] Validar e instalar la entrega: build Release 0/0, 19/19 tests, cobertura 86,50 % líneas / 67,70 % ramas / 80,95 % métodos, capturas de splash y mesa, instalaciones Menú Inicio/Codex Apps actualizadas y apertura/cierre real con título propio y código 0.
+
 - [2026-08-22] Agregar en el paso 00 `MOSTRAR CHROMA EN CARPETA`, desactivado hasta que exista el PNG y habilitado al terminar la preparación verde/azul; reutiliza la acción que abre el Explorador con el archivo seleccionado. Validado con build 0/0, 14/14 tests, cobertura 84,84/65,72/78,37, captura compacta e instalación/acceso real con iconos, identidad y cierre normal.
 
 - [2026-08-22] Retirar por completo la integración Kaggle/LTX: borrar ventana, cliente, modelos, tests, captura, documentación y caché local; sustituir el paso 01 por un puente manual a proveedores externos con ruta/copiar/carpeta y Grok Imagine como único aprobado. Documentar candidatos I2V sin agregarlos a la UI antes de la aprobación del usuario. Validado con build 0/0, 14/14 tests, cobertura 84,84/65,72/78,37, autoprueba FFmpeg 5/5, captura compacta, acceso real, iconos, identidad y cierre normal.

@@ -176,3 +176,17 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-22.
 - Decisión: mostrar debajo del resultado del paso 00 un botón de ancho completo `MOSTRAR CHROMA EN CARPETA`, desactivado mientras no exista un PNG preparado y habilitado inmediatamente después de generar verde o azul. Conservar también el acceso equivalente del paso 01.
 - Motivo: la ubicación del archivo debe estar disponible junto al visor y al mensaje que confirman la preparación, sin obligar a descubrir la acción en el paso siguiente.
+
+## D-026 - Autodetección determinista y corregible de loops
+
+- Estado: vigente.
+- Fecha: 2026-08-25.
+- Decisión: agregar `AUTO LOOP` como opción separada de `AUTO 16`. Construir firmas raster reducidas, buscar una repetición con al menos 16 intervalos, puntuar semejanza de extremos y continuidad del movimiento y elegir 16 fases dentro de `[inicio, cierre)` sin incluir el fotograma terminal repetido. Mostrar confianza y permitir editar cualquier check después.
+- Motivo: los clips I2V pueden contener entrada, ciclo útil y salida; repartir todo el video mezcla fases incompatibles. La detección debe ahorrar trabajo sin fingir certeza ni encerrar al usuario en una decisión automática.
+
+## D-027 - Splash cancelable antes de crear la UI principal
+
+- Estado: vigente.
+- Fecha: 2026-08-25.
+- Decisión: mantener una `X` visible y funcional en el splash y aceptar `Esc`; cualquier cierre de usuario emite una única cancelación, detiene el temporizador de arranque y apaga la aplicación sin construir la ventana principal. Los cierres programáticos de captura o arranque exitoso usan una ruta explícita que no dispara cancelación.
+- Motivo: un fallo durante la inicialización nunca debe dejar una pantalla de carga inescapable ni abrir la UI después de que la persona pidió cerrar.

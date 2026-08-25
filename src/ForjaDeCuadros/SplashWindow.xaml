@@ -4,10 +4,27 @@
         Width="620" Height="360" WindowStyle="None" ResizeMode="NoResize"
         AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen" Topmost="True"
+        PreviewKeyDown="SplashWindow_PreviewKeyDown"
         Icon="pack://application:,,,/Assets/forja-de-cuadros-icon.ico">
     <Border CornerRadius="24" Background="#181716" BorderBrush="#C73B2F" BorderThickness="2">
         <Border.Effect><DropShadowEffect BlurRadius="34" ShadowDepth="8" Opacity="0.42"/></Border.Effect>
-        <Grid Margin="34">
+        <Grid>
+            <Button x:Name="CloseSplashButton" Content="×" Width="42" Height="42" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="0,10,10,0" Panel.ZIndex="2" Click="CloseSplash_Click" ToolTip="Cancelar y cerrar"
+                    Background="#742A25" Foreground="White" BorderThickness="0" FontSize="21" FontWeight="SemiBold" Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Surface" Background="{TemplateBinding Background}" CornerRadius="11">
+                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontWeight="{TemplateBinding FontWeight}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Background" Value="#C73B2F"/></Trigger>
+                            <Trigger Property="IsPressed" Value="True"><Setter TargetName="Surface" Property="Background" Value="#952A22"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Grid Margin="34">
             <Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
             <Border Width="190" Height="190" CornerRadius="32" Background="#0E0E0D" BorderBrush="#3B3832" BorderThickness="1">
                 <Image Source="pack://application:,,,/Assets/forja-de-cuadros-icon.png" Margin="8" Stretch="Uniform"/>
@@ -22,6 +39,7 @@
                     <TextBlock Text="PREPARANDO EL TALLER" Foreground="#8FC3BC" FontSize="11" FontWeight="SemiBold"/>
                 </StackPanel>
             </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </Window>

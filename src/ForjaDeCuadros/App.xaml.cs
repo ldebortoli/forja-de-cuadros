@@ -48,10 +48,36 @@ namespace ForjaDeCuadros
             string? capturePath = ValueAfter(e.Args, "--capture");
             string? alphaCapturePath = ValueAfter(e.Args, "--capture-alpha");
             string? splashCapturePath = ValueAfter(e.Args, "--capture-splash");
+            string? splashDismissTestPath = ValueAfter(e.Args, "--splash-dismiss-test");
             int? captureWidth = int.TryParse(ValueAfter(e.Args, "--capture-width"), out int parsedWidth) && parsedWidth > 0 ? parsedWidth : (int?)null;
             int? captureHeight = int.TryParse(ValueAfter(e.Args, "--capture-height"), out int parsedHeight) && parsedHeight > 0 ? parsedHeight : (int?)null;
             var splash = new SplashWindow();
+            DispatcherTimer? startupTimer = null;
+            bool startupCancelled = false;
+            splash.StartupCancellationRequested += (_, __) =>
+            {
+                startupCancelled = true;
+                startupTimer?.Stop();
+                if (!string.IsNullOrWhiteSpace(splashDismissTestPath))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(splashDismissTestPath) ?? ".");
+                    File.WriteAllText(splashDismissTestPath, "CANCELLED=1" + Environment.NewLine + "MAIN_WINDOW=0");
+                }
+                Shutdown(0);
+            };
             splash.Show();
+
+            if (!string.IsNullOrWhiteSpace(splashDismissTestPath))
+            {
+                var dismissTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(80) };
+                dismissTimer.Tick += (_, __) =>
+                {
+                    dismissTimer.Stop();
+                    splash.Close();
+                };
+                dismissTimer.Start();
+                return;
+            }
 
             if (!string.IsNullOrWhiteSpace(splashCapturePath))
             {
@@ -65,23 +91,28 @@ namespace ForjaDeCuadros
                     var encoder = new PngBitmapEncoder();
                     encoder.Frames.Add(BitmapFrame.Create(bitmap));
                     using (var stream = File.Create(splashCapturePath)) encoder.Save(stream);
-                    splash.Close();
+                    splash.CloseForStartup();
                     Shutdown(0);
                 };
                 captureTimer.Start();
                 return;
             }
 
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(capturePath == null && alphaCapturePath == null ? 850 : 120) };
-            timer.Tick += (_, __) =>
+            startupTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(capturePath == null && alphaCapturePath == null ? 850 : 120) };
+            startupTimer.Tick += (_, __) =>
             {
-                timer.Stop();
+                startupTimer.Stop();
+                if (startupCancelled || !splash.IsVisible)
+                {
+                    Shutdown(0);
+                    return;
+                }
                 Window main = new MainWindow(alphaCapturePath ?? capturePath, captureWidth, captureHeight, alphaCapturePath != null);
                 MainWindow = main;
                 main.Show();
-                splash.Close();
+                splash.CloseForStartup();
             };
-            timer.Start();
+            startupTimer.Start();
         }
 
         private static string? ValueAfter(string[] args, string key)

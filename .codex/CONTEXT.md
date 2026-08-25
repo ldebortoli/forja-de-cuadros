@@ -43,6 +43,8 @@ El paso 01 conserva la ruta del PNG croma, permite copiarla o abrir su carpeta y
 - AppUserModelID: `io.github.ldebortoli.ForjaDeCuadros`.
 - El instalador estándar usa `%LOCALAPPDATA%\Programs\Forja de Cuadros` y el menú Inicio; `-CodexApps` usa la carpeta personal del usuario.
 - Cerrar la UI cancela el árbol FFmpeg activo.
+- `AUTO LOOP` es una ayuda determinista: compara firmas visuales y continuidad de movimiento, exige al menos 16 candidatos, elige 16 fases sin duplicar el cierre y comunica confianza; nunca bloquea la corrección manual ni reemplaza la revisión humana.
+- El splash ofrece `X` y `Esc` desde el primer render; descartarlo cancela el arranque antes de crear la ventana principal.
 - La barra superior propia y el ajuste al área útil del monitor deben permanecer accesibles en pantallas compactas.
 - Todas las superficies WPF usan una barra de scroll global tipo overlay: sin canal sólido, pulgar redondeado verde apagado y estados hover/drag sobrios; mantenerla consistente en vertical, horizontal y campos internos.
 - Los controles de entrada WPF usan superficies cacao mate, borde marrón y foco verde apagado: campos editables/solo lectura, dropdowns y su popup, checks y sliders deben conservar esta familia sin fondos blancos del sistema.

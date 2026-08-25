@@ -7,6 +7,7 @@ La herramienta separa tres responsabilidades:
 - **Preparacion local de imagen:** convierte la transparencia de un PNG en chroma verde o azul sin usar servicios ni creditos.
 - **Generacion I2V intercambiable:** produce un MP4 corto desde una imagen aprobada mediante un servicio externo elegido por el usuario. Forja abre solamente proveedores aprobados y no conecta cuentas ni sube archivos.
 - **Postprocesado local reproducible:** extrae, selecciona, limpia, registra, audita y exporta los 16 cuadros sin enviar el video a ningun servicio.
+- **Ayuda determinista para loops:** `AUTO LOOP` compara firmas visuales y la continuidad de entrada/salida, exige al menos 16 candidatos, no incluye el cierre duplicado y avisa cuando la coincidencia es debil. La eleccion manual siempre prevalece.
 
 Al elegir una imagen, el paso 00 muestra el original y la versión preparada lado a lado, genera chroma verde automáticamente y escribe la ruta resultante en el paso 01; los botones verde/azul regeneran y reemplazan esa misma ruta. El propio paso 00 habilita `MOSTRAR CHROMA EN CARPETA` cuando el PNG existe; en el paso 01 también se puede copiar la ruta, abrir la carpeta o visitar un generador aprobado. El MP4 descargado se carga manualmente en el paso 02. El postprocesado posterior es local.
 

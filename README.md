@@ -11,7 +11,7 @@ La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, We
 ## Qué resuelve
 
 - Extrae candidatos de un tramo preciso del video.
-- Distribuye automáticamente una selección inicial de 16 cuadros.
+- Distribuye automáticamente una selección inicial de 16 cuadros o busca un ciclo con `AUTO LOOP` mediante comparación visual y continuidad de movimiento.
 - Quita fondos verdes o azules con tolerancia, suavizado, despill, erosión de halo, limpieza de islas y corte alfa ajustable.
 - Mantiene una escala común y registra raíz/suelo según el tipo de movimiento.
 - Detecta cuadros vacíos, duplicados, recortes, deriva de altura/suelo/raíz y una mala costura del loop.
@@ -53,7 +53,7 @@ Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-Co
 2. En `00 GENERAR IMAGEN`, elegí el archivo: Forja prepara chroma verde automáticamente y completa la ruta del paso 01. Podés cambiarla a azul con un clic y usar `MOSTRAR CHROMA EN CARPETA` para abrir el Explorador con el PNG seleccionado. Este paso es local y no consume créditos.
 3. En `01 CONVERTIR A VIDEO`, copiá o localizá el PNG preparado, abrí un generador externo aprobado y pedí cámara fija, personaje completo y una sola acción de 2–4 segundos. Por ahora la lista incluye Grok Imagine.
 4. En `02 VIDEO`, cargá el clip, definí inicio/final y extraé candidatos.
-5. Elegí exactamente 16 cuadros; `AUTO 16` distribuye la selección sobre todo el tramo.
+5. Elegí exactamente 16 cuadros. `AUTO LOOP` busca un inicio y un cierre visualmente compatibles, distribuye 16 fases y excluye el cuadro terminal repetido; muestra una confianza y deja corregir todos los checks. `AUTO 16` sigue disponible para repartir la selección sobre todo el tramo sin detectar ciclos.
 6. En `03 FONDO / CHROMA`, tomá el color del fondo. Si queda un contorno semitransparente, dejá activa `Limpiar halo con corte alfa`, subí **Corte alfa** hasta eliminarlo y compensá un borde dentado con un poco de **Suavizado del corte**. La vista sobre damero se actualiza mientras movés ambos controles.
 7. Elegí el registro:
    - **Suelo + raíz fijos:** loops in-place.

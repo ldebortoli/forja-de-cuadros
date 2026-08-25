@@ -298,9 +298,11 @@
                 <StackPanel>
                     <TextBlock Text="Mesa de selección" FontSize="26" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
                     <TextBlock x:Name="CandidateSummaryText" Text="Cargá un video para extraer candidatos." Foreground="#706653" Margin="0,4,0,0"/>
+                    <TextBlock x:Name="LoopDetectionText" Text="AUTO LOOP busca una costura repetida; siempre podés corregir sus 16 elegidos." Foreground="#396E68" FontSize="11" TextWrapping="Wrap" MaxWidth="620" Margin="0,3,12,0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Content="AUTO 16" Style="{StaticResource SecondaryButton}" Click="AutoSelect_Click"/>
+                    <Button Content="AUTO LOOP" Style="{StaticResource SecondaryButton}" Click="AutoLoop_Click" ToolTip="Detecta inicio y cierre de un ciclo y distribuye 16 fases sin repetir el cuadro terminal."/>
+                    <Button Content="AUTO 16" Style="{StaticResource SecondaryButton}" Margin="7,0,0,0" Click="AutoSelect_Click" ToolTip="Distribuye 16 cuadros de manera uniforme por todo el tramo."/>
                     <Button Content="LIMPIAR" Style="{StaticResource SecondaryButton}" Margin="7,0,0,0" Click="ClearSelection_Click"/>
                     <Button x:Name="ProcessButton" Content="PROCESAR 16" Style="{StaticResource PrimaryButton}" Margin="7,0,0,0" Click="Process_Click" IsEnabled="False"/>
                 </StackPanel>
