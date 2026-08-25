@@ -14,7 +14,7 @@ La integracion Kaggle/LTX fue retirada por completo por instruccion del usuario.
 
 - Repositorio publico: `https://github.com/ldebortoli/forja-de-cuadros`.
 - Rama primaria y de entrega: `main`; no usar PR salvo pedido explicito.
-- Entrega previa publicada directamente en `main` mediante `a6a4fcf`; la entrega actual está validada localmente y pendiente del commit/push de esta sesión.
+- Entrega actual publicada directamente en `main` mediante `f136f3c`; no se creó PR y no se esperó ni monitoreó la CI remota.
 - .NET 8, C#, WPF/WinForms interop, Windows x64.
 - Flujo visible: `00 GENERAR IMAGEN` → `01 CONVERTIR A VIDEO` → `02 VIDEO` → `03 FONDO / CHROMA` → `04 REGISTRO` → `05 EXPORTACION`.
 - Paso 00: dos visores `ORIGINAL`/`CHROMA PARA VIDEO`; seleccionar imagen genera verde `#00FF00` automaticamente y verde/azul reemplazan la ruta de 01. Debajo del resultado, `MOSTRAR CHROMA EN CARPETA` se habilita solamente cuando el PNG preparado existe y lo selecciona en el Explorador.
