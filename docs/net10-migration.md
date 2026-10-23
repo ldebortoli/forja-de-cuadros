@@ -80,3 +80,6 @@ parches futuros requieren actualizar el pin, validar y republicar el paquete.
 2026-11-10. La antigüedad no demuestra una CVE. Esta entrega no certifica toda
 la seguridad, calidad artística ni continuidad de proveedores externos. El cierre
 de adopción y el estado de CI se registran con evidencia separada.
+
+## Resultado de adopción
+Paquete1.0.2 de código1ef369124dd6cb5ad79c066d99423ed16317c547 validado y adoptado. Autoprueba.NET10 5/5; los16PNG coinciden byte por byte (SHA256) con.NET8corregido. Identidad deproceso/ventana, iconos, splashcancelado sinabrirprincipal, trescapturas ycierrenormal correctos. CoreCLR tiene firmaMicrosoft válida yelpaquete ejecuta sin.NET10global. Ambas carpetasversionadas/accesos actualizados y rollback conservado. SHA256delEXE: EA98E4EF1D5FA175EB40C87DEB53D23F1AAA66E388EA4E08F28CEF125F80EC1C. CIremota se verifica despuésdelpush y no se deduce de estos gates locales.

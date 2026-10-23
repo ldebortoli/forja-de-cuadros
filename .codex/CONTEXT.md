@@ -63,3 +63,6 @@ El paso 01 conserva la ruta del PNG croma, permite copiarla o abrir su carpeta y
 
 ## R19d candidato.NET10 - 2026-10-23
 Código1.0.2 sobreSDK10.0.402/runtime10.0.13 autocontenido, C#12.68tests pasan100%561líneas/372ramas y100%métodosdelnúcleo instrumentado; NuGet sin vulnerabilidades detectadas. Sin cambios de paquetes. Todavía falta QA del paquete final/adopción/push; instalacionesanteriores intactas. Informe docs/net10-migration.md.
+
+## R19d adoptado - 2026-10-23
+Entrega1.0.2autocontenida, código1ef369124dd6cb5ad79c066d99423ed16317c547, fixRGBpreviof120d95. RuntimeMicrosoftDesktop/Core10.0.13 firmadoMicrosoft.68tests/100%561líneas372ramas/métodosdelnúcleo; pipelineFFmpeg5/5 y16PNGidénticosSHA256albaseline8corregido. Identidadventana/procesoio.github.ldebortoli.ForjaDeCuadros,iconos,capturasmesa/alfa/splash,cancelaciónCANCELLED1MAIN_WINDOW0ycierre normal verificadas. Paqueteejecutósin.NET10global. Nuevascarpetasversionadas1.0.2enPrograms yCodex/AppsData, accesosInicio/CodexAppsactualizados/verificadosCOM. SHA256exeEA98E4EF1D5FA175EB40C87DEB53D23F1AAA66E388EA4E08F28CEF125F80EC1C. Datos reales intactos; rollbackambosbinarios/accesos enTemp/codex-r19-net10-20261023/rollback/forja. SinVPS/APK/proveedores/secretos/snapshotnet5instalaciónglobal. Informe docs/net10-migration.md yrecibos privados conservados.
