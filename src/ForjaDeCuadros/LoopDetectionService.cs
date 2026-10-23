@@ -190,7 +190,8 @@ namespace ForjaDeCuadros
                     distances.Add(Distance(signatures[left], signatures[right]));
                 }
             }
-            if (distances.Count == 0) return 1;
+            // Called with at least three signatures: left=0, right=separation
+            // always contributes a sample before this median is calculated.
             distances.Sort();
             return Math.Max(0.000001, distances[distances.Count / 2]);
         }

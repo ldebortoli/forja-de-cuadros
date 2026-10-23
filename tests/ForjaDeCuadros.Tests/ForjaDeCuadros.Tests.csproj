@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <CoverletOutput>$(MSBuildProjectDirectory)\..\..\coverage\forja</CoverletOutput>
     <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
-    <Threshold>78,48,72</Threshold>
+    <Threshold>100,100,100</Threshold>
     <ThresholdType>line,branch,method</ThresholdType>
     <ThresholdStat>total</ThresholdStat>
     <ExcludeByFile>**/*.g.cs,**/*.g.i.cs,**/*.xaml,**/App.xaml.cs,**/MainWindow.xaml.cs,**/SplashWindow.xaml.cs,**/WindowsIdentity.cs,**/ImageLoading.cs,**/FfmpegService.cs,**/SelfTestRunner.cs,**/ExportService.cs</ExcludeByFile>

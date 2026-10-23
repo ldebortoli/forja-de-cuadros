@@ -137,7 +137,7 @@ namespace ForjaDeCuadros
         {
             try
             {
-                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ForjaDeCuadros", "Logs");
+                string folder = Path.Combine(AppDataPaths.DataDirectory, "Logs");
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder, "crash-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".log"), exception?.ToString() ?? "Error desconocido");
             }

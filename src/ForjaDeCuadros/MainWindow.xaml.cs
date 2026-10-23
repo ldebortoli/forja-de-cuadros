@@ -56,7 +56,7 @@ namespace ForjaDeCuadros
             if (captureWidth.HasValue) Width = Math.Max(MinWidth, captureWidth.Value);
             if (captureHeight.HasValue) Height = Math.Max(MinHeight, captureHeight.Value);
             _ffmpeg = new FfmpegService();
-            _sessionFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ForjaDeCuadros", "Sessions", DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N").Substring(0, 8));
+            _sessionFolder = Path.Combine(AppDataPaths.DataDirectory, "Sessions", DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N").Substring(0, 8));
             Directory.CreateDirectory(_sessionFolder);
             ExportFolderText.Text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Forja de Cuadros", "Exportaciones");
             _previewTimer = new DispatcherTimer();

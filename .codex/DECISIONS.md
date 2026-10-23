@@ -190,3 +190,10 @@ No borrar decisiones anteriores. Si una decision cambia, agregar una nueva entra
 - Fecha: 2026-08-25.
 - Decisión: mantener una `X` visible y funcional en el splash y aceptar `Esc`; cualquier cierre de usuario emite una única cancelación, detiene el temporizador de arranque y apaga la aplicación sin construir la ventana principal. Los cierres programáticos de captura o arranque exitoso usan una ruta explícita que no dispara cancelación.
 - Motivo: un fallo durante la inicialización nunca debe dejar una pantalla de carga inescapable ni abrir la UI después de que la persona pidió cerrar.
+
+## D-028 - 2026-10-23 - Cobertura completa del núcleo instrumentado
+Reemplaza los umbrales78/48/72 deD008 por100/100/100 sin agregar exclusiones.68pruebas sintéticas validan límites raster, tres registros, metadatos/JSON, auditorías y loops. Se retiran cuatro comprobaciones sin entrada alcanzable por sus precondiciones: ancho/alto positivos ydisponibles>=1 garantizan escala finita positiva; cutoffclamp/softnesspositiva garantizan upper>lower; ambos llamadoresdeMedian excluyen vacíos; ReferenceDistance recibe>=3firmasyaporta almenosunadistancia. Validaciones públicas de canvas/suelo/raíz, null, tamañosyfirmas permanecen.
+## D-029 - 2026-10-23 - Chroma no agrega color al sujeto opaco
+Tres fixtures reproducen fallo previo en.NET8: RGB220,30,20 terminaba220,220,20 sobreclaveverde, con equivalentes rojo/azul. Limitar el canal suprimido al valor original evita agregar color y conserva el despill para canales dominantes. Pruebas rojas antes del fix y verdes después; pipelineFFmpeg5/5 y68tests100% antesdemigrarruntime.
+## D-030 - 2026-10-23 - DatosQA porproceso
+FORJA_DATA_DIRECTORY redirige sólo sesiones/logs paraUIQA; sinvariable conserva la ruta anterior. Pruebas verifican stringsdefault sinI/Oyoverride temporal. No se usan medios reales ni proveedores externos; FORJA_KEEP_SELFTEST=1 conserva fixtures/evidencia para comparar runtimes.

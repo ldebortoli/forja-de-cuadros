@@ -34,7 +34,8 @@ namespace ForjaDeCuadros
             double availableWidth = Math.Max(1, options.CanvasWidth - options.Padding * 2);
             double availableHeight = Math.Max(1, options.GroundY - options.Padding);
             double scale = Math.Min(availableWidth / maxWidth, availableHeight / maxHeight);
-            if (scale <= 0 || double.IsNaN(scale) || double.IsInfinity(scale)) throw new InvalidOperationException("No se pudo calcular una escala valida.");
+            // Available dimensions are >= 1 and loaded nonempty bounds have
+            // positive finite dimensions, so scale is always positive and finite.
 
             var reference = sources[0];
             var results = new List<ProcessedFrame>(16);

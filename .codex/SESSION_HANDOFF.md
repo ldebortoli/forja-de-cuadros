@@ -44,3 +44,6 @@ La integracion Kaggle/LTX fue retirada por completo por instruccion del usuario.
 - Las cuotas, marcas de agua y licencias de los proveedores cambian; revisar fuentes oficiales antes de actualizar la lista publica.
 - No publicar `bin/`, `obj/`, `coverage/`, videos, reportes temporales, contenido del usuario ni rutas personales.
 - Computer Use contra Explorer y Forja WPF fallo en agosto de 2026 con `Interfaz no compatible (0x80004002)`. Usar captura interna, identidad de proceso y propiedades del acceso; no reintentar antes de septiembre salvo cambio de version/configuracion.
+
+## R19d preparación completada sobre.NET8 - 2026-10-23
+Worktree audit/r19d-net10-20261023 desde9368700, appinterna1.0.1 aúnNOadoptada. Baselineoriginal19tests/86.50,67.70,80.95; tres testsrojos demostraronadiciónRGBenchroma yfixmínimo pasa.68tests/100%líneasramasmétodosnúcleoinstrumentado; exclusionesoriginalesintactas. Cuatro checksinalcanzablesretiradosconprecondicionesdocumentadas. AutopruebaFFmpeg5/5 con mediossintéticos,16cuadros/hashesguardados; capturadeUI8exit0sóloenFORJA_DATA_DIRECTORYtemporal. Rollbackambasinstalaciones/accesosconservadoenTemp/codex-r19-net10-20261023/rollback/forja. Falta migrarSDK10.0.402/runtime10.0.13, compararpruebas/pipeline/UI, publicar/adoptar/subirnormal. Snapshotnet5juegoexcluido. No aprobaciónpendiente,nidenegación.

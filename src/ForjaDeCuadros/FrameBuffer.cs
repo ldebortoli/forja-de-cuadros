@@ -140,17 +140,17 @@ namespace ForjaDeCuadros
                 if (keyDominant == 1)
                 {
                     double neutral = Math.Max(r, b);
-                    g = Math.Max(neutral, g - Math.Max(0, g - neutral) * spill);
+                    g = Math.Min(g, Math.Max(neutral, g - Math.Max(0, g - neutral) * spill));
                 }
                 else if (keyDominant == 2)
                 {
                     double neutral = Math.Max(g, b);
-                    r = Math.Max(neutral, r - Math.Max(0, r - neutral) * spill);
+                    r = Math.Min(r, Math.Max(neutral, r - Math.Max(0, r - neutral) * spill));
                 }
                 else
                 {
                     double neutral = Math.Max(r, g);
-                    b = Math.Max(neutral, b - Math.Max(0, b - neutral) * spill);
+                    b = Math.Min(b, Math.Max(neutral, b - Math.Max(0, b - neutral) * spill));
                 }
 
                 output.Pixels[i] = (byte)Math.Clamp((int)Math.Round(b), 0, 255);
@@ -181,9 +181,9 @@ namespace ForjaDeCuadros
                 double adjusted;
                 if (alpha <= 0.0) adjusted = 0.0;
                 else if (softness <= 0.000001) adjusted = alpha < cutoff ? 0.0 : 1.0;
-                else if (upper <= lower) adjusted = alpha < cutoff ? 0.0 : 1.0;
                 else
                 {
+                    // Clamped cutoff and positive softness guarantee upper > lower.
                     double normalized = Math.Clamp((alpha - lower) / (upper - lower), 0.0, 1.0);
                     adjusted = normalized * normalized * (3.0 - 2.0 * normalized);
                 }

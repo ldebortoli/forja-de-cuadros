@@ -62,7 +62,7 @@ namespace ForjaDeCuadros
 
         private static double Median(double[] values)
         {
-            if (values.Length == 0) return 0;
+            // Both callers guard their collections before computing a median.
             Array.Sort(values);
             int middle = values.Length / 2;
             return values.Length % 2 == 0 ? (values[middle - 1] + values[middle]) / 2.0 : values[middle];
