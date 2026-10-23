@@ -1,6 +1,6 @@
 param(
     [switch]$SkipBuild,
-    [switch]$SelfContained,
+    [switch]$SelfContained = $true,
     [switch]$CodexApps
 )
 
@@ -22,6 +22,10 @@ if ($CodexApps) {
 
 $shortcutPath = Join-Path $shortcutFolder 'Forja de Cuadros.lnk'
 $executablePath = Join-Path $deployRoot 'ForjaDeCuadros.exe'
+
+if (Get-Process -Name 'ForjaDeCuadros' -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $executablePath }) {
+    throw 'Cierra esta instalación de Forja antes de actualizarla; el instalador no termina procesos.'
+}
 
 if (-not $SkipBuild) {
     $publishArguments = @('publish', $projectFile, '-c', 'Release', '-r', 'win-x64', '--self-contained', $SelfContained.ToString().ToLowerInvariant(), '-o', $publishRoot)

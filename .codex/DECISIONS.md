@@ -197,3 +197,6 @@ Reemplaza los umbrales78/48/72 deD008 por100/100/100 sin agregar exclusiones.68p
 Tres fixtures reproducen fallo previo en.NET8: RGB220,30,20 terminaba220,220,20 sobreclaveverde, con equivalentes rojo/azul. Limitar el canal suprimido al valor original evita agregar color y conserva el despill para canales dominantes. Pruebas rojas antes del fix y verdes después; pipelineFFmpeg5/5 y68tests100% antesdemigrarruntime.
 ## D-030 - 2026-10-23 - DatosQA porproceso
 FORJA_DATA_DIRECTORY redirige sólo sesiones/logs paraUIQA; sinvariable conserva la ruta anterior. Pruebas verifican stringsdefault sinI/Oyoverride temporal. No se usan medios reales ni proveedores externos; FORJA_KEEP_SELFTEST=1 conserva fixtures/evidencia para comparar runtimes.
+
+## D-031 - 2026-10-23 - R19d.NET10 autocontenido
+Reemplaza la base.NET8 deD003: global.jsonSDK10.0.402, runtimeDesktop10.0.13, C#12. El instalador incluye runtime por defecto y rechaza sobrescribir su instanciaactiva sin matarla.67+1tests/100%líneasramasmétodosnúcleo pasan en8y10, no nuevasexclusiones/actualizacionesdepaquetes. Paquete se adopta sólo trasFFmpeg/UI/identidad/splash/cierre y comparación de16cuadros sintéticos. No tocar snapshotnet5niinstalarMSIglobal; sinCVEinferidaporantigüedad.

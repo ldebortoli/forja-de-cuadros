@@ -23,7 +23,7 @@ La herramienta prepara imágenes transparentes sobre chroma, recibe MP4, MOV, We
 ## Requisitos
 
 - Windows 10 u 11, x64.
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) para compilar. Una publicación dependiente del framework requiere además el .NET 8 Desktop Runtime.
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) 10.0.402 para compilar. La publicación incluye su propio Desktop Runtime 10.0.13.
 - [FFmpeg](https://ffmpeg.org/) y `ffprobe` disponibles en `PATH`. En Windows también se detecta la instalación de WinGet:
 
 ```powershell
@@ -45,7 +45,7 @@ Para instalarla en el menú Inicio con su icono propio:
 powershell -NoProfile -ExecutionPolicy Bypass -File src\ForjaDeCuadros\install_forja.ps1
 ```
 
-Usá `-SelfContained` para incluir el runtime de .NET en la instalación, o `-CodexApps` si querés instalarla en tu carpeta personal `Codex Apps`.
+El instalador incluye el runtime por defecto. Usá `-CodexApps` para tu carpeta personal `Codex Apps`; `-SelfContained:$false` permite elegir una publicación dependiente del framework. El instalador pide cerrar la instalación que va a actualizar y no termina procesos.
 
 ## Workflow recomendado
 
@@ -82,7 +82,7 @@ Suite rápida y determinista:
 dotnet test ForjaDeCuadros.sln -c Release --no-restore
 ```
 
-Cobertura con umbrales de regresión para el núcleo de procesamiento (líneas 78 %, ramas 48 % y métodos 72 %):
+Cobertura exigida para el núcleo de procesamiento: 100 % de líneas, ramas y métodos. Las 68 pruebas usan raster y metadatos sintéticos; las exclusiones históricas de UI/integración se mantienen y se verifican aparte.
 
 ```powershell
 dotnet test tests\ForjaDeCuadros.Tests\ForjaDeCuadros.Tests.csproj -c Release --no-restore /p:CollectCoverage=true
@@ -93,7 +93,7 @@ Autoprueba completa con FFmpeg (más lenta):
 ```powershell
 dotnet build src\ForjaDeCuadros\ForjaDeCuadros.csproj -c Release
 $report = Join-Path $PWD 'artifacts\self-test.json'
-$process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net8.0-windows\ForjaDeCuadros.exe' -ArgumentList @('--self-test', $report) -WindowStyle Hidden -Wait -PassThru
+$process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net10.0-windows\ForjaDeCuadros.exe' -ArgumentList @('--self-test', $report) -WindowStyle Hidden -Wait -PassThru
 exit $process.ExitCode
 ```
 
@@ -101,7 +101,7 @@ Captura reproducible del panel de limpieza alfa:
 
 ```powershell
 $capture = Join-Path $PWD 'artifacts\alpha-controls.png'
-$process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net8.0-windows\ForjaDeCuadros.exe' -ArgumentList @('--capture-alpha', $capture, '--capture-width', '1440', '--capture-height', '960') -WindowStyle Hidden -Wait -PassThru
+$process = Start-Process -FilePath 'src\ForjaDeCuadros\bin\Release\net10.0-windows\ForjaDeCuadros.exe' -ArgumentList @('--capture-alpha', $capture, '--capture-width', '1440', '--capture-height', '960') -WindowStyle Hidden -Wait -PassThru
 exit $process.ExitCode
 ```
 
@@ -121,3 +121,5 @@ Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* 
 ## Licencia
 
 [MIT](LICENSE). Podés usar, modificar y compartir la herramienta, incluso en proyectos comerciales.
+
+La entrega 1.0.2 usa C# 12 y un runtime por aplicación. Para QA, FORJA_DATA_DIRECTORY separa sesiones y logs del perfil normal; FORJA_KEEP_SELFTEST=1 conserva los medios sintéticos. Ver [compatibilidad, corrección de color y rollback](docs/net10-migration.md).

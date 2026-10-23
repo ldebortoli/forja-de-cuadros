@@ -15,7 +15,7 @@ Aplicación WPF gratuita para Windows que prepara imágenes transparentes sobre 
 
 ## Stack y estructura
 
-- .NET 8, C#, WPF/WinForms interop, Windows x64.
+- .NET 10, C#, WPF/WinForms interop, Windows x64.
 - `src/ForjaDeCuadros/`: aplicación, instalador y validadores.
 - `MainWindow`: workflow 00 imagen → 01 proveedor externo → 02 video → cuadros y exportación.
 - `tests/ForjaDeCuadros.Tests/`: tests xUnit del núcleo de procesamiento.
@@ -60,3 +60,6 @@ El paso 01 conserva la ruta del PNG croma, permite copiarla o abrir su carpeta y
 - La limpieza posterior al chroma usa corte alfa activado por defecto en 10 % y suavizado en 4 %. Se aplica antes de calcular límites/alineación y después del remuestreo; la UI ofrece previsualización sobre damero y `--capture-alpha` permite revisar el panel completo.
 - Computer Use contra Explorer y Forja WPF produjo `Interfaz no compatible (0x80004002)` en agosto de 2026. No reintentar captura/coordenadas antes de septiembre de 2026 salvo cambio de versión; usar las capturas internas, la identidad de proceso y las propiedades COM del acceso como fallback.
 - Actualizar `.codex/` cuando cambie estado, arquitectura o workflow.
+
+## R19d candidato.NET10 - 2026-10-23
+Código1.0.2 sobreSDK10.0.402/runtime10.0.13 autocontenido, C#12.68tests pasan100%561líneas/372ramas y100%métodosdelnúcleo instrumentado; NuGet sin vulnerabilidades detectadas. Sin cambios de paquetes. Todavía falta QA del paquete final/adopción/push; instalacionesanteriores intactas. Informe docs/net10-migration.md.
