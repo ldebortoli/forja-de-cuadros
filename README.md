@@ -107,7 +107,7 @@ exit $process.ExitCode
 
 CI ejecuta build, tests y cobertura en cada push y pull request. La autoprueba con FFmpeg queda como workflow manual para cuidar los minutos gratuitos.
 
-Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición local actual es 84,84 % de líneas, 65,72 % de ramas y 78,37 % de métodos. Los conectores WPF generados por XAML se excluyen de forma explícita; no contienen lógica mantenida a mano.
+Coverlet mide líneas, ramas y métodos; no expone una métrica de *statements* separada, por lo que líneas es el control equivalente para sentencias ejecutables. La medición actual del núcleo instrumentado es 100 % de líneas, ramas y métodos. Se conservan las exclusiones históricas de UI, FFmpeg y exportación; esos recorridos se verifican aparte con la autoprueba completa, capturas, identidad y cierre. No se afirma cobertura total de toda la aplicación.
 
 ## Privacidad y alcance
 
